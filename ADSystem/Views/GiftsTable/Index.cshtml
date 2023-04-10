@@ -1,0 +1,629 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+
+@{
+    ViewBag.Title = "Mesa de Regalos";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/GiftsTable")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Customers")"></script>
+
+<style>
+    .vcenter {
+        height: 180px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        float: none;
+        padding-left: 75px;
+    }
+
+    #location{
+        width:400px;
+    }
+
+    #locationWedding {
+        width: 100%;
+        height: 400px;
+    }
+</style>
+
+<br />
+<div class="panel panel-default" data-ng-controller="GiftsTableController" style="width:950px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Mesa de Regalos</h3>
+    </div>
+    <div class="panel-body" data-ng-init="LoadVariablesInit('@ViewBag.Seller','@DateTime.Now.ToString("dd/MM/yyyy HH:mm")')">
+        <div class="row">
+            <div class="col-md-4 text-left">
+                <label class="control-label">Remisión</label>
+                <h4>{{remision}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Fecha y hora</label>
+                <h4>{{actualDateTime}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Sucursal</label>
+                <h4>{{branch}}</h4>
+            </div>
+        </div>
+        <br />
+        <br />
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#costumer" aria-controls="costumer" role="tab" data-toggle="tab">Cliente</a></li>
+            <li role="presentation"><a href="#wedding" aria-controls="wedding" role="tab" data-toggle="tab" ng-click="selected = 'wedding'">Boda</a></li>
+            <li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">Productos</a></li>
+            <li role="presentation"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Resumen</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="costumer">
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-left">                        
+                    </div>
+                    <div class="col-md-4 text-left">                        
+                    </div>
+                    <div class="col-md-2 text-left">
+                    </div>
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Notificar</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Novio</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <select class="form-control" name="boyfriend" data-ng-model="boyfriend" data-ng-options="option.Nombre for option in boyfriendSelect" ng-change="LoadGirlfriend()">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-left">
+                        <a href="JavaScript:void(0);" class="btn btn-block btn-info" data-ng-click="AddBoyfriendCustomer();">
+                            Agregar novio
+                        </a>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <input type="checkbox" ng-model="notifyBoyfriend">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Novia</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <select class="form-control" name="girlfriend" data-ng-model="girlfriend" data-ng-options="option.Nombre for option in girlfriendSelect">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-left">
+                        <a href="JavaScript:void(0);" class="btn btn-block btn-girlfriend" data-ng-click="AddGirlfriendCustomer();">
+                            Agregar novia
+                        </a>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <input type="checkbox" ng-model="notifyGirlfriend">
+                    </div>
+                </div>
+                <br />
+               
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-2 text-left">
+                        <label class="control-label">Despacho</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <input type="checkbox" ng-model="checkedOffices">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control" name="office" ng-show="checkedOffices" data-ng-model="office" data-ng-options="option.Nombre for option in offices">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="control-label">Vendedor(es)</label>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control" data-ng-model="sellerOne" data-ng-options="option.NombreCompleto for option in usersOne" data-ng-change="LoadUsersButNot()">
+                            <option value="">Seleccione</option>
+                        </select>
+                        <br />
+                        <select class="form-control" data-ng-model="sellerTwo" data-ng-options="option.NombreCompleto for option in usersTwo">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" ng-show="selected == 'wedding'" class="tab-pane" id="wedding">
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Fecha</label>
+                    </div>
+                    <div class="col-md-2 text-left">
+                        <input type="text" id="dateWedding" datepicker-popup="{{format}}" ng-model="dateWedding" is-open="openedDateWedding" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openDateWedding($event)" show-button-bar="false"/>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Hora</label>
+                    </div>
+                    <div class="col-md-2 text-left">
+                        <div class="row">
+                            <div class="col-md-6" style="padding-right: 0px;">
+                                <input type="text" class="form-control" id="hourWedding" ng-model="hourWedding" placeholder="12" maxlength="2" style="width:44px;" />
+                            </div>
+                            <div class="col-md-6" style="padding-left: 0px;">
+                                <input type="text" class="form-control" id="minuteWedding" ng-model="minuteWedding" placeholder="00" maxlength="2" style="width:44px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Lugar</label>
+                    </div>
+                    <div class="col-md-6 text-left">
+                        <input type="text" id="location" ng-model="location" placeholder="Ingrese una dirección">
+                    </div>
+                </div>    
+                <br />  
+                <div class="row">
+                    <div class="col-md-12 center-block">
+                        <place-Location id="locationWedding" init-event="a">
+
+                        </place-Location>
+                    </div>
+                </div>                
+                <br />
+            </div>
+            <div role="tabpanel" class="tab-pane" id="products">
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Subtotal</label>
+                            </div>
+                            <div class="col-md-8">
+                                <span>{{subTotal|currency}}</span>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Descuento %</label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <input type="checkbox" ng-model="checkedDiscount" ng-change="CalculateTotalCostWithoutDiscount();">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label"></label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <input type="number" ng-readonly="!checkedDiscount" ng-model="discount" ng-change="CalculateTotalCostWithoutDiscount();" min="0" max="100" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">IVA</label>
+                            </div>
+                            <div class="col-md-4" style="text-align:left;">
+                                <input type="checkbox" ng-model="checkedIVA" ng-change="CalculateTotalCost();">
+                            </div>
+                            <div class="col-md-4" style="text-align:left;">
+                                <span ng-show="checkedIVA">{{IVA |currency}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Total</label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <h3>{{total|currency}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button type="button" name="addServiceSale" class="btn btn-warning" data-ng-click="OpenModalService();">Servicio</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label">Producto</label>
+                            </div>
+                            <div class="col-md-7">
+                                <angucomplete id="product"
+                                              placeholder="Código"
+                                              pause="300"
+                                              selectedobject="selectedCode"
+                                              url="../../../Products/GetProductsForCodigo?codigo="
+                                              datafield="Codigos"
+                                              titlefield="Codigo"
+                                              inputclass="form-control form-control-small" />
+                            </div>
+                            <div class="col-md-3">
+                                <a href="JavaScript:void(0)" class="btn btn-block btn-success" data-ng-click="GetProduct();">
+                                    Agregar
+                                </a>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <h3 class="panel-title text-center">Productos</h3>
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Imagen</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Código</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Descripción</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Precio</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Unidades</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Subtotal</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Desc.%</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Total</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-1 text-center"><img class="img-product-list" src="{{item.imagen}}" /></div>
+                            <div class="col-md-2 text-center">{{(item.codigo == null)? item.credito:item.codigo}}</div>
+                            <div class="col-md-1 text-center txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{item.desc}}">{{item.desc}}</p></div>
+                            <div class="col-md-2 text-center">{{item.prec | currency}}</div>
+                            <div class="col-md-1 text-center"><input type="text" maxlength="5" ng-model="item.cantidad" ng-change="ValidateStock(item.idProducto);" style="width:50px;" ng-readonly="item.credito == true" /></div>
+                            <div class="col-md-1 text-center">{{item.prec * item.cantidad | currency}}</div>
+                            <div class="col-md-1 text-center"><input type="text" maxlength="3" min="0" max="100" ng-model="item.descuento" ng-change="CalculateTotalCost()" style="width:50px;" ng-readonly="item.credito == true" /></div>
+                            <div class="col-md-2 text-center"><label ng-model="item.costo">{{ (item.cantidad * item.prec) - ((item.cantidad * item.prec) * (item.descuento/100)) | currency}}</label></div>
+                            <div class="col-md-1 text-center">
+                                <i class="fa fa-trash color-red" ng-click="DeleteProduct(item.idProducto)"></i>
+                                <i class="fa fa-comments-o color-red" ng-click="OpenCommentsModal(item.idProducto, item.comentarios)"></i>
+                            </div>
+                        </div><br>
+                    </div>
+                </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="summary">
+                <br />
+                @*<br />
+                <i class="fa fa-floppy-o fa-2 color-red" data-ng-click="SaveEraserGiftsTable();" style="left:3%;"></i>
+                <br />*@
+                <br />
+                <div class="panel panel-success" style="width:100%;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">ARTÍCULO</div>
+                            <div class="col-md-3">CANT.</div>
+                            <div class="col-md-2">PRE.UNIT</div>
+                            <div class="col-md-2">DESCUENTO %</div>
+                            <div class="col-md-2">TOTAL</div>
+                        </div>
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-3">{{item.codigo}}</div>
+                            <div class="col-md-3">{{item.cantidad}}</div>
+                            <div class="col-md-2">{{item.prec | currency }}</div>
+                            <div class="col-md-2">{{item.descuento}}</div>
+                            <div class="col-md-2 ">{{ (item.cantidad * item.prec) - ((item.cantidad * item.prec) * (item.descuento/100)) | currency}}</div>
+                        </div>
+                        <br>
+                        <b>Venta Subtotal</b>&nbsp;<span>{{ subTotal | currency}}</span>
+                        <br />
+                        <b ng-show="checkedDiscount">Descuento %</b>&nbsp;<span ng-show="checkedDiscount">{{ discount }}</span>
+                        <br />
+                        <b ng-show="checkedIVA">IVA 16%</b>&nbsp;<span ng-show="checkedIVA">{{ IVA |currency}}</span>
+                        <br />
+                        <b>Venta Total</b>&nbsp;<span>{{ total | currency }}</span>
+                        <br />
+                        <b ng-show="customer.type == 'moral'">Cliente {{moralCustomer.Nombre}}</b>
+                        <b ng-show="customer.type == 'physical'">Cliente {{physicalCustomer.Nombre}}</b>
+                        <b ng-show="customer.type == 'office'">Cliente {{officeCustomer.Nombre}}</b>
+                        <br />
+                        <b>Le atendío {{sellerOne.NombreCompleto}} --- {{sellerTwo.NombreCompleto}}</b>
+                        <br />
+                        <br />
+                        <br />
+                        <b>Fecha:</b>&nbsp;<span>{{ dateTime }}</span>
+                        <br />
+                        <b>Sucursal:</b>&nbsp;<span>{{ branch }}</span>
+                        <b></b>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="control-label">Comentarios</label>
+                            </div>
+                            <div class="col-md-9">
+                                <textarea rows="5" cols="60" ng-model="comments"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" name="saveSale" class="btn btn-primary" ng-really-message="Está seguro que desea finalizar esta Mesa de Regalos?" ng-really-click="SaveGiftsTable();">Guardar</button>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+    </div>
+
+    <!----------------------------MODAL BRANCH---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModal" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <figure class="img-modal">
+                        <img src="@Url.Img("icon_sucursales.png")">
+                    </figure>
+                </div>
+                <div class="container-btn-modal">
+                    <div class="row">
+                        <div class="col-md-4" data-ng-click="SetBranchName('RÍO AMAZONAS', 2)">RÍO AMAZONAS</div>
+                        <div class="col-md-4" data-ng-click="SetBranchName('RÍO GUADALQUIVIR', 3)">RÍO GUADALQUIVIR</div>
+                        <div class="col-md-4" data-ng-click="SetBranchName('TEXTURA', 4)">TEXTURA</div>
+                    </div>   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL ADD BOYFRIEND CUSTOMER---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalAddBoyfriendCustomer" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-include="includeURLBoyfriend"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL ADD GIRLFRIEND CUSTOMER---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalAddGirlfriendCustomer" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-include="includeURLGirlfriend"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL SERVICE---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalService" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Servicio</h4>
+                </div>
+                <div class="modal-body">
+                    <code ng-show="!addServiceForm.$valid">Revise la información</code><br>
+                    <form id="addServiceForm" name="addServiceForm">
+                        <div class="form-group">
+                            <label for="descService">Servicio</label>
+                            <select class="form-control" name="descService" id="descService" data-ng-model="newService.descService" data-ng-options="option.Descripcion for option in listServices" required>
+                                <option value="">Seleccione</option>
+                            </select>
+                            <code class="has-error" ng-show="addServiceForm.descService.$error.required">Requerido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePriceService">Precio</label>
+                            <input type="text" class="form-control" id="salePriceService" ng-model="newService.salePriceService" ng-currency maxlength="15" placeholder="Precio" required>
+                            <code class="has-error" ng-show="addServiceForm.salePriceService.$error.required">Requerido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label for="amountService">Cantidad</label>
+                            <input type="text" class="form-control" id="amountService" ng-model="newService.amountService" maxlength="5" placeholder="Cantidad" required>
+                            <code class="has-error" ng-show="addServiceForm.amountService.$error.required">Requerido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label for="commentsService">Comentarios</label>
+                            <textarea class="form-control" id="commentsService" rows="3" ng-model="newService.commentsService" maxlength="400"></textarea>                            
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="AddService()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <ul class="list-group">
+                        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL COMMENTS---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalComments" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Comentarios</h4>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="form-group hidden">
+                            <label for="productItem">ID</label>
+                            <input type="text" class="form-control" id="productItem" ng-model="productItem">
+                        </div>
+                        <div class="form-group">
+                            <label for="commentsItem">Comentarios</label>
+                            <textarea class="form-control" id="commentsItem" rows="3" ng-model="commentsItem" maxlength="400"></textarea>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-primary" ng-click="SaveComments()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL VALIDATION---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalValidation" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="txtValidation">
+
+                </div>
+                <div class="container-btn-modal">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL PRINT BILLING---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalPrint" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Resumen</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-success" style="width:100%;">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12"><b>{{remision}}</b></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">ARTÍCULO</div>
+                                <div class="col-md-3">CANT.</div>
+                                <div class="col-md-2">PRE.UNIT</div>
+                                <div class="col-md-2">DESC. %</div>
+                                <div class="col-md-2">TOTAL</div>
+                            </div>
+                            <div class="row" ng-repeat="item in items">
+                                <div class="col-md-3">{{item.codigo}}</div>
+                                <div class="col-md-3">{{item.cantidad}}</div>
+                                <div class="col-md-2">{{item.prec | currency}}</div>
+                                <div class="col-md-2">{{item.descuento}}</div>
+                                <div class="col-md-2">{{ (item.cantidad * item.prec) - ((item.cantidad * item.prec) * (item.descuento/100)) | currency}}</div>
+                            </div>
+                            <br>
+                            <b>Venta Subtotal</b>&nbsp;<span>{{ subTotal | currency}}</span>
+                            <br />
+                            <b ng-show="checkedDiscount">Descuento %</b>&nbsp;<span ng-show="checkedDiscount">{{ discount }}</span>
+                            <br />
+                            <b ng-show="checkedIVA">IVA 16%</b>&nbsp;<span ng-show="checkedIVA">{{IVA|currency}}</span>
+                            <br />
+                            <b>Venta Total</b>&nbsp;<span>{{ total | currency }}</span>                           
+                            <br />
+                            <b>Le atendío {{sellerOne.NombreCompleto}} --- {{sellerTwo.NombreCompleto}}</b>
+                            <br />
+                            <br />
+                            <b>Fecha:</b>&nbsp;<span>{{ actualDateTime }}</span>
+                            <br />
+                            <b>Sucursal:</b>&nbsp;<span>{{ branch }}</span>
+                            <b></b>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" name="printSale" class="btn btn-primary" data-ng-click="Print();">Imprimir</button>
+                                </div>
+                                <div class="col-md-4">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,91 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Subcategorías";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Subcategories")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Subcategorías</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="SubcategoriesController">
+        <div class="row">
+            <div class="col-md-3 text-right">
+                <a href="~/Categories/Index" class="btn btn-primary">Regresar</a>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+            <div class="col-md-3 text-left">
+                <button type="button" class="btn btn-primary" data-ng-click="AddSubcategory(@ViewData["idCategory"])">Agregar</button>
+            </div>
+        </div>
+        <input type="hidden" class="form-control" id="idCategory" data-ng-model="idCategory" data-ng-init="idCategory='@ViewData["idCategory"]'">
+        <div class="table-responsive">
+            <table class="table table-striped" data-ng-init="listSubcategories()">
+                <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Subcategoria</th>
+                        <th>Descripción</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="c in Subcategories">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{c.Nombre}}</td>
+                        <td>{{c.Descripcion}}</td>
+                        <td class="pull-left">
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Categories", "UpdateSubcategory") == 1" data-ng-click="UpdateSubcategory(c.idSubcategoria)"><i class="fa fa-pencil color-red"></i></a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Categories", "DeleteSubcategory") == 1" data-ng-click="" ng-really-message="Está seguro que desea eliminar la subcategoría?" ng-really-click="DeleteSubcategory(c.idSubcategoria)"> <i class="fa fa-trash color-red"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

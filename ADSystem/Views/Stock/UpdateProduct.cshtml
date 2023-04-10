@@ -1,0 +1,199 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.ProductViewModel
+
+@{
+    ViewBag.Title = "Modificar Producto";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Products")"></script>
+<script type="text/javascript" src="http://beneposto.pl/jqueryrotate/js/jQueryRotateCompressed.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script type="text/javascript">
+  
+    var value = 0
+    $("#holder").rotate({
+        bind:
+          {
+              click: function () {
+                  value += 90;
+                  $(this).rotate({ animateTo: value })
+              }
+          }
+
+    });
+
+</script>
+<style>
+    #holder, #holderUrl {
+        width: 100%;
+        height: 350px;
+        border: 5px dashed gray;
+        border-radius: 8px;
+        background: rgb(230,230,230);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        vertical-align: central;
+        -webkit-transition: all 1s ease;
+    }
+</style>
+@{
+    string img1 = "../Content/Products/" + Model.NombreImagen + Model.Extension;
+    string img2 = Model.urlImagen;
+
+    //Session["idProduct"] = Model.idProducto;
+}
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modificar Producto</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="ProductsController" data-ng-init="iniUpdProduct('@Model.idProducto', '@Model.TipoImagen','@Model.NombreImagen')">
+
+        <img class="img-responsive center-block" src='@Url.Action("Barcode", "Products", new { pedido = Model.idProducto.ToString("D12") }, Request.Url.Scheme)' alt='Sample Barcode' />
+
+        <br />
+        <br />
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#step1" aria-controls="home" role="tab" data-toggle="tab">Generales</a></li>
+            <li role="presentation"><a href="#step2" aria-controls="profile" role="tab" data-toggle="tab">Proveedor</a></li>
+            <li role="presentation"><a href="#step3" aria-controls="messages" role="tab" data-toggle="tab">Descripción</a></li>
+            <li role="presentation"><a href="#step4" aria-controls="messages" role="tab" data-toggle="tab">Imagen</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="step1">
+                <section class="container-tab">
+                    <div class="form-group">
+                        <label>Código</label>
+                        <input type="text" maxlength="100" class="form-control" id="Code" data-ng-model="newProduct.Code" data-ng-init="newProduct.Code='@Model.Codigo'" placeholder="Escriba el código" uppercase />
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <input type="text" maxlength="250" class="form-control" id="Description" data-ng-model="newProduct.Description" data-ng-init="newProduct.Description='@Model.Descripcion'" placeholder="Escriba la descripción" uppercase />
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" maxlength="200" class="form-control" id="Name" data-ng-model="newProduct.Name" data-ng-init="newProduct.Name='@Model.Nombre'" placeholder="Escriba el nombre del producto" uppercase />
+                    </div>
+                    <div class="form-group">
+                        <label>Precio Venta</label>
+                        <input type="text" maxlength="9" class="form-control" id="SalePrice" data-ng-model="newProduct.SalePrice" data-ng-init="newProduct.SalePrice='@Model.PrecioVenta'" ng-currency placeholder="Escriba el precio de venta">
+                    </div>
+                </section>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="step2">
+                <section class="container-tab" data-ng-model="lBranches" data-ng-init="lBranches=@ViewBag.ProductBranch">
+
+                    <div class="form-group">
+                        <label>Proveedor</label>
+                        <select class="form-control" name="ProveedorId" id="ProveedorId" data-ng-model="newProduct.ProveedorId" data-ng-init="selectedProveedorId='@Model.idProveedor'" data-ng-options="option.Empresa for option in Providers"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select class="form-control" name="CategoryId" id="CategoryId" data-ng-model="newProduct.CategoryId" data-ng-init="selectedCategoryId='@Model.idCategoria'" ng-change="GetSubcategoriesUpdate(@Model.idCategoria)" data-ng-options="option.Nombre for option in Categories"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>SubCategoría</label>
+                        <select class="form-control" name="SubcategoryId" id="SubcategoryId" data-ng-model="newProduct.SubcategoryId" data-ng-init="selectedSubcategoryId='@Model.idSubcategoria'" data-ng-options="option.Nombre for option in Subcategories"></select>
+                    </div>
+                    <div class="form-group" data-ng-repeat="br in lBranches">
+                        <label>{{br.Sucursal}}</label>
+                        <input type="text" maxlength="4" class="form-control" data-ng-model="br.Existencia" placeholder="Escriba el núm. de existencias"/>
+                    </div>
+                </section>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="step3">
+                <section class="container-tab">
+                    <div class="form-group">
+                        <label>Color</label>
+                        <input type="text" maxlength="10" class="form-control" id="Color" data-ng-model="newProduct.Color" data-ng-init="newProduct.Color='@Model.Color'" placeholder="Escriba el color" uppercase />
+                    </div>
+                    <div class="form-group">
+                        <label>Material</label>
+                        <select class="form-control" name="MaterialId" id="MaterialId" data-ng-model="newProduct.MaterialId" data-ng-init="selectedMaterialId='@Model.idMaterial'" data-ng-options="option.Material for option in Materials"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Medida</label>
+                        <input type="text" maxlength="250" class="form-control" id="Measure" data-ng-model="newProduct.Measure" data-ng-init="newProduct.Measure='@Model.Medida'" placeholder="Escriba las medidas">
+                    </div>
+                    <div class="form-group">
+                        <label>Peso</label>
+                        <input type="text" maxlength="9" class="form-control" id="Weight" data-ng-model="newProduct.Weight" data-ng-init="newProduct.Weight='@Model.Peso'" placeholder="Escriba el peso en kilogramos">
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios</label>
+                        <textarea rows="4" cols="50" class="form-control" id="Comments" data-ng-model="newProduct.Comments" placeholder="Escriba comentarios" />
+                    </div>
+                </section>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="step4">
+                <section class="container-tab">
+
+                    <label>
+                        <input type="radio" ng-model="imgType" value="file">
+                        Desde Archivo
+                    </label>
+                    <label>
+                        <input type="radio" ng-model="imgType" value="url">
+                        Desde URL
+                    </label>
+                    <br /><br />
+
+                    <div id="file-content" class="table-responsive file">
+                        <center><label>Arrastre aqui el archivo de imagen que desea agregar</label></center>
+                        <div id="holder" class="" data-ng-model="rd" data-ng-click="RotateImage()">
+                            <img src="@img1" width="100%" height="100%" id="imgProduct">
+                        </div>
+                        <br />
+                        * Se permiten imagenes con formato PNG, JPEG y GIF
+                        <br /><br />
+                        <br /><br />
+                        <input type="button" id="loadImg" class="form-control" value="Cargar imagen de producto" data-ng-click="SaveUploadImg('UPD')" />
+                    </div>
+
+                    <div id="url-content" class="table-responsive url">
+                        <center><label>Arrastre aqui la imagen que desea agregar</label></center>
+                        <div id="holderUrl" class="">
+                            <img src="@img2" width="100%" height="100%" id="imgProductUpd">
+                        </div>
+                        <br />
+                        <input type="text" id="urlImagen" data-ng-model="newProduct.urlImagen" data-ng-init="newProduct.urlImagen='@Model.urlImagen'" style="display: none;">
+
+                    </div>
+
+                </section>
+            </div>
+        </div>
+        @Html.Raw(HtmlHelperExtension.Button("Products", "SaveUpdateProductStock", "SaveUpdateProductStock", "SaveUpdateProductStock", "Guardar", "", "", "SaveUpdateProductStock(" + Model.idProducto + "," + @ViewBag.idStock + "," + @ViewBag.idBranch + ")", "btn btn-primary", "Guardando..."))
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalMsg" aria-labelledby="modalReloadPage" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <span class="dial-text" id="msgModalMsg"></span>
+                    </div>
+                </div>
+                <div class="container-btn-modal center-block">
+                    <button type="button" class="btn confirmbutton-yes btn-danger btn-sm" data-dismiss="modal">Aceptar</button>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

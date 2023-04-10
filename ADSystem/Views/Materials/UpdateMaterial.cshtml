@@ -1,0 +1,30 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.MaterialViewModel
+
+@{
+    ViewBag.Title = "Material";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Materials")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modificar Material</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="MaterialsController">
+        <div class="form-group">
+            <label>Material</label>
+            <input type="text" maxlength="100" class="form-control" id="name" data-ng-model="newMaterial.Material" data-ng-init="newMaterial.Material='@Model.Material'" placeholder="Escriba el nombre del material" uppercase />
+        </div>     
+        @Html.Raw(HtmlHelperExtension.Button("Materials", "SaveUpdateMaterial", "SaveUpdateMaterial", "SaveUpdateMaterial", "Guardar", "", "", "SaveUpdateMaterial(" + Model.idMaterial + ")", "btn btn-primary", "Guardando..."))
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>
+

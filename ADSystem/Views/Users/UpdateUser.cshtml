@@ -1,0 +1,164 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Usuarios";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+
+<script type="text/javascript" src="@Url.Js("Class/Users")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-app="users">
+    <div class="panel-heading">
+        <h3 class="panel-title">Actualizar Usuario</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="UsersController" data-ng-init="getStates()">
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#step1" aria-controls="home" role="tab" data-toggle="tab">Nombre</a></li>
+            <li role="presentation"><a href="#step2" aria-controls="profile" role="tab" data-toggle="tab">Dirección</a></li>
+            <li role="presentation"><a href="#step3" aria-controls="messages" role="tab" data-toggle="tab">Contacto</a></li>
+            <li role="presentation"><a href="#step4" aria-controls="messages" role="tab" data-toggle="tab">Nivel Académico</a></li>
+            <li role="presentation"><a href="#step5" aria-controls="messages" role="tab" data-toggle="tab">Perfil</a></li>
+        </ul>
+        <form id="addUserForm">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="step1">
+                    <section class="container-tab">
+
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" maxlength="100" class="form-control" id="name" data-ng-model="newUserUpdate.Name" data-ng-init="newUserUpdate.Name='@Model.Nombre'" placeholder="Escriba el nombre del usuario" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Apellidos</label>
+                            <input type="text" maxlength="200" class="form-control" id="lastname" data-ng-model="newUserUpdate.LastName" data-ng-init="newUserUpdate.LastName='@Model.Apellidos'" placeholder="Escriba los apellidos del usuario" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de Nacimiento</label>
+                            <input type="text" class="form-control" id="dateBirth" datepicker-popup="{{format}}" data-ng-model="dateBirth" data-ng-init="dateBirth='@(Model.FechaNacimiento != null ? Model.FechaNacimiento.Value.ToString("MM/dd/yyyy") : String.Empty)'" is-open="openedBirth" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" ng-required="true" data-ng-click="openBirth($event)" show-button-bar="false" placeholder="Seleccione la fecha de nacimiento" readonly />
+                        </div>
+
+                    </section>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="step2">
+                    <section class="container-tab">
+
+                        <div class="form-group">
+                            <label>Calle</label>
+                            <input type="text" maxlength="100" class="form-control" id="street" data-ng-model="street" data-ng-init="street='@Model.Calle'" placeholder="Escriba la calle" uppercase />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Núm. Exterior</label>
+                            <input type="text" maxlength="6" class="form-control" id="extNum" data-ng-model="extNum" data-ng-init="extNum='@Model.NumExt'" placeholder="Escriba el número exterior" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Núm. Interior</label>
+                            <input type="text" maxlength="6" class="form-control" id="intNum" data-ng-model="intNum" data-ng-init="intNum='@Model.NumInt'" placeholder="Escriba el número interior" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Colonia</label>
+                            <input type="text" maxlength="300" class="form-control" id="district" data-ng-model="district" data-ng-init="district='@Model.Colonia'" placeholder="Escriba la colonia" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <select class="form-control" name="state" id="state" data-ng-model="state" data-ng-init="selectedState='@Model.idEstado'" data-ng-options="option.Estado for option in States" data-ng-change="getTowns()"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Municipio</label>
+                            <select class="form-control" name="town" id="town" data-ng-model="town" data-ng-init="selectedTown='@Model.idMunicipio'" data-ng-options="option.Municipio for option in Towns"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>CP</label>
+                            <input type="text" maxlength="5" class="form-control" id="CP" data-ng-model="CP" data-ng-init="CP='@Model.CP'" placeholder="Escriba el código postal" numbers-only="numbers-only">
+                        </div>
+                    </section>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="step3">
+                    <section class="container-tab">
+
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" maxlength="12" class="form-control" id="telephone" data-ng-model="telephone" data-ng-init="telephone='@Model.Telefono'" placeholder="Escriba el número de teléfono" numbers-only="numbers-only">
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono celular</label>
+                            <input type="text" maxlength="12" class="form-control" id="telCel" data-ng-model="telCel" data-ng-init="telCel='@Model.TelefonoCelular'" placeholder="Escriba el número de teléfono celular" numbers-only="numbers-only">
+                        </div>
+                        <div class="form-group">
+                            <label>Correo</label>
+                            <input type="text" maxlength="200" class="form-control" id="mail" data-ng-model="newUserUpdate.Mail" data-ng-init="newUserUpdate.Mail='@Model.Correo'" placeholder="Escriba el correo electrónico" uppercase />
+                        </div>
+                    </section>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="step4">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label class="radio-inline" data-ng-init="sex='@Model.Sexo'">
+                                <input type="radio" id="sex" data-ng-model="sex" value="H" data-ng-checked="'H' == '@Model.Sexo'"><label>Masculino</label>
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" id="sex" data-ng-model="sex" value="M" data-ng-checked="'M' == '@Model.Sexo'"><label>Femenino</label>
+                            </label>
+                        </div>
+                        <div class="form-group" data-ng-init="AcademicDegrees = @ViewBag.Academic">
+                            <label>Nivel academico</label>
+                            <select class="form-control" name="academicDegree" id="academicDegree" data-ng-model="academicDegree" data-ng-init="setSelecAcademicDegree(@Model.idNivelAcademico)" data-ng-options="option.NivelAcademico for option in AcademicDegrees"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Título</label>
+                            <input type="text" maxlength="120" class="form-control" id="grade" data-ng-model="grade" value="" data-ng-init="grade='@Model.titulo'" placeholder="Escriba el título academico" />
+                        </div>
+                    </section>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="step5" data-ng-init="getProfiles()">
+                    <section class="container-tab" data-ng-init="getBranches()">
+                        <div class="form-group">
+                            <label>Perfil</label>
+                            <select class="form-control" name="profile" id="profile" data-ng-model="newUserUpdate.Profile" data-ng-init="selectedProfile='@Model.idPerfil'" data-ng-options="option.Perfil for option in Profiles"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Vendedor</label>
+                            <input type="checkbox" class="form-control" style="height:18px;" id="seller" data-ng-model="seller" ng-true-value="1" ng-false-value="0" data-ng-init="seller = @Model.Ventas" data-ng-checked="1 == @Model.Ventas" />
+                        </div>
+                        <div class="form-group">
+                            <label>Facturar</label>
+                            <input type="checkbox" class="form-control" style="height:18px;" id="bill" data-ng-model="bill" ng-true-value="true" ng-false-value="false" data-ng-init="bill = (@Convert.ToUInt32(Model.Facturar) == 1)? true: false" data-ng-checked="1 == @Convert.ToUInt32(Model.Facturar)" />
+                        </div>
+                        <div class="form-group">
+                            <label>Restringido</label>
+                            <input type="checkbox" class="form-control" style="height:18px;" id="restricted" data-ng-model="restricted" ng-true-value="1" ng-false-value="0" data-ng-init="restricted = @Model.Restringido" data-ng-checked="1 == @Model.Restringido" />
+                        </div>
+                        <div class="form-group">
+                            <label>Atencion de ticket</label>
+                            <input type="checkbox" class="form-control" style="height:18px;" id="attentionTicket" data-ng-model="attentionTicket" ng-true-value="true" ng-false-value="false" data-ng-init="attentionTicket = (@Convert.ToUInt32(Model.AtencionTicket) == 1)? true: false" data-ng-checked="1 == @Convert.ToUInt32(Model.AtencionTicket)" />
+                        </div>
+                        <div class="form-group">
+                            <label>Sucursal</label>
+                            <select class="form-control" name="branch" id="branch" data-ng-model="newUserUpdate.Branch" data-ng-init="selectedBranch='@Model.Sucursal.idSucursal'" data-ng-options="option.Nombre for option in Branches"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de Ingreso</label>
+                            <input type="text" class="form-control" id="dateInput" datepicker-popup="{{format}}" data-ng-model="dateInput" data-ng-init="dateInput='@(Model.FechaIngreso != null ? Model.FechaIngreso.Value.ToString("MM/dd/yyyy") : String.Empty)'" is-open="openedInput" min-date="'1985-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openInput($event)" show-button-bar="false" placeholder="Escriba la fecha de ingreso" />
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+        </form>
+        @Html.Raw(HtmlHelperExtension.Button("Users", "SaveUpdateUser", "SaveUpdateUser", "SaveUpdateUser", "Guardar", "", "", "SaveUpdateUser(" + Model.idUsuario + ")", "btn btn-primary", "Guardando..."))
+
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>

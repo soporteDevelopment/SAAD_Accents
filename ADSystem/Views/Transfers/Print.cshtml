@@ -1,0 +1,137 @@
+﻿
+@using System.Web.MVC;
+@using System.Globalization;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.TransferViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>TRANSFERENCIA @Model.Numero</title>
+    <link href="~/Content/Print/css/print.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700" rel="stylesheet">
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("lodash.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angucomplete")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/Transfers/Print")"></script>
+    <script type="text/javascript" src="@Url.Js("ngProgress")"></script>
+    <script type="text/javascript" src="@Url.Js("acute.select")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-animate.min")"></script>
+    <script type="text/javascript" src="@Url.Js("toaster")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-currency")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-filter")"></script>
+
+</head>
+
+<body data-ng-app="General" data-ng-controller="GeneralController">
+    <div class="contenedor">
+        <table style="width: 100%; padding: 20px 0 5px 0;">
+            <tr>
+                <th style="width: 30%;"></th>
+                <th style="width: 30%;">
+                    <img style="width: 300px;" src="@Url.Img("print/logotipo.png")">
+                </th>
+                <th class="folio" style="width: 30%; padding-right: 20px;">Transferencia: <strong>@Model.Numero</strong></th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border-bottom: 1px solid #D4D4D4; padding: 20px; text-align: center;">
+            <tr>
+                <td class="txt-data" style="width: 30%; text-align: left;">Sucursal Origen:<strong> @Model.SucursalOrigen</strong></td>
+                <td class="txt-data">|</td>
+                <td class="txt-data" style="width: 30%;">Sucursal Destino:<strong>@Model.SucursalDestino</strong></td>
+                <td class="txt-data">|</td>
+                <td class="txt-data" style="width: 30%; text-align: right;">Fecha:<strong>@Model.Fecha</strong></td>
+            </tr>
+        </table>
+
+        <table style="width: 100%; padding: 10px; border-bottom: 2px solid #000;">
+            <tr>
+                <th style="width: 31%;">
+                    <div class="circulo-left"></div>
+                </th>
+                <th class="titulos" style="width: 30%; text-align: center;">TRANSFERENCIA</th>
+                <th style="width: 31%;">
+                    <div class="circulo-right"></div>
+                </th>
+            </tr>
+        </table>
+        
+        <table style="width: 100%; padding: 20px 0 3px 0">
+            <tr>
+                <th class="subtitulos">
+                    DETALLE DE LA TRANSFERENCIA
+                </th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border: 1px solid #D4D4D4; border-radius: 5px; padding: 10px; text-align: center;">
+            <tr>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        IMAGEN
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        CÓDIGO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        DESCRIPCIÓN
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        CANT.
+                    </strong>
+                </th>               
+            </tr>
+        </table>
+
+        <section class="tb-productos" data-ng-controller="PrintTransfer" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.lDetail))">
+            <table style="width: 100%; text-align: left;">
+                <tr ng-repeat-start="item in items" ng-class="{'border-bottom': item.Comentarios == null}">
+                    <td class="imagen-producto" style="width: 25%;">
+                        <img src="{{item.Imagen}}">
+                    </td>
+                    <td class="txt-data" style="width: 25%;">
+                        {{item.Codigo}}
+                    </td>
+                    <td class="txt-data" style="width: 25%;">
+                        {{item.Descripcion}}
+                    </td>
+                    <td class="txt-data" style="width: 25%;text-align: center;">
+                        {{item.Cantidad}}
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="item.Comentarios.length > 0" ng-class="{'border-bottom-left': item.Comentarios.length > 0}">
+                    <td class="comentarios-producto" colspan="8" style="width: 100%;">
+                        <strong>COMENTARIOS:</strong> {{item.Comentarios}}
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <div class="footer">
+            <p>Río Amazonas 305 Ote. Col. del Valle San Pedro, Garza Garcia, N. L. CP: 66220, Tel. (81) 8356 9558, www.acentsdecoration.com, RFC: ADE050128252</p>
+        </div>
+    </div>
+</body>
+</html>

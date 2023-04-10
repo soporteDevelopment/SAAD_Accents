@@ -1,0 +1,74 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Perfiles";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Profiles")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Perfiles</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="ProfilesController">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Perfil</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="p in Profiles">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{p.Perfil}}</td>
+                        <td class="pull-left"><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Profiles", "UpdateProfile") == 1" data-ng-click="UpdateProfile(p.idPerfil)"><i class="fa fa-pencil color-red"></i></a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+

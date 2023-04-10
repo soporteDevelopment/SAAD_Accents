@@ -1,0 +1,146 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.PhysicalCustomerViewModel
+
+@{
+    ViewBag.Title = "Modificar Cliente Fisico";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Customers")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modificar Cliente Fisico</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CustomersController" data-ng-init="getStates('F')">
+        <code ng-show="!addPhysicalCustomerForm.$valid">Revise la información</code><br>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#step1" aria-controls="home" role="tab" data-toggle="tab">Datos Generales</a></li>
+            <li role="presentation"><a href="#step2" aria-controls="profile" role="tab" data-toggle="tab">Dirección</a></li>
+            <li role="presentation"><a href="#step3" aria-controls="messages" role="tab" data-toggle="tab">Datos Extra</a></li>
+        </ul>
+        <form id="addPhysicalCustomerForm" name="addPhysicalCustomerForm">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="step1">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" maxlength="100" class="form-control" id="Name" name="Name" data-ng-model="newPhysicalCustomer.Name" data-ng-init="newPhysicalCustomer.Name='@Model.Nombre'" placeholder="Escriba el nombre del cliente" required uppercase />
+                            <code class="has-error" ng-show="addPhysicalCustomerForm.Name.$error.required">Requerido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label>Apellidos</label>
+                            <input type="text" maxlength="200" class="form-control" id="LastName" data-ng-model="newPhysicalCustomer.LastName" data-ng-init="newPhysicalCustomer.LastName='@Model.Apellidos'" placeholder="Escriba los apellidos del cliente" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de nacimiento</label>
+                            <input type="text" maxlength="100" class="form-control" readonly id="Birthday" data-ng-model="newPhysicalCustomer.Birthday" datepicker-popup="{{format}}" data-ng-init="newPhysicalCustomer.Birthday='@(Model.FechaNacimiento != null ? Model.FechaNacimiento.Value.ToString("MM/dd/yyyy") : String.Empty)'" is-open="opened" datepicker-options="dateOptions" data-ng-click="open($event)" show-button-bar="false" placeholder="Seleccione la fecha de nacimiento del cliente" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Sexo</label>
+                            <select class="form-control" name="Street" id="Genre" data-ng-model="newPhysicalCustomer.Genre" data-ng-init="SelectedGenre='@Model.Sexo'" data-ng-options="option.name for option in GenresData"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Correo</label>
+                            <input type="text" maxlength="200" class="form-control" id="Mail" name="Mail" data-ng-model="newPhysicalCustomer.Mail" data-ng-init="newPhysicalCustomer.Mail='@Model.Correo'" placeholder="Escriba el correo del cliente" uppercase required />
+                            <code class="has-error" ng-show="addPhysicalCustomerForm.Mail.$error.required">Requerido!</code>
+                            <code class="has-error" ng-show="addPhysicalCustomerForm.Mail.$error.email">Email invalido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono Celular</label>
+                            <input type="text" maxlength="12" class="form-control" id="CelPhone" name="CelPhone" data-ng-model="newPhysicalCustomer.CelPhone" data-ng-init="newPhysicalCustomer.CelPhone='@Model.TelefonoCelular'" placeholder="Escriba el teléfono celular del cliente" numbers-only="numbers-only" required>
+                            <code class="has-error" ng-show="addPhysicalCustomerForm.CelPhone.$error.required">Requerido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" maxlength="12" class="form-control" id="Phone" data-ng-model="newPhysicalCustomer.Phone" data-ng-init="newPhysicalCustomer.Phone='@Model.Telefono'" placeholder="Escriba el teléfono del cliente" numbers-only="numbers-only">
+                        </div>
+                    </section>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="step2">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label>Calle</label>
+                            <input type="text" maxlength="100" class="form-control" id="Street" data-ng-model="newPhysicalCustomer.Street" data-ng-init="newPhysicalCustomer.Street='@Model.Calle'" placeholder="Escriba la calle" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Num Exterior</label>
+                            <input type="text" maxlength="6" class="form-control" id="OutNumber" data-ng-model="newPhysicalCustomer.OutNumber" data-ng-init="newPhysicalCustomer.OutNumber='@Model.NumExt'" placeholder="Escriba el número exterior" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Num Interior</label>
+                            <input type="text" maxlength="6" class="form-control" id="IntNumber" data-ng-model="newPhysicalCustomer.IntNumber" data-ng-init="newPhysicalCustomer.IntNumber='@Model.NumInt'" placeholder="Escriba el número interior" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Colonia</label>
+                            <input type="text" maxlength="300" class="form-control" id="Suburb" data-ng-model="newPhysicalCustomer.Suburb" data-ng-init="newPhysicalCustomer.Suburb='@Model.Colonia'" placeholder="Escriba la colonia" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <select class="form-control" name="state" id="state" data-ng-model="state" data-ng-init="selectedState='@Model.idEstado'" data-ng-options="option.Estado for option in States" data-ng-change="getTowns('F')"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Municipio</label>
+                            <select class="form-control" name="Town" id="Town" data-ng-model="newPhysicalCustomer.Town" data-ng-init="selectedTown='@Model.idMunicipio'" data-ng-options="option.Municipio for option in Towns"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>CP</label>
+                            <input type="text" maxlength="5" class="form-control" id="PC" data-ng-model="newPhysicalCustomer.PC" data-ng-init="newPhysicalCustomer.PC='@Model.CP'" placeholder="Escriba el código postal" numbers-only="numbers-only">
+                        </div>
+                    </section>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="step3">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label>Número de IFE</label>
+                            <input type="text" maxlength="100" class="form-control" id="CardId" data-ng-model="newPhysicalCustomer.CardId" data-ng-init="newPhysicalCustomer.CardId='@Model.NoIFE'" placeholder="Escriba el número de IFE del cliente" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>RFC</label>
+                            <input type="text" maxlength="16" class="form-control" id="RFC" data-ng-model="newPhysicalCustomer.RFC" data-ng-init="newPhysicalCustomer.RFC='@Model.RFC'" placeholder="Escriba el RFC del cliente" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Crédito</label>
+                            <input type="checkbox" id="Credit" data-ng-model="newPhysicalCustomer.Credit" data-ng-init="newPhysicalCustomer.Credit = @Model.Credito" ng-true-value="1" ng-false-value="0" data-ng-checked="1 == @Model.Credito" />
+                        </div>
+                        <div class="form-group">
+                            <label>Plazo</label>
+                            <select class="form-control" name="state" id="TimeOfCredit" data-ng-model="newPhysicalCustomer.TimeOfCredit" data-ng-options="option as option for option in months" data-ng-init="selectedTimeOfCreditPhysical(@Model.Plazo)"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Límite Crédito</label>
+                            <input type="text" maxlength="9" class="form-control" id="CreditLimit" data-ng-model="newPhysicalCustomer.CreditLimit" data-ng-init="newPhysicalCustomer.CreditLimit='@Model.LimiteCredito'" ng-currency placeholder="Escriba el límite de crédito" numbers-only="numbers-only" />
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre Intermediario</label>
+                            <input type="text" maxlength="200" class="form-control" id="IntermediaryName" data-ng-model="newPhysicalCustomer.IntermediaryName" data-ng-init="newPhysicalCustomer.IntermediaryName='@Model.NombreIntermediario'" placeholder="Escriba el nombre del intermediario del cliente" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono Intermediario</label>
+                            <input type="text" maxlength="15" class="form-control" id="IntermediaryPhone" data-ng-model="newPhysicalCustomer.IntermediaryPhone" data-ng-init="newPhysicalCustomer.IntermediaryPhone='@Model.TelefonoIntermediario'" placeholder="Escriba el teléfono del intermediario del cliente" numbers-only="numbers-only" />
+                        </div>
+                        <div class="form-group" data-ng-init="getOriginCustomer()">
+                            <label>Origen</label>
+                            <select class="form-control" id="idOrigin" name="idOrigin" data-ng-model="newPhysicalCustomer.idOrigin" data-ng-init="newPhysicalCustomer.idOrigin = @Model.idOrigen" data-ng-options="option.idOrigen as option.Origen for option in origins" required>
+                                <option value="">Seleccione</option>
+                            </select>
+                            <code class="has-error" ng-show="addPhysicalCustomerForm.idOrigin.$error.required">Requerido!</code>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </form>
+
+        @Html.Raw(HtmlHelperExtension.Button("Customers", "UpdatePhysicalCustomer", "UpdatePhysicalCustomer", "UpdatePhysicalCustomer", "Guardar", "", "", "SaveUpdatePhysical(" + Model.idCliente + ")", "btn btn-primary", "Guardando..."))
+
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>

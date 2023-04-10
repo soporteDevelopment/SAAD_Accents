@@ -1,0 +1,79 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Categorías";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/CatalogCategory/Add")"></script>
+<style>
+    #holder {
+        /*margin: 10px;*/
+        width: 100%;
+        height: 350px;
+        border: 5px dashed gray;
+        border-radius: 8px;
+        background: rgb(230,230,230);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        vertical-align: central;
+    }
+</style>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Categoría</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CategoriesController">
+        <div class="form-group">
+            <label>Categoría</label>
+            <input type="text" maxlength="100" class="form-control" id="name" data-ng-model="newCategory.name" placeholder="Escriba el nombre de la categoría" uppercase />
+        </div>
+        <br />
+        <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" maxlength="250" class="form-control" id="description" data-ng-model="newCategory.description" placeholder="Escriba la descripción de la categoría" uppercase />
+        </div>
+        <section class="container-tab" data-ng-init="fileMethod()">
+            <br /><br />
+            <div id="file-content" class="table-responsive file">
+                <center><label>Arrastre aquí el archivo de imagen que desea agregar</label></center>
+                <div id="holder" class=""></div>
+                <br />
+                * Se permiten imágenes con formato PNG, JPEG y GIF
+                <br /><br />
+                <br /><br />
+                <input type="hidden" id="imgName" />
+            </div>
+        </section>
+        @Html.Raw(HtmlHelperExtension.Button("Categories", "SaveAddCategory", "SaveAddCategory", "SaveAddCategory", "Guardar", "", "", "SaveAddCategory()", "btn btn-primary", "Guardando..."))
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalMsg" aria-labelledby="modalReloadPage" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <span class="dial-text" id="msgModalMsg"></span>
+                        </div>
+                    </div>
+                    <div class="container-btn-modal center-block">
+                        <button type="button" class="btn confirmbutton-yes btn-danger btn-sm" data-dismiss="modal">Aceptar</button>
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

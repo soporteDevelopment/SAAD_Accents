@@ -1,0 +1,59 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Área Metropolitana";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/MetropolitanAreas/Index")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Área Metropolitana</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="MetropolitanAreasController">
+        <div class="table-responsive" ng-init="init()">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Municipio</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat">
+                        <td>
+                            <select data-ng-model="idState" data-ng-options="state.idEstado as state.Estado for state in states" data-ng-change="getTowns()">
+                                <option value="">Seleccione</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select data-ng-model="idTown" data-ng-options="town.idMunicipio as town.Municipio for town in towns">
+                                <option value="">Seleccione</option>
+                            </select>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" data-ng-click="saveMetropolitanArea()" title="Guardar" data-ng-hide="saving"><i class="fa fa-floppy-o fa-2 color-red" style="left: 0px;"></i></a>
+                        </td>
+                    </tr>
+                    <tr class="animate-repeat" data-ng-repeat="metropolitanArea in metropolitanAreas">
+                        <td>
+                            {{metropolitanArea.Municipio.Estado.Estado}}
+                        </td>
+                        <td>
+                            {{metropolitanArea.Municipio.Municipio}}
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" data-ng-click="deleteMetropolitanArea(metropolitanArea.idAreaMetropolitana)" title="Eliminar"><i class="fa2 fa-trash color-red" style="left: 0px;"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

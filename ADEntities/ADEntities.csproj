@@ -1,0 +1,873 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9EFDFEBC-EEB0-44B0-ABB0-72F9EE431538}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ADEntities</RootNamespace>
+    <AssemblyName>ADEntities</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DataBase\Feature\Script.sql" />
+    <Content Include="Global.asax" />
+    <Content Include="Models\SAADContext.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SAADContext.edmx</DependentUpon>
+      <LastGenOutput>SAADContext.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\SAADContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SAADContext.edmx</DependentUpon>
+      <LastGenOutput>SAADContext.cs</LastGenOutput>
+    </Content>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\FormattedDbEntityValidationException.cs" />
+    <Compile Include="Converts\Banners.cs" />
+    <Compile Include="Converts\BranchCatalogs.cs" />
+    <Compile Include="Converts\Catalogs.cs" />
+    <Compile Include="Converts\Commissions.cs" />
+    <Compile Include="Converts\CreditNotes.cs" />
+    <Compile Include="Converts\Egresses.cs" />
+    <Compile Include="Converts\Entries.cs" />
+    <Compile Include="Converts\MetropolitanAreas.cs" />
+    <Compile Include="Converts\Repairs.cs" />
+    <Compile Include="Converts\ReportEntries.cs" />
+    <Compile Include="Converts\SalesOnLine.cs" />
+    <Compile Include="Enums\CustomerType.cs" />
+    <Compile Include="Enums\OrderDateType.cs" />
+    <Compile Include="Enums\OriginCurrency.cs" />
+    <Compile Include="Enums\OriginSale.cs" />
+    <Compile Include="Enums\QuotationType.cs" />
+    <Compile Include="Enums\StatusCatalogView.cs" />
+    <Compile Include="Enums\StatusViewDetail.cs" />
+    <Compile Include="Enums\CreditNoteType.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CorteDiario_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CotizacionesVentas_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetAniversaries_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetBirthDays_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetEvents_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPendingsTransfers_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetPendingsViews_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetUsers_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\InventarioPorDia_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ObtenerOrigenClientes_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ObtenerProductosFechaCompra_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SAADContext.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SAADContext.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SAADContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SAADContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SAADContext.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SalidasVista_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tAccione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tActividadVendedore.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tAreaMetropolitana.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tAtencionCliente.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tBanner.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tBitacoraProducto.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tBitacoraProductosInventario.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tBorradorDetalleVenta.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tBorradorDetalleVista.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tBorradorServicioVista.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tBorradorVenta.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tBorradorVista.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCantidadProductosOrden.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCarrito.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogo.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoCategoria.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoCuentaBanco.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoDetalleDevolucion.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoDetalleVista.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoMarca.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoProveedor.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoSubcategoria.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoSucursal.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoTipoTerminale.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCatalogoVista.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCategoria.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tClientesFisico.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tClientesMorale.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tClientesTiendaVirtual.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tComisione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tControle.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCotizacion.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCotizacionDetalle.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCuenta.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCuentaBancariaINT.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tCuentaBancariaMXN.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDatosFacturacion.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDescuento.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDespacho.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleCarrito.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleCredito.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleDevolucione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleHistoricoComisione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleMesaRegalo.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetallePedido.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetallePromocion.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleRecepcion.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleReparacione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleTransferencia.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleVenta.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleVentaEnLinea.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleVentaMesaRegalo.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDetalleVista.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tDistribucionVentaEnLinea.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tEmpresa.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tEntrada.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tErrore.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tEstado.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tEstatusTicket.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tEstatusVentasEnLinea.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tEvento.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tFacturacionTiendaVirtual.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tFormaPago.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tFormaPagoCredito.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tFormaPagoMesaRegalo.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tHistorialCredito.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tHistoricoComisione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tHistoricoRecepcion.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tHistoricoReparacione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tHistoricoTransferencia.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tInventario.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tMarca.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tMateriale.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tMesaRegalo.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tMunicipio.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tNacionalidad.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tNivelAcademico.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tNotasCredito.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tOrden.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tOrdenProducto.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tOrigenCliente.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tOrigenVenta.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tPagoMes.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tPedido.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tPerfilAccione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tPerfile.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tPrioridadTicket.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tProducto.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tProductosInventario.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tProductosSucursal.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tPromocione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tProveedore.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tRecepcione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tReparacione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tReporteCaja.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tReporteComisionesEspeciale.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tReporteDiarioInventario.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tReporteVentasComisione.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tReporteVentasComisionesDespacho.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tRespaldoDetalleVentaEnLinea.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tRespaldoDiarioInventario.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tRespaldoProductosSucursal.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tRespaldoVentasEnLinea.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tSalida.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tServicio.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tServicioVista.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tSubcategoria.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tSucursale.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tTicket.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tTipoCotizacion.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tTipoEntrega.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tTipoMoneda.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tTipoNotaCredito.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tTipoPromocion.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tTipoTicket.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tTransferencia.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tUsuario.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tUsuarioEvento.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tVenta.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tVentaMesaRegalo.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tVentasEnLinea.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tVista.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VentasCategorias_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VentasCredito_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VentasProductos_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VentasServicios_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VentasTipoCliente_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VentasTotalesPorVendedor_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VentasTotales_Result.cs">
+      <DependentUpon>SAADContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\Actions.cs" />
+    <Compile Include="Queries\Banners.cs" />
+    <Compile Include="Queries\Base.cs" />
+    <Compile Include="Queries\Binnacle.cs" />
+    <Compile Include="Queries\BranchCatalogs.cs" />
+    <Compile Include="Queries\Branches.cs" />
+    <Compile Include="Queries\Brands.cs" />
+    <Compile Include="Queries\CatalogCategory.cs" />
+    <Compile Include="Queries\Catalogs.cs" />
+    <Compile Include="Queries\CatalogSubcategory.cs" />
+    <Compile Include="Queries\Commissions.cs" />
+    <Compile Include="Queries\CreditHistory.cs" />
+    <Compile Include="Queries\Credits.cs" />
+    <Compile Include="Queries\CustomersVirtualStore.cs" />
+    <Compile Include="Queries\DailyCutting.cs" />
+    <Compile Include="Queries\Discounts.cs" />
+    <Compile Include="Queries\Egresses.cs" />
+    <Compile Include="Queries\Entries.cs" />
+    <Compile Include="Queries\EraserOutProducts.cs" />
+    <Compile Include="Queries\Events.cs" />
+    <Compile Include="Queries\GiftsTable.cs" />
+    <Compile Include="Queries\IRepository\IBaseRepository.cs" />
+    <Compile Include="Queries\IRepository\IBranchOfficeRepository.cs" />
+    <Compile Include="Queries\IRepository\ICatalogBankAccountRepository.cs" />
+    <Compile Include="Queries\IRepository\ICatalogDetailDevolutionRepository.cs" />
+    <Compile Include="Queries\IRepository\ICatalogDetailViewRepository.cs" />
+    <Compile Include="Queries\IRepository\IBranchRepository.cs" />
+    <Compile Include="Queries\IRepository\ICatalogBrandRepository.cs" />
+    <Compile Include="Queries\IRepository\ICatalogTerminalTypeRepository.cs" />
+    <Compile Include="Queries\IRepository\ISubcategoryRepository.cs" />
+    <Compile Include="Queries\IRepository\ICategoryRepository.cs" />
+    <Compile Include="Queries\IRepository\IPriorityTicketRepository.cs" />
+    <Compile Include="Queries\IRepository\IStatusTicketRepository.cs" />
+    <Compile Include="Queries\IRepository\ICustomerOriginRepository.cs" />
+    <Compile Include="Queries\IRepository\IPaymentMonthRepository.cs" />
+    <Compile Include="Queries\IRepository\ICatalogViewRepository.cs" />
+    <Compile Include="Queries\IRepository\ICatalogProviderRepository.cs" />
+    <Compile Include="Queries\IRepository\ITicketsRepository.cs" />
+    <Compile Include="Queries\IRepository\ITypeTicketRepository.cs" />
+    <Compile Include="Queries\MetropolitanAreas.cs" />
+    <Compile Include="Queries\Payments.cs" />
+    <Compile Include="Queries\Promotions.cs" />
+    <Compile Include="Queries\Quotations.cs" />
+    <Compile Include="Queries\EraserSales.cs" />
+    <Compile Include="Queries\Offices.cs" />
+    <Compile Include="Queries\MoralCustomers.cs" />
+    <Compile Include="Queries\Orders.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Queries\OutProducts.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Queries\PhysicalCustomers.cs" />
+    <Compile Include="Queries\Receptions.cs" />
+    <Compile Include="Queries\Repairs.cs" />
+    <Compile Include="Queries\ReportEntries.cs" />
+    <Compile Include="Queries\Reports.cs" />
+    <Compile Include="Queries\Repository\BaseRepository.cs" />
+    <Compile Include="Queries\Repository\BranchOfficeRepository.cs" />
+    <Compile Include="Queries\Repository\BranchRepository.cs" />
+    <Compile Include="Queries\Repository\CatalogBankAccountRepository.cs" />
+    <Compile Include="Queries\Repository\CatalogDetailDevolutionRepository.cs" />
+    <Compile Include="Queries\Repository\CatalogDetailViewRepository.cs" />
+    <Compile Include="Queries\Repository\CatalogBrandRepository.cs" />
+    <Compile Include="Queries\Repository\CatalogTerminalTypeRepository.cs" />
+    <Compile Include="Queries\Repository\CategoryRepository.cs" />
+    <Compile Include="Queries\Repository\PriorityTicketRepository.cs" />
+    <Compile Include="Queries\Repository\CustomerOriginRepository.cs" />
+    <Compile Include="Queries\Repository\PaymentMonthRepository.cs" />
+    <Compile Include="Queries\Repository\CatalogViewRepository.cs" />
+    <Compile Include="Queries\Repository\CatalogProviderRepository.cs" />
+    <Compile Include="Queries\Repository\StatusTicketRepository.cs" />
+    <Compile Include="Queries\Repository\SubcategoryRepository.cs" />
+    <Compile Include="Queries\Repository\TicketsRepository.cs" />
+    <Compile Include="Queries\Repository\TypeTicketRepository.cs" />
+    <Compile Include="Queries\Sales.cs" />
+    <Compile Include="Queries\SalesOnLine.cs" />
+    <Compile Include="Queries\SalesReport.cs" />
+    <Compile Include="Queries\Services.cs" />
+    <Compile Include="Queries\ShoppingCarts.cs" />
+    <Compile Include="Queries\States.cs" />
+    <Compile Include="Queries\Materials.cs" />
+    <Compile Include="Queries\Profiles.cs" />
+    <Compile Include="Queries\Provider.cs" />
+    <Compile Include="Queries\Products.cs" />
+    <Compile Include="Queries\Stocks.cs" />
+    <Compile Include="Queries\SubCategories.cs" />
+    <Compile Include="Queries\Categories.cs" />
+    <Compile Include="Queries\Controllers.cs" />
+    <Compile Include="Queries\Transfers.cs" />
+    <Compile Include="Queries\TypePromotions.cs" />
+    <Compile Include="Queries\TypesGeneric\StatusShoppingCart.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesAction.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesBanners.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesBranch.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesCard.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesCatalogProvider.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesCategory.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesCredit.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesCustomers.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesGiftsTable.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesIntelligence.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesModule.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesOrder.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesOutProducts.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesPayment.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesProduct.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesProfile.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesPromotions.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesProvider.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesQuotations.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesRepairs.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesSales.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesStock.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesReceptions.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesTransfers.cs" />
+    <Compile Include="Queries\TypesGeneric\TypesUser.cs" />
+    <Compile Include="Queries\UnifiedQuotations.cs" />
+    <Compile Include="Queries\UserEvent.cs" />
+    <Compile Include="Queries\Users.cs" />
+    <Compile Include="ViewModels\AcademicDegreeViewModel.cs" />
+    <Compile Include="ViewModels\AccountViewModel.cs" />
+    <Compile Include="ViewModels\ActionsControllerViewModel.cs" />
+    <Compile Include="ViewModels\ActionViewModel.cs" />
+    <Compile Include="ViewModels\ActivityViewModel.cs" />
+    <Compile Include="ViewModels\AddressViewModel.cs" />
+    <Compile Include="ViewModels\AttentionClientViewModel.cs" />
+    <Compile Include="ViewModels\AuthorizeTicketViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\BranchCatalogViewModel.cs" />
+    <Compile Include="ViewModels\BranchOfficeViewModel.cs" />
+    <Compile Include="ViewModels\CatalogBankAccountViewModel.cs" />
+    <Compile Include="ViewModels\CatalogBrandFilterViewModel.cs" />
+    <Compile Include="ViewModels\CatalogDetailDevolutionViewModel.cs" />
+    <Compile Include="ViewModels\CatalogDetailViewViewModel.cs" />
+    <Compile Include="ViewModels\CatalogProviderFilterViewModel.cs" />
+    <Compile Include="ViewModels\CatalogProviderViewModel.cs" />
+    <Compile Include="ViewModels\CatalogTerminalTypeViewModel.cs" />
+    <Compile Include="ViewModels\CatalogTicketViewModel.cs" />
+    <Compile Include="ViewModels\CatalogViewFilterViewModel.cs" />
+    <Compile Include="ViewModels\CatalogViewPrintViewModel.cs" />
+    <Compile Include="ViewModels\CatalogViewViewModel.cs" />
+    <Compile Include="ViewModels\CoinTypeViewModel.cs" />
+    <Compile Include="ViewModels\CreditNoteRequestViewModel.cs" />
+    <Compile Include="ViewModels\CreditNoteTypeViewModel.cs" />
+    <Compile Include="ViewModels\CustomerOnLineViewModel.cs" />
+    <Compile Include="ViewModels\DailyCuttingViewModel.cs" />
+    <Compile Include="ViewModels\DetailSaleOnLineViewModel.cs" />
+    <Compile Include="ViewModels\DistributionDetailSaleOnLineCartViewModel.cs" />
+    <Compile Include="ViewModels\DistributionViewModel.cs" />
+    <Compile Include="ViewModels\MetropolitanAreaViewModel.cs" />
+    <Compile Include="ViewModels\CustomerOriginViewModel.cs" />
+    <Compile Include="ViewModels\PriorityTicketViewModel.cs" />
+    <Compile Include="ViewModels\SaleOriginViewModel.cs" />
+    <Compile Include="ViewModels\PaymentCreditNoteViewModel.cs" />
+    <Compile Include="ViewModels\PaymentEntryViewModel.cs" />
+    <Compile Include="ViewModels\PaymentMothViewModel.cs" />
+    <Compile Include="ViewModels\SaleOnLineViewModel.cs" />
+    <Compile Include="ViewModels\TerminalBankViewModel.cs" />
+    <Compile Include="ViewModels\TicketViewModel.cs" />
+    <Compile Include="ViewModels\StockCatalogViewModel.cs" />
+    <Compile Include="ViewModels\StatusTicketViewModel.cs" />
+    <Compile Include="ViewModels\TypeTicketViewModel.cs" />
+    <Compile Include="ViewModels\VirtualStore\AddressViewModel.cs" />
+    <Compile Include="ViewModels\VirtualStore\BannerViewModel.cs" />
+    <Compile Include="ViewModels\BillViewModel.cs" />
+    <Compile Include="ViewModels\BinnacleViewModel.cs" />
+    <Compile Include="ViewModels\BranchStoreViewModel.cs" />
+    <Compile Include="ViewModels\BrandViewModel.cs" />
+    <Compile Include="ViewModels\CatalogViewModel.cs" />
+    <Compile Include="ViewModels\CategoryCatalogViewModel.cs" />
+    <Compile Include="ViewModels\CategoryViewModel.cs" />
+    <Compile Include="ViewModels\CommissionsSalesOfficesViewModel.cs" />
+    <Compile Include="ViewModels\CommissionsSalesViewModel.cs" />
+    <Compile Include="ViewModels\CommissionViewModel.cs" />
+    <Compile Include="ViewModels\CompanyViewModel.cs" />
+    <Compile Include="ViewModels\ControllerViewModel.cs" />
+    <Compile Include="ViewModels\CatalogBrandViewModel.cs" />
+    <Compile Include="ViewModels\VirtualStore\CustomerVirtualStoreViewModel.cs" />
+    <Compile Include="ViewModels\CreditDetailViewModel.cs" />
+    <Compile Include="ViewModels\CreditHistoryViewModel.cs" />
+    <Compile Include="ViewModels\CreditNoteViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModel.cs" />
+    <Compile Include="ViewModels\DetailDevOutProductViewModel.cs" />
+    <Compile Include="ViewModels\DetailGiftsTableViewModel.cs" />
+    <Compile Include="ViewModels\DetailPercentageViewModel.cs" />
+    <Compile Include="ViewModels\DetailProductPromotionViewModel.cs" />
+    <Compile Include="ViewModels\DetailPromotionViewModel.cs" />
+    <Compile Include="ViewModels\DetailQuotationViewModel.cs" />
+    <Compile Include="ViewModels\DetailReceptionViewModel.cs" />
+    <Compile Include="ViewModels\DetailSaleGiftsTable.cs" />
+    <Compile Include="ViewModels\DetailTransferViewModel.cs" />
+    <Compile Include="ViewModels\EgressViewModel.cs" />
+    <Compile Include="ViewModels\EntryViewModel.cs" />
+    <Compile Include="ViewModels\EventViewModel.cs" />
+    <Compile Include="ViewModels\GiftsTableViewModel.cs" />
+    <Compile Include="ViewModels\InformationStockViewModel.cs" />
+    <Compile Include="ViewModels\INTBankAccountViewModel.cs" />
+    <Compile Include="ViewModels\IntermediaryViewModel.cs" />
+    <Compile Include="ViewModels\InternalEgressViewModel.cs" />
+    <Compile Include="ViewModels\MaterialViewModel.cs" />
+    <Compile Include="ViewModels\MethodOfPaymentViewModel.cs" />
+    <Compile Include="ViewModels\MoralCustomerViewModel.cs" />
+    <Compile Include="ViewModels\MXNBankAccountViewModel.cs" />
+    <Compile Include="ViewModels\NationalityViewModel.cs" />
+    <Compile Include="ViewModels\OfficeViewModel.cs" />
+    <Compile Include="ViewModels\OrderViewModel.cs" />
+    <Compile Include="ViewModels\OutProductsMasterViewModel.cs" />
+    <Compile Include="ViewModels\OutProductsViewModel.cs" />
+    <Compile Include="ViewModels\PhysicalCustomerViewModel.cs" />
+    <Compile Include="ViewModels\ProductBranchViewModel.cs" />
+    <Compile Include="ViewModels\ProductOrderViewModel.cs" />
+    <Compile Include="ViewModels\ProductPromotionViewModel.cs" />
+    <Compile Include="ViewModels\ProductSaleViewModel.cs" />
+    <Compile Include="ViewModels\ProductStockViewModel.cs" />
+    <Compile Include="ViewModels\ProductViewModel.cs" />
+    <Compile Include="ViewModels\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\PromotionViewModel.cs" />
+    <Compile Include="ViewModels\ProviderViewModel.cs" />
+    <Compile Include="ViewModels\QuantityProductsOrderViewModel.cs" />
+    <Compile Include="ViewModels\QuotationViewModel.cs" />
+    <Compile Include="ViewModels\ReceptionViewModel.cs" />
+    <Compile Include="ViewModels\DetailRepairViewModel.cs" />
+    <Compile Include="ViewModels\RepairViewModel.cs" />
+    <Compile Include="ViewModels\ReportEntriesViewModel.cs" />
+    <Compile Include="ViewModels\ReportOfSalesViewModel.cs" />
+    <Compile Include="ViewModels\SaleDetailViewModel.cs" />
+    <Compile Include="ViewModels\SaleGiftsTableViewModel.cs" />
+    <Compile Include="ViewModels\SalesChartViewModel.cs" />
+    <Compile Include="ViewModels\SaleViewModel.cs" />
+    <Compile Include="ViewModels\ServiceOutProductViewModel.cs" />
+    <Compile Include="ViewModels\ServiceViewModel.cs" />
+    <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
+    <Compile Include="ViewModels\StateViewModel.cs" />
+    <Compile Include="ViewModels\StockViewModel.cs" />
+    <Compile Include="ViewModels\SubcategoryViewModel.cs" />
+    <Compile Include="ViewModels\TownViewModel.cs" />
+    <Compile Include="ViewModels\TransferViewModel.cs" />
+    <Compile Include="ViewModels\TypePaymentViewModel.cs" />
+    <Compile Include="ViewModels\TypePromotionViewModel.cs" />
+    <Compile Include="ViewModels\UnifiedQuotationViewModel.cs" />
+    <Compile Include="ViewModels\UserEventViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\VirtualStore\DetailShoppingCartViewModel.cs" />
+    <Compile Include="ViewModels\VirtualStore\ShoppingCartViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="Models\SAADContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SAADContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\SAADContext.edmx.diagram">
+      <DependentUpon>SAADContext.edmx</DependentUpon>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'QA|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51177</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:51177/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

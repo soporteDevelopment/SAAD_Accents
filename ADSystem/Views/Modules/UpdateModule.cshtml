@@ -1,0 +1,32 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.ControllerViewModel
+
+@{
+    ViewBag.Title = "Módulos";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Modules")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modificar Control</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="ModulesController">
+        <div class="form-group">
+            <label>Módulo</label>
+            <input type="text" data-ng-readonly="true" maxlength="100" class="form-control" id="control" data-ng-model="control" data-ng-init="control='@Model.Control'" placeholder="Escriba el nombre del módulo" uppercase />
+        </div>
+        <br />
+        <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" class="form-control" maxlength="150" id="description" data-ng-model="description" placeholder="Escriba una descripción para el módulo" uppercase />
+        </div>
+        <div class="form-group">
+            @Html.Raw(HtmlHelperExtension.Button("Modules", "SaveUpdateModule", "SaveUpdateModule", "SaveUpdateModule", "Guardar", "", "", "SaveUpdateControl(" + Model.idControl + ")", "btn btn-primary"))
+        </div>
+    </div>
+</div>

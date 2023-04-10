@@ -1,0 +1,27 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+<div class="panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Corte de Caja</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label>Total a entregar</label>
+            <label class="color-red">{{(amountEntry - amountEgress) | currency}}</label>
+        </div>
+        <div class="form-group">
+            <label>Comentarios</label>
+            <textarea rows="4" cols="50" class="form-control" data-ng-model="cashreport.Comments" placeholder="Escriba comentarios" uppercase />
+        </div>
+        <div class="form-group text-center">
+            <button type="button" class="btn btn-primary button-search" data-ng-click="saveAdd()">Guardar</button>
+        </div>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+    </ul>
+</div>
+
+

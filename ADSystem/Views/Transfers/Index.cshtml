@@ -1,0 +1,238 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Transferencias";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Transfers/Add")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="TransfersController" style="width:950px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Transferencia</h3>
+    </div>
+    <div class="panel-body" data-ng-init="LoadInit('transfer')">
+        <div class="row">
+            <div class="col-md-4 text-left">
+                <label class="control-label">Transferencia</label>
+                <h4>{{number}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Fecha y hora</label>
+                <h4 data-ng-init="dateTime = '@DateTime.Now.ToString("MM/dd/yyyy HH:mm")'">{{dateTime}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Sucursal</label>
+                <h4 data-ng-init="branch = '@ViewBag.Branch.Nombre'">{{branch}}</h4>
+            </div>
+        </div>
+        <br />
+        <br />
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#costumer" aria-controls="costumer" role="tab" data-toggle="tab">Usuario</a></li>
+            <li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">Productos</a></li>
+            <li role="presentation"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Resumen</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="costumer">
+                <br />                
+                <div class="row" data-ng-init="seller = '@ViewBag.Seller'">
+                    <div class="col-md-2">
+                        <label class="control-label">Vendedor(es)</label>
+                    </div>
+                    <div class="col-md-4" data-ng-init="LoadUsers()">
+                        <select class="form-control" data-ng-model="seller" data-ng-options="option.NombreCompleto for option in Users">
+                            <option value="">Seleccione</option>
+                        </select>
+                        <br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="control-label">Destino</label>
+                    </div>
+                    <div class="col-md-4" data-ng-init="LoadUsers()">
+                        <input type="checkbox" ng-model="branchDestiny" ng-true-value="2" />Ámazonas
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" ng-model="branchDestiny" ng-true-value="3" />Guadalquivir
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" ng-model="branchDestiny" ng-true-value="4" />Textura
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="products">
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label">Producto</label>
+                            </div>
+                            <div class="col-md-7">
+                                <angucomplete id="product"
+                                              placeholder="Código"
+                                              pause="300"
+                                              selectedobject="selectedCode"
+                                              url="../../../Products/GetProductsForCodigo?codigo="
+                                              datafield="Codigos"
+                                              titlefield="Codigo"
+                                              inputclass="form-control form-control-small" />
+                            </div>
+                            <div class="col-md-3">
+                                <a href="JavaScript:void(0)" class="btn btn-block btn-success" data-ng-click="ValidateProduct();">
+                                    Agregar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">                        
+                    </div>
+                </div>
+                <br />
+                <br />
+                <h3 class="panel-title text-center">Productos</h3>
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Imagen</span>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <span class="color-red">Código</span>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <span class="color-red">Descripción</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Precio</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Unidades</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-1 text-center"><img class="img-product-list" src="{{item.imagen}}" /></div>
+                            <div class="col-md-3 text-center">{{(item.codigo == null)? item.credito:item.codigo}}</div>
+                            <div class="col-md-4 text-center txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{item.desc}}">{{item.desc}}</p></div>
+                            <div class="col-md-2 text-center">{{item.prec | currency}}</div>
+                            <div class="col-md-1 text-center"><input type="text" maxlength="5" ng-model="item.cantidad" ng-change="ValidateStock(item.idProducto);" style="width:50px;" ng-readonly="item.credito == true" /></div>
+                            <div class="col-md-1 text-center">
+                                <i class="fa fa-trash color-red" ng-click="DeleteProduct(item.idProducto)"></i>
+                                <i class="fa fa-comments-o color-red" ng-click="OpenCommentsModal(item.idProducto, item.comentarios)"></i>
+                            </div>
+                        </div><br>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="summary">
+                <br />
+                <div class="panel panel-success" style="width:100%;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">ARTÍCULO</div>
+                            <div class="col-md-3">CANT.</div>
+                            <div class="col-md-2">PRE.UNIT</div>
+                        </div>
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-3">{{item.codigo}}</div>
+                            <div class="col-md-3">{{item.cantidad}}</div>
+                            <div class="col-md-2">{{item.prec | currency }}</div>                           
+                        </div>
+                        <br>                        
+                        <b>Responsable {{seller.NombreCompleto}}</b>
+                        <br />
+                        <br />
+                        <br />
+                        <b>Fecha:</b>&nbsp;<span>{{ dateTime }}</span>
+                        <br />
+                        <b>Sucursal:</b>&nbsp;<span>{{ branch }}</span>
+                        <b></b>
+                        <br />
+                        <div class="col-md-3"><b>Comentarios:</b></div>
+                        <div class="col-md-3">
+                            <textarea cols="50" rows="5" ng-model="comments" uppercase></textarea>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" name="SaveTransfer" class="btn btn-primary" data-ng-click="" ng-really-message="Desea finalizar la transferencia?" ng-really-click="SaveTransfer();">Guardar</button>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+    </div>
+
+    <!----------------------------MODAL BRANCH---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModal" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-ng-init="SetBranch(@ViewBag.IDBranch)">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <figure class="img-modal">
+                        <img src="@Url.Img("icon_sucursales.png")">
+                    </figure>
+                </div>
+                <div class="container-btn-modal">
+                    <div class="row">
+                        <div class="col-md-4" data-ng-click="SetBranchName('RÍO AMAZONAS', 2)">RÍO AMAZONAS</div>
+                        <div class="col-md-4" data-ng-click="SetBranchName('RÍO GUADALQUIVIR', 3)">RÍO GUADALQUIVIR</div>
+                        <div class="col-md-4" data-ng-click="SetBranchName('TEXTURA', 4)">TEXTURA</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL COMMENTS---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalComments" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Comentarios</h4>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="form-group hidden">
+                            <label for="productItem">ID</label>
+                            <input type="text" class="form-control" id="productItem" ng-model="productItem">
+                        </div>
+                        <div class="form-group">
+                            <label for="commentsItem">Comentarios</label>
+                            <textarea class="form-control" id="commentsItem" rows="3" ng-model="commentsItem" maxlength="400"></textarea>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-primary" ng-click="SaveComments()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,165 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@using ADSystem.Common;
+@using ADEntities.Queries.TypesGeneric;
+
+@{
+    ViewBag.Title = "Reportes - Ventas";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+<style>
+    .table {
+        width: 3500px;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .img-responsive {
+        width: 44px;
+        height: 44px;
+        display: inline;
+        cursor: pointer;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.es.js"></script>
+<script type="text/javascript" src="@Url.Js("Class/SalesIntelligence/TotalSalesBySeller")"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$(".date-picker").datepicker({
+			format: "mm-yyyy",
+			startView: "months",
+			minViewMode: "months",
+			language: 'es'
+		});
+	});
+
+</script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="TotalSalesBySellerController" style="width:1200px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Reporte Ventas Por Vendedor</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal" style="margin-left:300px;width:500px;">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Desde</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="sinceMonth" data-ng-model="sinceMonth" data-ng-options="option.Month as option.Name for option in months">
+                        <option value="">Mes...</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <select class="form-control" name="sinceYear" data-ng-model="sinceYear" data-ng-options="option as option for option in years">
+                        <option value="">Año...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Hasta</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="untilMonth" data-ng-model="untilMonth" data-ng-options="option.Month as option.Name for option in months">
+                        <option value="">Mes...</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <select class="form-control" name="untilYear" data-ng-model="untilYear" data-ng-options="option as option for option in years">
+                        <option value="">Año...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Vendedor</label>
+                <div class="col-sm-6" data-ng-init="LoadSellers()">
+                    <select class="form-control" name="idSeller" id="idSeller" data-ng-model="idSeller" data-ng-options="option.idUsuario as option.NombreCompleto for option in sellers">
+                        <option value="">Todos...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchReport" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="LoadSales(0,10)">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+
+        <div class="table-responsive" style="width:100%;height:100%;padding-bottom: 100px;">
+            <div class="row">
+                <div class="col-md-12 text-left">
+                    <img src="@Url.Img("icon_excel.png")" alt="exportar" style="width:25px;height:25px;" data-ng-click="DownloadSales();" />
+                </div>
+            </div>
+            <table class="table table-hover">
+                <tr>
+                    <td>Año</td>
+                    <td>Mes</td>
+                    <td>Vendedor</td>
+                    <td>Subtotal</td>
+                    <td>Descuento</td>
+                    <td>PagoConNotaCredito</td>
+                    <td>NotaCreditoGenerada</td>
+                    <td>VentaBruta</td>
+                    <td>Efectivo</td>
+                    <td>CompassAnna</td>
+                    <td>CompassFernanda</td>
+                    <td>BanorteAnna</td>
+                    <td>BanregioAnna</td>
+                    <td>SinDestino</td>
+                    <td>SinCuenta</td>
+                    <td>VentaCredito</td>
+                    <td>TarjetaCredito</td>
+                    <td>TarjetaDebito</td>
+                    <td>Transferencia</td>
+                    <td>Cheque</td>
+                    <td>Deposito</td>
+                    <td>FiscalSinDestino</td>
+                    <td>BanregioAccents</td>
+                    <td>BanorteAccents</td>
+                    <td>VentaBrutaFiscal</td>
+                    <td>IVA</td>
+                    <td>VentaNetaFiscal</td>
+                    <td>VentaNeta</td>
+                    <td>ComisionTarjetaCredito</td>
+                </tr>
+                <tr data-ng-repeat="s in sales">
+                    <td>{{s.Tiempo}}</td>
+                    <td>{{s.Mes}}</td>
+                    <td>{{s.Vendedor}}</td>
+                    <td>{{s.Subtotal | currency}}</td>
+                    <td>{{s.Descuento | currency}}</td>
+                    <td>{{s.PagoConNotaCredito | currency}}</td>
+                    <td>{{s.NotaCreditoGenerada | currency}}</td>
+                    <td>{{s.VentaBruta | currency}}</td>
+                    <td>{{s.Efectivo | currency}}</td>
+                    <td>{{s.CompassAnna | currency}}</td>
+                    <td>{{s.CompassFernanda | currency}}</td>
+                    <td>{{s.BanorteAnna | currency}}</td>
+                    <td>{{s.BanregioAnna | currency}}</td>
+                    <td>{{s.SinDestino | currency}}</td>
+                    <td>{{s.SinCuenta | currency}}</td>
+                    <td>{{s.VentaCredito | currency}}</td>
+                    <td>{{s.TarjetaCredito | currency}}</td>
+                    <td>{{s.TarjetaDebito | currency}}</td>
+                    <td>{{s.Transferencia | currency}}</td>
+                    <td>{{s.Cheque | currency}}</td>
+                    <td>{{s.Deposito | currency}}</td>
+                    <td>{{s.FiscalSinDestino | currency}}</td>
+                    <td>{{s.BanregioAccents | currency}}</td>
+                    <td>{{s.BanorteAccents | currency}}</td>
+                    <td>{{s.VentaBrutaFiscal | currency}}</td>
+                    <td>{{s.IVAFiscal | currency}}</td>
+                    <td>{{s.VentaNetaFiscal | currency}}</td>
+                    <td>{{s.VentaNeta | currency}}</td>
+                    <td>{{s.ComisionTarjetaCredito | currency}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+

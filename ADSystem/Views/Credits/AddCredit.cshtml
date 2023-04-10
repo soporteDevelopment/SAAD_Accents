@@ -1,0 +1,204 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "AddCredit";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Credits")"></script>
+<style>
+
+    .vcenter {
+        height: 180px; 
+        width: 100%; 
+        display: flex;
+        align-items: center;
+        float: none;
+        padding-left:75px;
+    }
+
+</style>
+
+<div class="panel panel-default" data-ng-controller="CreditsController">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Nota de Crédito</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-3">
+                <label>Crédito por</label>
+            </div>
+            <div class="col-md-3" data-ng-init="idSeller=@ViewBag.idUser">
+                <input type="radio" ng-model="typeCredit" value="remision" />Remisión
+            </div>
+            <div class="col-md-3" data-ng-init="LoadCustomers()">
+                <input type="radio" ng-model="typeCredit" value="costumer" />Cliente
+            </div>
+        </div>
+        <br />
+        <div class="row" ng-show="typeCredit == 'remision'">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-7">
+                <input type="text" maxlength="100" class="form-control" id="remision" data-ng-model="remision" placeholder="Escriba la remisión de la venta" uppercase />
+            </div>
+            <div class="col-md-2">
+                <button type="button" data-ng-click="DetailSaleForRemision()" class="bt-menu btn-success" style="width:100%;font-size:1.5em;">Buscar</button>
+            </div>
+        </div>
+        <br />
+        <div class="row" ng-show="typeCredit == 'costumer'">
+            <div class="col-md-3">
+                <label>Tipo de cliente</label>
+            </div>
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="radio" ng-model="customer" value="moral"  />Moral&nbsp;&nbsp;
+                    </div>
+                    <div class="col-md-4">
+                        <input type="radio" ng-model="customer" value="physical"  />Físico
+                    </div>
+                    <div class="col-md-4">
+                        <input type="radio" ng-model="customer" value="office"/>Despacho
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row" ng-show="typeCredit == 'costumer'">
+            <div class="col-md-3 text-right">
+                <label></label>
+            </div>
+            <div class="col-md-7">
+                <select class="form-control" name="moralCustomer" ng-show="customer == 'moral'" data-ng-model="moralCustomer" data-ng-options="option.Nombre for option in moralCustomers" >
+                    <option value="">Seleccione</option>
+                </select>
+                <select class="form-control" name="physicalCustomer" ng-show="customer == 'physical'" data-ng-model="physicalCustomer" data-ng-options="option.Nombre for option in physicalCustomers" >
+                    <option value="">Seleccione</option>
+                </select>
+                <select class="form-control" name="officeCustomer" ng-show="customer == 'office'" data-ng-model="officeCustomer" data-ng-options="option.Nombre for option in officeCustomers">
+                    <option value="">Seleccione</option>
+                </select>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-3">
+                <label>Cantidad</label>
+            </div>
+            <div class="col-md-7">
+                <input type="text" maxlength="100" class="form-control" id="amount" value="0" data-ng-model="newCredit.Amount" ng-currency placeholder="Escriba la cantidad" uppercase />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-3">
+                <label>Comentarios</label>
+            </div>
+            <div class="col-md-7">
+                <textarea rows="4" cols="100" class="form-control" id="comments" value="0" data-ng-model="comments" uppercase></textarea>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-3">
+                <label>Fecha de emisión</label>
+            </div>
+            <div class="col-md-7">
+                <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" placeholder="Seleccione una fecha" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row" ng-show="typeCredit == 'remision'">
+            <div class="col-md-12 text-center">
+                <h3 class="panel-title">Productos</h3>
+            </div>
+        </div>
+        <br />
+        <div class="row" ng-show="typeCredit == 'remision'">
+            <div class="col-md-2">
+                <span class="color-red">Código</span>
+            </div>
+            <div class="col-md-2">
+                <span class="color-red">Precio</span>
+            </div>
+            <div class="col-md-1">
+                <span class="color-red">Unid.</span>
+            </div>
+            <div class="col-md-1">
+                <span class="color-red">Desc.</span>
+            </div>
+            <div class="col-md-2">
+                <span class="color-red">Total</span>
+            </div>
+            <div class="col-md-1">
+                <span class="color-red">AMA.</span>
+            </div>
+            <div class="col-md-1">
+                <span class="color-red">GUA.</span>
+            </div>
+            <div class="col-md-1">
+                <span class="color-red">TEX.</span>
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
+        <div class="row" ng-show="typeCredit == 'remision'" ng-repeat="item in items">
+            <div class="col-md-2">{{item.Codigo}}</div>
+            <div class="col-md-2">{{item.Precio | currency}}</div>
+            <div class="col-md-1">{{item.Cantidad}}</div>
+            <div class="col-md-1">{{item.Descuento}} %</div>
+            <div class="col-md-2"><label>{{ (item.Cantidad * item.Precio) - ((item.Cantidad * item.Precio) * (item.Descuento/100)) | currency}}</label></div>
+            <div class="col-md-1" ng-show="!item.Service"><input type="number" min="0" ng-model="item.Amazonas" ng-change="calculateAmount()" style="width:50px;" /></div>
+            <div class="col-md-1" ng-show="!item.Service"><input type="number" min="0" ng-model="item.Guadalquivir" ng-change="calculateAmount()" style="width:50px;" /></div>
+            <div class="col-md-1" ng-show="!item.Service"><input type="number" min="0" ng-model="item.Textura" ng-change="calculateAmount()" style="width:50px;" /></div>
+            <div class="col-md-3" ng-show="item.Service" ><input type="number" min="0" ng-model="item.CantDev" ng-change="calculateAmount()" style="width:50px;" /></div>
+            <div class="col-md-1"><input type="checkbox" data-ng-model="item.Checked" ng-change="calculateAmount()" ng-show="item.NotaCredito == false" ng-true-value="true" ng-false-value="false" /></div>
+        </div><br />
+
+        @Html.Raw(HtmlHelperExtension.Button("Credits", "SaveAddCredit", "SaveAddCredit", "SaveAddCredit", "Guardar", "", "", "SaveAddCredit()", "btn btn-primary", "Guardando..."))
+        <br />
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalCredit" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="txtValidation">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="thumbnail">
+                                <div class="vcenter text-center">
+                                    <h2>{{newCredit.Amount | currency}}</h2>
+                                </div>
+                                <div class="caption">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><h3>Nota de Crédito</h3></li>
+                                        <li class="list-group-item">{{remision}}</li>
+                                        <li class="list-group-item">Valido hasta: {{finalDate}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-btn-modal">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="PrintCredit(idCreditNote)">Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

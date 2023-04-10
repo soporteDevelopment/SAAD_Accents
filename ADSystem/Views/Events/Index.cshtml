@@ -1,0 +1,120 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Evento";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Events/Add")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $("#EventDate").datetimepicker({
+            locale: 'ES',
+            format: 'MM-DD-YYYY'
+        });
+        $("#RememberDate").datetimepicker({
+            locale: 'ES',
+            format: 'MM-DD-YYYY'
+        });
+    });
+</script>
+
+<style>
+    .clsDatePicker {
+        z-index: 100000;
+    }
+</style>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Evento</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="EventsController" ng-init="LoadInit()">
+        <code ng-show="!frmEvent.$valid && frmEvent.$dirty">Revise la información</code><br>
+        <form id="frmEvent" name="frmEvent">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#event" aria-controls="event" role="tab" data-toggle="tab">Evento</a></li>
+                <li role="presentation"><a href="#remember" aria-controls="remember" role="tab" data-toggle="tab">Recordatorio</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="event" style="max-height: 500px;">
+                    <div class="form-group">
+                        <label>Tipo de Evento</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" value="1" ng-model="Type"/>
+                            <label class="form-check-label">Cita en Tienda</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" value="2" ng-model="Type"/>
+                            <label class="form-check-label">Salida a Vista</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <input type="text" class="form-control" id="EventName" name="EventName" ng-model="EventName" maxlength="100" uppercase required/>
+                        <code class="has-error" ng-show="frmEvent.EventName.$error.required && frmEvent.$dirty">Requerido!</code>
+                    </div>
+                    <div class="form-group" ng-show="Type == 1">
+                        <label>Sucursal</label>
+                        <select class="form-control" name="EventColor" data-ng-model="EventColor">
+                            <option value="">Seleccione</option>
+                            <option ng-repeat="color in Colors" value="{{color.Color}}">{{color.Lugar}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group" ng-show="Type == 2">
+                        <label>Dirección</label>
+                        <input type="text" class="form-control" id="EventZone" name="EventZone" ng-model="EventZone" uppercase />
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="text" class="form-control" id="EventDate" name="EventDate" datepicker-popup="{{format}}" data-ng-model="EventDate" is-open="openedDateEvent" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openDateEvent($event)" show-button-bar="false" data-ng-init="EventDate = '@DateTime.Now.AddDays(1).ToString("MM-dd-yyyy")'"/>
+                        <code class="has-error" ng-show="frmEvent.EventDate.$error.required && frmEvent.$dirty">Requerido!</code>
+                    </div>
+                    <div class="form-group">
+                        <label>Todo el día</label>
+                        <input type="checkbox" ng-model="AllDay"/>
+                    </div>
+                    <div class="form-group" ng-show="!AllDay">
+                        <label>Hora de Inicio (HH:MM)</label>
+                        <input type="text" class="form-control" ng-model="EventTimeStart" placeholder="Ejemplo 09:00"/>
+                    </div>
+                    <div class="form-group" ng-show="!AllDay">
+                        <label>Hora de Termino (HH:MM)</label>
+                        <input type="text" class="form-control" ng-model="EventTimeEnd" placeholder="Ejemplo 10:00"/>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="remember">
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="text" class="form-control" id="RememberDate" name="RememberDate" datepicker-popup="{{format}}" data-ng-model="RememberDate" is-open="openedRememberDate" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openRememberDate($event)" show-button-bar="false" data-ng-init="RememberDate = '@DateTime.Now.AddDays(1).ToString("MM-dd-yyyy")'" />
+                        <code class="has-error" ng-show="frmEvent.RememberDate.$error.required && frmEvent.$dirty">Requerido!</code>
+                    </div>
+                    <div class="form-group">
+                        <label>Hora (HH:MM)</label>
+                        <input type="text" class="form-control" ng-model="EventTimeRemember" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-success" ng-click="AddEvent()">Aceptar</button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-danger" ng-click="Back()">Cancelar</button>
+            </div>
+        </div>
+        <br />
+        <br />
+    </div>
+</div>
+
+

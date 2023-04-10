@@ -1,0 +1,63 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Acciones";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Actions")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Acción</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="ActionsController" data-ng-init="GetControllers()">
+        <div class="form-group">
+            <label>Acción</label>
+            <input type="text" class="form-control" id="name" data-ng-model="newAction.name" placeholder="Escriba el nombre de la acción" uppercase maxlength="100">
+        </div>
+        <br />
+        <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" class="form-control" id="name" data-ng-model="newAction.description" placeholder="Escriba una descripción" uppercase maxlength="150">
+        </div>
+        <br />
+        <div class="form-group">
+            <label class="radio-inline">
+                <input type="radio" id="ajax" data-ng-model="newAction.ajax" value="true" checked> Es Ajax
+            </label>
+            <label class="radio-inline">
+                <input type="radio" id="ajax" data-ng-model="newAction.ajax" value="false" checked> No Ajax
+            </label>
+        </div>
+        <br />
+        <div class="form-group">
+            <label class="radio-inline">
+                <input type="radio" id="parentmenuBool" data-ng-model="newAction.parentmenuBool" value="true" checked> Padre
+            </label>
+            <label class="radio-inline">
+                <input type="radio" id="parentmenuBool" data-ng-model="newAction.parentmenuBool" value="false"> Hijo
+            </label>
+        </div>
+        <br />
+        <div class="form-group">
+            <label>Módulo</label>
+            <select class="form-control" name="parentmenu" id="parentmenu" data-ng-model="newAction.parentmenu" data-ng-options="option.Control for option in Controllers"></select>
+
+        </div>
+        <br />
+
+        @Html.Raw(HtmlHelperExtension.Button("Actions", "SaveAddAction", "SaveAddAction", "SaveAddAction", "Guardar", "", "", "SaveAddAction()", "btn btn-primary", "Guardando..."))
+       
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,39 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{ 
+    ViewBag.Title = "Agregar";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/CatalogBrand/Add")"></script>
+<br />
+<div class="panel panel-default" data-ng-controller="CatalogBrandController">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Marca</h3>
+    </div>
+    <div class="panel-body">
+        <br>
+        <form id="frmCatalogBrand" name="frmCatalogBrand" autocomplete="off">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" class="form-control" id="name" name="name" data-ng-model="name" placeholder="Nombre" uppercase maxlength="100" required />
+                <code class="has-error" ng-show="frmCatalog.name.$error.required">Requerido!</code>
+            </div>
+            <div class="form-group">
+                <label>Descripcion</label>
+                <input type="text" class="form-control" id="description" name="description" data-ng-model="Description" placeholder="Descripcion" uppercase maxlength="50" />
+            </div>
+            <div class="form-group" data-ng-init="GetProviders();">
+                <label>Proveedor</label>
+                <select class="form-control" name="idProvider" id="idProvider" data-ng-model="idProvider" data-ng-options="option.idProveedor as option.Nombre for option in Providers" required></select>
+                <code class="has-error" ng-show="frmCatalog.idProvider.$error.required">Requerido!</code>
+            </div>
+            <button type="button" id="btnSave" class="btn btn-primary" data-ng-click="SaveBrand();">Guardar</button>
+        </form>
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>

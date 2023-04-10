@@ -1,0 +1,101 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Listado";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/CatalogBrand/List")"></script>
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Marcas</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CatalogBrandController">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Nombre</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="name" />
+                </div>
+            </div>
+            <div class="form-group" data-ng-init="GetProviders();">
+                <label class="col-sm-2 control-label">Provedor</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="idProvider" id="idProvider" data-ng-model="idProvider" data-ng-options="option.idProveedor as option.Nombre for option in Providers" required>
+                        <option value="">Seleccione</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group text-center" ng-init="Get()">
+                <div class="col-sm-12">
+                    <button type="button" id="btnSearch" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="Get()">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Proveedor</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="p in brands">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{p.Name}}</td>
+                        <td>{{p.idProvider}}</td>
+                        <td class="pull-left">
+                            <a href="javascript:void(0);" data-ng-click="Update(p.idCatalogBrand)" title="Editar"><i class="fa fa-pencil color-red"></i></a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0);" data-ng-click="deactiveCatalogBrand(p.idCatalogBrand)" title="Eliminar"> <i class="fa fa-trash color-red"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+

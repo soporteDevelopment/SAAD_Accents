@@ -1,0 +1,175 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+
+@{
+    ViewBag.Title = "Impresión de Códigos";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+
+<script type="text/javascript" src="@Url.Js("Class/ProductsPrintBarCode")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="ProductsController" style="width:1200px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Productos</h3>
+    </div>
+    <div class="panel-body" data-ng-init="listProducts();">
+        <br />
+        <br />
+        <form class="form-horizontal" style="margin-left:300px;width:690px;">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Código</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Codigo" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Descripción</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Description" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Precio</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="productPrecio" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" data-ng-init="GetCategories()">Categoría</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="Category" id="Category" data-ng-model="Category" data-ng-options="option.Nombre for option in Categories">
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Color</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Color" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Material</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Material" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Orden</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Orden" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Proveedor</label>
+                <div class="col-sm-10">
+                    <angucomplete id="brands"
+                                  placeholder="Buscar por marca"
+                                  pause="300"
+                                  selectedobject="selectedProvider"
+                                  url="../../../Products/GetProductsForBrands?brand="
+                                  datafield="Brands"
+                                  titlefield="Nombre"
+                                  inputclass="form-control form-control-small" />
+                </div>
+            </div>
+            <div class="form-group hide">
+                <label class="col-sm-2 control-label">Sucursal</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="branch" data-ng-model="branch">
+                        <option value="">Todas</option>
+                        <option value="2">Ámazonas</option>
+                        <option value="3">Guadalquivir</option>
+                        <option value="4">Textura</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchProduct" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listProducts(0,20)">Buscar</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" id="printProducts" class="btn btn-primary button-search" data-ng-click="printProducts()" style="background-color: #5cb85c;border-color: #4cae4c;" >Imprimir</button>
+                </div>
+            </div>
+            @*<div class="form-group text-center">
+                <div class="col-sm-12">
+                    <input type="checkbox" data-ng-model="chkAllProduct" />
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="number" style="width:40px;" data-ng-model="numberAllProduct" ng-disabled="!chkAllProduct" />
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" id="printAllProducts" class="btn btn-primary button-search" data-ng-click="printAllProducts()" ng-disabled="!chkAllProduct" style="background-color: #5cb85c;border-color: #4cae4c;">Imprimir Todos</button>
+                </div>
+            </div>*@
+        </form>
+        <br />
+        <div class="table-responsive" style="width:1190px;">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="10">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Imagen</th>
+                        <th>Codigo</th>
+                        <th style="width:300px;">Descripción</th>
+                        <th>Precio</th>
+                        <th>Proveedor</th>
+                        <th>Marca</th>                      
+                        <th style="width:96px;">Copias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="c in itemsToPrint">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td><img class="img-product-list" ng-src="{{c.urlImagen}}"></td>
+                        <td>{{c.Codigo}}</td>
+                        <td>{{c.Descripcion}}</td>
+                        <td>{{c.Precio | currency}}</td>
+                        <td>{{c.Proveedor}}</td>
+                        <td>{{c.Marca}}</td>
+                        <td class="pull-left"><input type="number" data-ng-model="c.Copias" min="0" max="100" /></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

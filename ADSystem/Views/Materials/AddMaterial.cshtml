@@ -1,0 +1,31 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Materiales";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Materials")"></script>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Material</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="MaterialsController">
+        <div class="form-group">
+            <label>Material</label>
+            <input type="text" maxlength="100" class="form-control" id="material" data-ng-model="newMaterial.Material" placeholder="Escriba el nombre del material" uppercase />
+        </div>
+       
+        @Html.Raw(HtmlHelperExtension.Button("Materials", "SaveAddMaterial", "SaveAddMaterial", "SaveAddMaterial", "Guardar", "", "", "SaveAddMaterial()", "btn btn-primary", "Guardando..."))
+
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>
+
+

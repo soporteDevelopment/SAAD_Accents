@@ -1,0 +1,72 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using System.Globalization;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.CreditNoteViewModel
+
+<!DOCTYPE html>
+
+<html ng-app>
+<head lang="en">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Impresión</title>
+
+    <link rel="shortcut icon" href="@Url.Img("favicon.png")" />
+    <link href="~/Content/Print/css/styles.css" rel="stylesheet" />
+    <link href="~/Content/Print/css/fonts.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700|Open+Sans+Condensed:300,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Open+Sans+Condensed:300,700" rel="stylesheet" />
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="@Url.Img("logoAccents.png")">
+        </div>
+        <div class="header-container-data-left">
+            Código: <strong>@Model.RemisionCredito</strong>
+        </div>
+    </header>
+    <section class="name-document-credito">
+        NOTA DE CRÉDITO
+    </section>
+
+    <section class="container-data-title">
+        <div class="container-data-title-sections">
+            Cliente: <strong>@Model.Cliente @Model.ClienteVenta</strong>
+        </div>
+        <div class="container-data-title-sections">
+            Valido hasta: <strong>@Model.Fecha.Value.ToString("dd/mm/yyyy")</strong>
+        </div>
+        <div class="container-data-title-sections">
+            Cantidad: <strong>@Model.Cantidad.Value.ToString("C", CultureInfo.CurrentCulture)</strong>
+        </div>
+    </section>
+
+    <div class="line-black"></div>
+    <section class="container-data-credito"></section>
+    <div class="line-black"></div>
+    <section class="container-coments">
+        <div class="coment-title">
+            COMENTARIOS
+        </div>
+        <img src="@Url.Img("print/icon.png")">
+        <textarea class="textarea-container" data-ng-init="comments = '@Model.Comentarios'" style ="font-style: italic">{{comments}}</textarea>
+    </section>
+    <footer>
+        <p>Río Amazonas 305 Ote. Col. del Valle San Pedro, Garza Garcia, N. L. CP: 66220, Tel. (81) 8356­ 9558 RFC: ADE050128252</p>
+    </footer>
+
+    <script type="text/javascript">
+        window.print();
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Promoción";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Promotions/Update")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $("#SinceDate").datetimepicker({
+            locale: 'ES',
+            format: 'MM-DD-YYYY'
+        });
+        $("#UntilDate").datetimepicker({
+            locale: 'ES',
+            format: 'MM-DD-YYYY'
+        });
+    });
+</script>
+
+<style>
+    .clsDatePicker {
+        z-index: 100000;
+    }
+</style>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modificar Promoción</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="PromotionsController" ng-init="LoadInit(@Newtonsoft.Json.JsonConvert.SerializeObject(@Model))">
+        <code ng-show="!frmPromotion.$valid && frmPromotion.$dirty">Revise la información</code><br>
+        <form id="frmPromotion" name="frmPromotion">
+            <div class="form-group">
+                <label>Descripción</label>
+                <input type="text" class="form-control" id="Description" name="Description" ng-model="Description" uppercase />
+            </div>
+            <div class="form-group">
+                <label>Desde</label>
+                <input type="text" class="form-control" id="SinceDate" name="SinceDate" datepicker-popup="{{format}}" data-ng-model="SinceDate" is-open="openedSinceDate" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSinceDate($event)" show-button-bar="false" data-ng-init="SinceDate = '@Model.FechaInicio.ToString("MM-dd-yyyy")'" />
+                <code class="has-error" ng-show="frmPromotion.EventDate.$error.required && frmPromotion.$dirty">Requerido!</code>
+            </div>
+            <div class="form-group">
+                <label>Hasta</label>
+                <input type="text" class="form-control" id="UntilDate" name="UntilDate" datepicker-popup="{{format}}" data-ng-model="UntilDate" is-open="openedUntilDate" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntilDate($event)" show-button-bar="false" data-ng-init="UntilDate = '@Model.FechaFin.ToString("MM-dd-yyyy")'" />
+                <code class="has-error" ng-show="frmPromotion.UntilDate.$error.required && frmPromotion.$dirty">Requerido!</code>
+            </div>
+            <div class="form-group">
+                <label>Tipo de promoción</label>
+                <select class="form-control" name="TypePromotion" data-ng-model="TypePromotion" ng-required="true" data-ng-options="option.idTipoPromocion as option.Descripcion for option in typePromotions">
+                    <option value="">Seleccione</option>
+                </select>
+                <code class="has-error" ng-show="frmPromotion.TypePromotion.$error.required && frmPromotion.$dirty">Requerido!</code>
+            </div>
+            <div class="form-group" ng-hide="TypePromotion == 3">
+                <label>Descuento</label>
+                <input type="number" class="form-control" id="Discount" name="Discount" ng-model="Discount" />
+            </div>
+            <div class="form-group hidden">
+                <label>Costo</label>
+                <input type="number" class="form-control" id="Cost" name="Cost" ng-model="Cost" />
+            </div>
+            <h6>Productos</h6>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label>Buscar</label>
+                </div>
+                <div class="form-group col-md-6">
+                    <angucomplete id="product"
+                                  placeholder="Código"
+                                  pause="300"
+                                  selectedobject="selectedCode"
+                                  url="../../../Products/GetProductsForCodigo?codigo="
+                                  datafield="Codigos"
+                                  titlefield="Codigo"
+                                  inputclass="form-control form-control-small" />
+                </div>
+                <div class="form-group col-md-4">
+                    <a href="JavaScript:void(0)" class="btn btn-block btn-success" data-ng-click="GetProduct();">
+                        Agregar
+                    </a>
+                </div>
+            </div>
+            <br/>
+            <div class="row" ng-repeat="product in products">
+                <div class="col-md-2 text-center"><img class="img-product-list" src="{{product.imagen}}" /></div>
+                <div class="col-md-2 text-center">{{product.codigo}}</div>
+                <div class="col-md-6 text-center txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{product.desc}}">{{product.desc}}</p></div>
+                <div class="col-md-1 text-center"><input type="text" maxlength="5" ng-model="product.cantidad" style="width:50px;" /></div>
+                <div class="col-md-1 text-center">
+                    <i class="fa fa-trash color-red" ng-click="DeleteProduct(product.idProducto)"></i>
+                </div>
+            </div>
+        </form>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-success" ng-click="Add()">Aceptar</button>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-danger" ng-click="Back()">Cancelar</button>
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+        <br />
+        <br />
+    </div>
+</div>
+
+

@@ -1,0 +1,133 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.CreditNoteViewModel
+
+<style>
+    .center {
+        text-align: center;
+    }
+
+        .center form {
+            display: inline-block;
+        }
+</style>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row" data-ng-init="GetTypesPaymentForSale(@Model.idVenta)">
+            <div class="col-md-12 center">
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Remisión Credito</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="remision = '@Model.RemisionCredito'"><b>{{remision}}</b></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Remisión Venta</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="remisionSale = '@Model.RemisionVenta'"><b>{{remisionSale}}</b></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Fecha Expedicion</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="dateTime = '@Model.Fecha'">{{dateTime}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Fecha Vigencia</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="expirationDate = '@Model.FechaVigencia'">{{expirationDate}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Cliente</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="customer = '@Model.Cliente'">@Model.Cliente</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Vendedor</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="sellerOne = '@Model.Vendedor'">{{sellerOne}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Total</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="total = '@Model.Cantidad'"><i>{{total | currency}}</i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Origen</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="tipoNotaCredito = '@Model.TipoNotaCredito.Nombre'"><i>{{tipoNotaCredito}}</i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Comentarios</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="comments = '@Model.Comentarios'"><i>{{comments}}</i></span>
+                    </div>
+                </div>
+                <div class="row" data-ng-init="GetDetail(@Model.idNotaCredito)">
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Producto</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Servicio</span>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <span class="color-red">Descripción</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Cantidad</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Precio</span>
+                    </div>
+                </div>
+                <div class="row" ng-repeat="product in products">
+                    <div class="col-md-2 text-center">
+                        <span>{{product.Codigo}}</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span>{{product.idServicio}}</span>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <span>{{product.Descripcion}}</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span>{{product.Cantidad}}</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span>{{product.Precio | currency}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

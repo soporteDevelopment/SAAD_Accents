@@ -1,0 +1,212 @@
+﻿@using System.Web.MVC;
+@using System.Globalization;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.SaleOnLineViewModel
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>VENTA EN LINEA @Model.Remision</title>
+    <link href="~/Content/Print/css/print.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700" rel="stylesheet">
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angucomplete")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/SalesOnLine/Print")"></script>
+    <script type="text/javascript" src="@Url.Js("ngProgress")"></script>
+    <script type="text/javascript" src="@Url.Js("acute.select")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-animate.min")"></script>
+    <script type="text/javascript" src="@Url.Js("toaster")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-currency")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-filter")"></script>
+
+</head>
+
+<body data-ng-app="General" data-ng-controller="GeneralController">
+    <div class="contenedor" data-ng-controller="SalesOnLine">
+        <table style="width: 100%; padding: 20px 0 5px 0;" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+            <tr>
+                <th style="width: 30%;"></th>
+                <th style="width: 30%;">
+                    <img style="width: 300px;" src="@Url.Img("print/logotipo.png")">
+                </th>
+                <th class="folio" style="width: 30%; padding-right: 20px;"></th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border-bottom: 1px solid #D4D4D4; padding: 20px; text-align: center;">
+            <tr>
+                <th class="txt-data" style="width: 30%; text-align: left;">Fecha:<strong>@Model.Fecha.Value.ToString("dd/MM/yyyy hh:mm")</strong></th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="width: 30%;"></th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="width: 30%; text-align: right;">Vendedor:<strong>@Model.Vendedor.NombreCompleto</strong></th>
+            </tr>
+            <tr>
+                <td class="txt-data" style="width: 30%; text-align: left;"></td>
+                <td class="txt-data">|</td>
+                <td class="txt-data" style="width: 30%;"></td>
+                <td class="txt-data">|</td>
+                <td class="txt-data" style="width: 30%; text-align: right;"></td>
+            </tr>
+        </table>
+
+        @{
+            var typeDelivery = (Model.IdTipoEntrega == 1) ? "Sucursal" : "Domicilio";
+        }
+
+        <table style="width: 95%; padding: 20px; text-align: left; margin: 0 auto;">
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Cliente:<strong>{{name}}</strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Tipo de Entrega:<strong>@typeDelivery</strong></th>
+            </tr>
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Teléfono:<strong>{{phone}}</strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Direccción:<strong>{{address}}</strong></th>
+            </tr>
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Email:<strong>{{email}}</strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;"></th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; padding: 20px 0 3px 0">
+            <tr>
+                <th class="subtitulos">
+                    DETALLE
+                </th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; text-align: left;">
+            <tr>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        IMAGEN
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        CÓDIGO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        DESCRIPCIÓN
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        CANT.
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        PRECIO UNITARIO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        SUBTOTAL
+                    </strong>
+                </th>
+                <th class="txt-data" ng-show="showDesc == 1">|</th>
+                <th class="txt-data" style="text-align: center;" ng-show="showDesc == 1">
+                    <strong>
+                        DESCUENTO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        TOTAL
+                    </strong>
+                </th>
+            </tr>
+        </table>
+
+        <section class="tb-productos">
+            <table style="width: 100%; text-align: left;">
+                <tr ng-repeat-start="item in items">
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="{{item.Producto.Imagen}}">
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        {{item.Producto.Codigo}}
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        {{item.Producto.Descripcion}}
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        {{item.Cantidad}}
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        {{item.Precio | currency }}
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        {{item.Cantidad * item.Precio | currency}}
+                    </td>
+                    <td class="txt-data" style="width: 12%;" ng-show="showDesc == 1">
+                        {{item.Descuento}}%
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        {{ (item.Cantidad * item.Precio) - ((item.Cantidad * item.Precio) * (item.Descuento/100)) | currency}}
+                    </td>
+                </tr>
+                <tr ng-repeat-end style="border-bottom:double;">
+                    <td ng-repeat="dist in item.Distribucion" colspan="8" style="width: 100%;">
+                        <table>
+                            <tr>
+                                <td class="txt-data">{{dist.Sucursal}}</td>
+                                <td class="txt-data">{{dist.Cantidad}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <table style="width: 100%; margin-top: 15px; border-bottom: 2px solid #000; border-top: 2px solid #000; padding: 10px;">
+            <tr>
+                <td class="txt-data" style="text-align: left; width: 42%; padding: 0 0 15px 0;">
+                    Cantidad de productos: <strong>@Model.CantidadProductos</strong>
+                </td>
+                <td class="txt-data" style="text-align: left; width: 25%; padding: 0 0 15px 0;"></td>
+                <td class="txt-data" style="text-align: right; width: 25%; padding: 0 0  15px 0;">
+                    @{
+                        var Total = (Model.Total > 0) ? Model.Total.Value.ToString("C", CultureInfo.CurrentCulture) : "$0.00";
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="txt-data" style="text-align: left; width: 42%"></td>
+                <td class="txt-data" style="text-align: left; width: 25%;"></td>
+                <td class="txt-data" style="text-align: right; width: 25%;">
+                    Total:<strong> @Total</strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,597 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@using ADSystem.Common;
+
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/bootstrap-datetimepicker.min")" />
+
+<script type="text/javascript" src="@Url.Js("Class/Sales")"></script>
+<script type="text/javascript" src="@Url.Js("Class/EditHeaderSale")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $(".datepickerSales").datetimepicker({
+            format: 'MM-DD-YYYY'
+        });
+    });
+</script>
+
+<style>
+    .clsDatePicker {
+        z-index: 100000;
+    }
+</style>
+
+<br />
+<div class="panel panel-default" style="width:1210px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ventas</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="SalesController" data-ng-enter="listSales()">
+        <form class="form-horizontal" style="margin-left:300px;width:500px;">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Buscar desde</label>
+                <div class="col-sm-8">
+                    <select class="form-control" data-ng-model="searchSince" data-ng-init="searchSince = 1">
+                        <option value="1">Rango de Fechas</option>
+                        <option value="2">Todo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" data-ng-show="searchSince == 1">
+                <label class="col-sm-4 control-label">Desde</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" placeholder="Seleccione la fecha inicial de consulta" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group" data-ng-show="searchSince == 1">
+                <label class="col-sm-4 control-label">Hasta</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="dateUntil" datepicker-popup="{{format}}" data-ng-model="dateUntil" is-open="openedUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntil($event)" show-button-bar="false" placeholder="Seleccione la fecha final de consulta" data-ng-init="dateUntil = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Remisión</label>
+                <div class="col-sm-8">
+                    <input type="text" data-ng-model="sRemision" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Cliente</label>
+                <div class="col-sm-8">
+                    <input type="text" data-ng-model="sCustomer" />
+                </div>
+            </div>
+            <div class="form-group" ng-init="loadsellers()">
+                <label class="col-sm-4 control-label">Vendedor</label>
+                <div class="col-sm-8">
+                    <select class="form-control" data-ng-model="sseller" data-ng-options="option.NombreCompleto for option in sellers">
+                        <option value="">Seleccione</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Producto</label>
+                <div class="col-sm-8">
+                    <input type="text" data-ng-model="sCodigo" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Proyecto</label>
+                <div class="col-sm-8">
+                    <input type="text" data-ng-model="sProject" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Factura</label>
+                <div class="col-sm-8">
+                    <input type="text" data-ng-model="sBillNumber" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Voucher</label>
+                <div class="col-sm-8">
+                    <input type="text" data-ng-model="sVoucher" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Estatus</label>
+                <div class="col-sm-8">
+                    <select class="form-control" data-ng-model="sStatusCredit" data-ng-init="sStatusCredit=@Constants.ventaPendiente">
+                        <option value="0">Todo</option>
+                        <option value="1">Saldada</option>
+                        <option value="2">Pendiente</option>
+                        <option value="3">Cancelada</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Sucursal</label>
+                <div class="col-sm-8">
+                    <input type="checkbox" ng-model="sBranchAma" ng-true-value="2" />Ámazonas
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" ng-model="sBranchGua" ng-true-value="3" />Guadalquivir
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" ng-model="sBranchTex" ng-true-value="4" />Textura
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Fecha de Pagos</label>
+                <div class="col-md-3">
+                    <input type="radio" ng-model="searchPayment" value="true"  />Si
+                </div>
+                <div class="col-md-3 text-left">
+                    <input type="radio" ng-model="searchPayment" value="false"  />No
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Cantidad Pago</label>
+                <div class="col-sm-8">
+                    <input type="text" data-ng-model="sPayment" />
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchSales" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listSales()">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive" style="width:1200px;">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:120px;">Remision</th>
+                        <th style="width:180px;">Cliente</th>
+                        <th style="width:100px;">Proyecto</th>
+                        <th>Despacho</th>
+                        <th style="width:135px;">Vendedores</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>T. Pago</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="s in Sales">
+                        <td>{{s.Remision}}</td>
+                        <td><div class="txt-describe">{{s.ClienteFisico}}{{s.ClienteMoral}}{{s.Despacho}}</div></td>
+                        <td><div class="txt-describe" data-toggle="tooltip" data-placement="top" title="{{s.Proyecto}}">{{s.Proyecto}}</div></td>
+                        <td><div class="txt-describe">{{s.DespachoReferencia}}</div></td>
+                        <td><div class="txt-describe">{{s.Usuario1}}</div></td>
+                        <td>{{s.Fecha | jsDate | date:'shortDate'}}</td>
+                        <td>{{(s.Total > 0)? s.Total : 0 | currency}}</td>
+                        <td class="txt-describe">
+                            <p><span data-ng-repeat="t in s.DescFormasPago track by $index">{{t}}|</span></p>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-sm dropdown-toggle" style="width:80px; background-color:{{s.sEstatus}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Opciónes<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" style="min-width:78px; max-width:78px;">
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","SetStatus") == 1" data-ng-click="ChangeStatus(s.idVenta,s.Estatus)" title="Estatus"><i class="fa fa-circle color-{{s.sEstatus}}" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","DetailSale") == 1" data-ng-click="DetailSale(s.Remision)" title="Detalle de la venta"><i class="fa fa-eye color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","DetailSale") == 1 && s.Estatus != 3" data-ng-click="CreditNoteSale(s.Remision)" title="Notas de Crédito"><i class="fa fa-list color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","PrintSale") == 1" data-ng-click="PrintSale(s.Remision)" title="Imprimir"><i class="fa fa-print color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","PrintSaleWithBankInformation") == 1" data-ng-click="PrintSaleWithBankInformation(s.Remision)" title="Imprimir con cuentas de banco"><i class="fa fa-print color-yellow" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","InsertPayment") == 1 && s.FormaPago == 2 && s.Estatus != 3" data-ng-click="PaymentHistorySale(s.idVenta)" title="Abonar"><i class="fa fa-money color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","AddTax") == 1 && s.IVA != 1 && s.Estatus != 3" data-ng-click="OpenAddTax(s.idVenta)" title="Agregar IVA"><i class="fa fa-calculator color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","SendMailSaleAgain") == 1" data-ng-click="SendMail(s.idVenta)" title="Enviar correo"><i class="fa fa-envelope color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","ModifyPaymentWay") == 1 && s.Estatus != 3" data-ng-click="ModalPaymentWay(s.idVenta, s.Total)" title="Modificar pagos"><i class="fa fa-credit-card color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","EditHeaderSale") == 1 && s.Estatus != 3" data-ng-click="EditHeaderSale(s.idVenta)" title="Editar encabezado de la venta"><i class="fa fa-pencil-square-o color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","EditSale") == 1 && s.Estatus != 3 && s.idSucursal > 1" ng-really-message="Desea modificar completamente está venta?" ng-really-click="EditSale(s.idVenta)" title="Editar venta completa"><i class="fa fa-pencil color-red" style="left: 0px;"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Sales","EditSale") == 1 && s.Estatus != 3 && s.idSucursal == 1" ng-really-message="Desea modificar completamente está venta?" ng-really-click="EditUnifySale(s.idVenta)" title="Editar venta completa"><i class="fa fa-pencil color-red" style="left: 0px;"></i></a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="openModalStatus" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Estatus de Venta</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="descService">Estatus</label>
+                            <select class="form-control" data-ng-model="statusSale">
+                                <option value="1">Saldada</option>
+                                <option value="2">Pendiente</option>
+                                <option value="3">Cancelada</option>
+                            </select>
+                        </div>
+                        <div class="form-group" ng-show="statusSale == 3">
+                            <label for="descService">Comentarios</label>
+                            <textarea cols="31" rows="5" ng-model="comments" ng-maxlength="290"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="SetStatus()">Aceptar</button>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="openModalStatusCredit" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Estatus de Pago de Crédito</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="descService">Estatus</label>
+                                <select class="form-control" data-ng-model="statusCredit">
+                                    <option value="1">Saldada</option>
+                                    <option value="2">Pendiente</option>
+                                    <option value="3">Cancelada</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-primary" ng-click="SetStatusCredit()">Aceptar</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalDetailSaleOnLine" aria-labelledby="modalReloadPage" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style="width:1200px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Detalle de Venta</h4>
+                    </div>
+                    <div class="modal-body" id="msgModalDetailSaleOnLine">
+                        <div ng-include="includeURL"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalCreditNoteSaleOnLine" aria-labelledby="modalReloadPage" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style="width:1200px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Detalle de Venta</h4>
+                    </div>
+                    <div class="modal-body" id="msgModalCreditNoteSaleOnLine">
+                        <div ng-include="includeCreditNoteSale"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalPaymentSaleOnLine" aria-labelledby="modalReloadPage" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Pagos de Venta</h4>
+                    </div>
+                    <div class="modal-body" id="msgModalPaymentSaleOnLine">
+                        <div ng-include="includeURLPayment"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalAddTax" aria-labelledby="modalReloadPage" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Facturar</h4>
+                    </div>
+                    <div class="modal-body" id="msgModalPaymentSaleOnLine">
+                        <div ng-include="includeURLAddTax"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalSendMail" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm" style="width: 400px;">
+                <div class="modal-content" style="width: 400px;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="descService">Correo</label>
+                            <input type="email" data-ng-model="txtSendMail" style="width: 300px;" />
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="AcceptSendMail()">Aceptar</button>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!----------------------------MODAL PAYMENT---------------------------->
+        <div class="modal" tabindex="-1" role="dialog" id="modalPayment" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="width:1200px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Forma de pago</h4>
+                    </div>
+                    <div class="modal-body" style="max-height:600px; overflow-y: auto;">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="color-red">Total <b>{{ total | currency }}</b></span>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="color-red" ng-show="msgTypesPayment">* El total de la venta debe de cubrirse, aún resta: {{ missing | currency }}</span>
+                            </div>
+                        </div>
+                        <br />
+
+                        <div class="panel panel-success" style="width:100%;">
+                            <div class="panel-body" data-ng-repeat="item in typesPaymentItems">
+                                <div class="row">
+                                    <div class="col-sm-4">
+
+                                    </div>
+                                    <div class="col-sm-2">
+                                        Forma de Pago
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <select class="form-control" data-ng-model="item.typesPayment">
+                                            <option value="1">Cheque</option>
+                                            <option value="2">Crédito</option>
+                                            <option value="3">Deposito</option>
+                                            <option value="4">Efectivo</option>
+                                            <option value="5">Tarjeta de Crédito</option>
+                                            <option value="6">Tarjeta de Débito</option>
+                                            <option value="7">Transferencia</option>
+                                            <option value="8">Nota de Crédito</option>
+                                            <option value="9">Intercambio</option>
+                                            <option value="10">Mercado Pago</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row" ng-show="item.typesPayment == 8">
+                                    <div class="col-sm-2 text-right">
+                                        Nota de Crédito
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control" ng-model="item.creditnote" placeholder="Nota de Crédito" uppercase>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="button" id="getCreditNote" name="getCreditNote" class="btn btn-primary" data-ng-click="GetCreditNote(item);" data-loading-text="Cargando...">Buscar</button>
+                                    </div>
+                                </div>
+                                <div class="row" ng-show="item.typesPayment != 8">
+                                    <div class="col-sm-2 text-right">
+                                        Títular
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control" ng-model="item.holder" ng-disabled="item.typesPayment == 2 || item.typesPayment == 3 || item.typesPayment == 4" placeholder="Nombre del Titular" uppercase>
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        No. de IFE
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control" ng-model="item.numIFE" ng-disabled="item.typesPayment != 5 && item.typesPayment != 6" placeholder="Número de IFE" uppercase>
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        Banco
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control" ng-model="item.bank" ng-disabled="item.typesPayment == 2 || item.typesPayment == 4" placeholder="Nombre del Banco" uppercase>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-4">
+
+                                    </div>
+                                    <div class="col-sm-2" ng-show="item.typesPayment == 5 || item.typesPayment == 6 ">
+                                        Terminales
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <select class="form-control" ng-show="item.typesPayment == 5 || item.typesPayment == 6" name="idCatalogTerminalType" data-ng-model="item.idCatalogTerminalType" data-ng-options="option.idCatalogTerminalType as option.Name for option in terminalTypeStatus">
+                                            <option>Seleccione</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4 text-right" ng-show="item.typesPayment == 7">
+                                        Banco Destino
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <select style="width:115px" ng-show="item.typesPayment == 7" class="form-control" name="idCatalogBankAccount" data-ng-model="item.idCatalogBankAccount" data-ng-options="option.idCatalogBankAccount as option.Name for option in bankAccountStatus">
+                                            <option>Seleccione</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-2 text-right">
+                                        Tipo de Tarjeta
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        <select class="form-control" data-ng-model="item.typesCard" ng-disabled="item.typesPayment != 5 && item.typesPayment != 6">
+                                            <option value="1">American Express</option>
+                                            <option value="2">Master Card</option>
+                                            <option value="3">Visa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 text-right" ng-show="item.typesPayment == 1">
+                                        No. de Cheque
+                                    </div>
+                                    <div class="col-sm-2" ng-show="item.typesPayment == 1">
+                                        <input type="text" class="form-control" ng-model="item.numCheck" ng-disabled="item.typesPayment != 1" placeholder="Número de Cheque" uppercase>
+                                    </div>
+                                    <div class="col-sm-2 text-right" ng-show="item.typesPayment == 5" ng-init="GetPaymentMonths();">
+                                        Meses
+                                    </div>
+                                    <div class="col-sm-2" ng-show="item.typesPayment == 5">
+                                        <select class="form-control" data-ng-model="item.paymentMonth" data-ng-options="option.idPagoMeses as option.Meses for option in paymentMonths">
+                                            <option value="">Seleccione</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        Cantidad
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control" ng-model="item.amount" ng-currency placeholder="Cantidad" ng-readonly="item.typesPayment == 8">
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-sm-2 text-right">
+                                        <label ng-show="item.typesPayment != 8">IVA</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="checkbox" ng-show="item.typesPayment != 8" ng-model="item.IVA" ng-change="CalculateTotalCostTypesPayment(item);">
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        <label ng-show="item.typesPayment == 2">Fecha</label>
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        <input type="text" class="form-control" id="dateMaxPayment" ng-show="item.typesPayment == 2" datepicker-popup="{{format}}" ng-model="item.dateMaxPayment" is-open="item.openedMaxPayment" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openMaxPayment(this, $event)" show-button-bar="false" placeholder="Seleccione la fecha límite de pago" data-ng-init="item.dateMaxPayment = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        <button type="button" name="addTypePayment" class="btn btn-primary" data-ng-click="RemoveTypePayment();">Remover</button>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="button" name="addTypePayment" class="btn btn-success" data-ng-click="AddModifyTypePayment();" style="width:100%; font-size:1.5em;">Agregar</button>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                </div>
+                                <div class="col-md-2">
+
+                                </div>
+                                <div class="col-md-5">
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-5">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" name="saveSale" class="btn btn-primary" ng-disabled="typesPaymentItems.length == 0" data-ng-click="SaveModifyPaymentWay();" data-ng-disabled="buttonDisabled">Aceptar</button>
+                                </div>
+                                <div class="col-md-5">
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!----------------------------MODAL CREDIT-------------------------->
+        <div class="modal" tabindex="-1" role="dialog" id="modalCreditNote" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="thumbnail">
+                                    <div class="text-center">
+                                        <h2>{{resCredit | currency}}</h2>
+                                    </div>
+                                    <div class="caption">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"><h3>Nota de Crédito</h3></li>
+                                            <li class="list-group-item">{{remisionCredit}}</li>
+                                            <li class="list-group-item">Valido hasta: {{finalDateCredit}}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-btn-modal">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="PrintCredit(idCreditNote)">Imprimir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalEditSale" aria-labelledby="modalReloadPage" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Detalle de Venta</h4>
+                    </div>
+                    <div class="modal-body" id="msgModalEditSale">
+                        <div ng-include="includeURLEditSale"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

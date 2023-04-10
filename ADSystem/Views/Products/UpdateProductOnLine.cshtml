@@ -1,0 +1,55 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.ProductViewModel
+
+
+
+@*@{ Session["idProduct"] = Model.Codigo;   }*@
+<br />
+
+<div class="panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modificar Producto</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label>Código</label>
+            <input type="text" maxlength="100" class="form-control" id="Code" data-ng-model="newProduct.Code" data-ng-init="newProduct.Code='@Model.Codigo'" placeholder="Escriba el código" uppercase />
+        </div>
+        <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" maxlength="250" class="form-control" id="Description" data-ng-model="newProduct.Description" data-ng-init="newProduct.Description='@Model.Descripcion'" placeholder="Escriba la descripción" uppercase />
+        </div>
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" maxlength="200" class="form-control" id="Name" data-ng-model="newProduct.Name" data-ng-init="newProduct.Name='@Model.Nombre'" placeholder="Escriba el nombre del producto" uppercase />
+        </div>
+        <div class="form-group">
+            <label>Precio Venta</label>
+            <input type="text" maxlength="9" class="form-control" id="SalePrice" data-ng-model="newProduct.SalePrice" data-ng-init="newProduct.SalePrice='@Model.PrecioVenta'" ng-currency placeholder="Escriba el precio de venta">
+        </div>
+        <section data-ng-init="newProduct.lBranches=@ViewBag.ProductBranch">            
+            <div class="form-group">
+                <label>Proveedor</label>
+                <select class="form-control" name="ProveedorId" id="ProveedorId" data-ng-model="newProduct.ProveedorId" data-ng-init="setSelecProveedor('@Model.idProveedor')" data-ng-options="option.Empresa for option in Providers"></select>
+            </div>
+            <div class="form-group" data-ng-repeat="br in newProduct.lBranches">
+                <label>{{br.Sucursal}}</label>
+                <input type="text" maxlength="4" class="form-control" data-ng-model="br.Existencia" placeholder="Escriba el núm. de existencias" />
+            </div>
+        </section>
+        <div class="form-group">
+            <label>Comentarios</label>
+            <textarea rows="4" cols="50" class="form-control" id="Comments" data-ng-model="newProduct.Comments" data-ng-init="newProduct.Comments='@Model.Comentarios'" placeholder="Escriba comentarios" />
+        </div>
+        <div class="form-group">
+            <label>Justificación de cambios</label>
+            <textarea rows="4" cols="50" class="form-control" id="Justify" data-ng-model="newProduct.Justify" placeholder="Indique porque de sus cambios" uppercase></textarea>
+        </div>
+    </div>
+    @Html.Raw(HtmlHelperExtension.Button("Products", "SaveUpdateProductOnLine", "SaveUpdateProductOnLine", "SaveUpdateProductOnLine", "Guardar", "", "", "SaveUpdateProductOnLine(" + Model.idProducto + ")", "btn btn-primary", "Guardando..."))    
+    <ul class="list-group">
+        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+    </ul>
+</div>

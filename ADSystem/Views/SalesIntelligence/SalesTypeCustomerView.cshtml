@@ -1,0 +1,120 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@using ADSystem.Common;
+@using ADEntities.Queries.TypesGeneric;
+
+@{
+    ViewBag.Title = "Reportes - Tipo Cliente";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+<style>
+    .table {
+        width: 3500px;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .img-responsive {
+        width: 44px;
+        height: 44px;
+        display: inline;
+        cursor: pointer;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/bootstrap-datetimepicker")" />
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $(".datepickerSales").datetimepicker({
+            format: 'MM-DD-YYYY'
+        });
+    });
+
+</script>
+
+<script type="text/javascript" src="@Url.Js("Class/SalesIntelligence/SalesTypeCustomer")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="SalesTypeCustomerController" style="width:1200px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Reporte Ventas</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal" style="margin-left:300px;width:500px;">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Desde</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" placeholder="Seleccione la fecha inicial de consulta" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Hasta</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateUntil" datepicker-popup="{{format}}" data-ng-model="dateUntil" is-open="openedUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntil($event)" show-button-bar="false" placeholder="Seleccione la fecha final de consulta" data-ng-init="dateUntil = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Vendedor</label>
+                <div class="col-sm-6" data-ng-init="LoadUsers()">
+                    <select class="form-control" name="seller" id="seller" data-ng-model="seller" data-ng-options="option.idUsuario as option.NombreCompleto for option in users">
+                        <option value="">TODOS...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Sucursal</label>
+                <div class="col-sm-10">
+                    <input type="radio" ng-model="branch" value="1">Todas
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" ng-model="branch" value="2">Amazonas
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" ng-model="branch" value="3">Guadalquivir
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" ng-model="branch" value="4">Textura
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchReport" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="LoadSales(0,10)">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+
+        <div class="table-responsive" style="width:100%;height:100%;padding-bottom: 100px;">
+            <div class="row">
+                <div class="col-md-12 text-left">
+                    <img src="@Url.Img("icon_excel.png")" alt="exportar" style="width:25px;height:25px;" data-ng-click="DownloadSales();" />
+                </div>
+            </div>
+            <table class="table table-hover">
+                <tr>
+                    <td>Mes</td>
+                    <td>Remision</td>
+                    <td>Tipo Cliente</td>
+                    <td>Cliente</td>
+                    <td>Vendedor</td>
+                    <td>Subtotal</td>
+                    <td>Descuento</td>
+                    <td>Total</td>
+                </tr>
+                <tr data-ng-repeat="s in sales">
+                    <td>{{s.Mes}}</td>
+                    <td>{{s.Remision}}</td>
+                    <td>{{s.TipoCliente}}</td>
+                    <td>{{s.Cliente}}</td>
+                    <td>{{s.Vendedor}}</td>
+                    <td>{{s.Subtotal | currency}}</td>
+                    <td>{{s.Descuento | currency}}</td>
+                    <td>{{s.Total | currency}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

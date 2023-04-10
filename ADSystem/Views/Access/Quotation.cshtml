@@ -1,0 +1,404 @@
+﻿@using System.Web.MVC;
+@using System.Globalization;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.SaleViewModel
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>COTIZACIÓN</title>
+    <link href="~/Content/Print/css/print.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700" rel="stylesheet">
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angucomplete")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+
+</head>
+
+<body>
+    <div class="contenedor">
+        <table style="width: 100%; padding: 20px 0 5px 0;">
+            <tr>
+                <th style="width: 30%;"></th>
+                <th style="width: 30%;">
+                    <img style="width: 300px;" src="@Url.Img("print/logotipo.png")">
+                </th>
+                <th class="folio" style="width: 30%; padding-right: 20px;"></th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border-bottom: 1px solid #D4D4D4; padding: 20px; text-align: center;">
+            <tr>
+                <th class="txt-data" style="width: 30%; text-align: left;">Sucursal:<strong> TODAS</strong></th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="width: 30%;">Vendedor:<strong>Ricardo Montemayor Bravo</strong><br /><strong></strong></th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="width: 30%; text-align: right;">Fecha:<strong>25/10/2019</strong></th>
+            </tr>
+        </table>
+
+        <table style="width: 95%; padding: 20px; text-align: left; margin: 0 auto;">
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Cliente:<strong>LILIANA ORTEGA QUEZADA</strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Móvil:<strong>8110663932</strong></th>
+            </tr>
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Teléfono:<strong></strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Direccción:<strong></strong></th>
+            </tr>
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Email:<strong>ORTEGALILIANA@GMAIL.COM</strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Proyecto:<strong></strong></th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; padding: 10px; border-bottom: 2px solid #000;">
+            <tr>
+                <th style="width: 31%;">
+                    <div class="circulo-left"></div>
+                </th>
+                <th class="titulos" style="width: 30%; text-align: center;">COTIZACIÓN</th>
+                <th style="width: 31%;">
+                    <div class="circulo-right"></div>
+                </th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; padding: 20px 0 3px 0">
+            <tr>
+                <th class="subtitulos">
+                    DETALLE
+                </th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border: 1px solid #D4D4D4; border-radius: 5px; padding: 10px; text-align: center;">
+            <tr>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        IMAGEN
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        CÓDIGO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        DESCRIPCIÓN
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        CANT.
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        PRECIO UNITARIO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        SUBTOTAL
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        DESCUENTO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        TOTAL
+                    </strong>
+                </th>
+            </tr>
+        </table>
+
+        <section class="tb-productos">
+            <table style="width: 100%; text-align: left;">
+                <tr>
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="http://www.accentsadmin.com/Content/Products/31d8adab-a7fa-4d82-b75a-756a50b000a6.JPG">
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        7688/111 SILLON INDIVIDUAL LAYTON ARDOISE
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        7688/111 SILLON INIDVIDUAL LAYTON ARDOISE
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        2
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        $20,200.00
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        $40,400.00
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        5
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        $38,380.00
+                    </td>
+                </tr>
+                <tr>
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="http://www.accentsadmin.com/Content/Products/5daa1340-c372-410d-9ffa-9d2f5cdbe181.JPG">
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        030719 BANCA AMAZILIA 140X64X50
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        BANCA AMAZILIA 140X64X50
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        1
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        $18,900.00
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        $18,900.00
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        5
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        $17,955.00
+                    </td>
+                </tr>
+                <tr>
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="http://www.accentsadmin.com/Content/Products/29e2370c-027e-4085-b63c-3979467f0125.JPG">
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        75107-2
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        SET DE 2 CAJAS
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        1
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        $5,890.00
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        $5,890.00
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        5
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        $5,595.5
+                    </td>
+                </tr>
+                <tr>
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="http://www.accentsadmin.com/Content/Products/2e1b5e58-b631-4a96-8224-2cb638a21fe5.JPG">
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        10647.23-COJ 55 X 55
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        SONORA
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        2
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        $2,800.00
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        $5,600.00
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        5
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        $5,320.00
+                    </td>
+                </tr>
+                <tr>
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="http://www.accentsadmin.com/Content/Products/eeb4b701-7e0d-462e-905b-877720774144.JPG">
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        CMN2957/9208 - COJ 55X5
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        CMN2957/9208 COJ 55X55 -PLUMA Y DELCRON
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        2
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        $2,500.00
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        $5,000.00
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        5
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        $4,750.00
+                    </td>
+                </tr>
+                <tr>
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="http://www.accentsadmin.com/Content/Products/6e91d03f-580b-4a0e-ac26-a598a9255c50.JPG" />
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        74640.00
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        PORTAVELAS EN RAMA COLOR PLATA
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        1
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        $8,400.00
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        $8,400.00
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        5
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        $7,980.00
+                    </td>
+                </tr>
+                <tr>
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="http://www.accentsadmin.com/Content/Products/8b4aff91-7d5d-413c-bce1-b5ea337844b8.JPEG" />
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        AC02
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        TRICERATOPS NEGRO ESCALA 1:6
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        1
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        $11,600.00
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        $11,600.00
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        5
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        $11,020
+                    </td>
+                </tr>
+                <tr>
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="http://www.accentsadmin.com/Content/Products/b9f7e6c4-4745-43fc-8521-afb20effc503.JPG" />
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        FDG2830/01SHUKNA COJ 55X55
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        FDG2830/01SHUKNA COJ 55X55
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        2
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        $3,800.00
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        $7,600.00
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        5
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        $7,220.00
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <table style="width: 100%; margin-top: 15px; border-bottom: 2px solid #000; border-top: 2px solid #000; padding: 10px;">
+            <tr>
+                <td class="txt-data" style="text-align: left; width: 42%; padding: 0 0 15px 0;">
+                    Cantidad de productos: <strong>12</strong>
+                </td>
+                <td class="txt-data" style="text-align: left; width: 25%; padding: 0 0 15px 0;"></td>
+            </tr>
+            <tr>
+                <td class="txt-data" style="text-align: left; width: 42%; padding: 0 0 15px 0;"></td>
+                <td class="txt-data" style="text-align: left; width: 25%; padding: 0 0 15px 0;"></td>
+                <td class="txt-data" style="text-align: right; width: 25%; padding: 0 0  15px 0;"></td>
+            </tr>
+            <tr>
+                <td class="txt-data" style="text-align: left; width: 42%"></td>
+                <td class="txt-data" style="text-align: left; width: 25%;"></td>
+                <td class="txt-data" style="text-align: right; width: 25%;">
+                    Total:<strong> $98,220.50</strong>
+                </td>
+            </tr>
+        </table>
+        <table style="width: 100%; border-bottom: 2px solid #000;">
+            <tr>
+                <th class="txt-data-10 info">
+                    * Nuestra Política de Devolución  se encuentra impresa en la RECEPCIÓN de cada una de nuestras sucursales.
+                </th>
+            </tr>
+            <tr>
+                <th class="txt-data-10 info">
+                    * En promociones especiales no aplican descuentos adicionales.
+                </th>
+            </tr>
+            <tr>
+                <th class="txt-data-10 info">
+                    * Precios sujetos a cambio sin previo aviso, en productos importados o sobre pedido.
+                </th>
+            </tr>
+            <tr>
+                <th class="txt-data-10 info">
+                    * En pedidos de diseños especiales proporcionados por el cliente no nos hacemos responsables por fallas de cálculo o de ergonomía, los diseños que los clientes nos proveen son totalmente bajo su riesgo y responsabilidad y deberán ser pagados al 100% por el cliente antes de la entrega, cualquier cambio o modificación al diseño ya aceptado se cobrará como extra. Las garantías de fabricación varían según el proveedor y serán estipuladas en una carta cuando el cliente lo solicite a la hora de la compra.
+                </th>
+            </tr>
+        </table>
+        <div class="footer">
+            <p>Río Amazonas 305 Ote. Col. del Valle San Pedro, Garza Garcia, N. L. CP: 66220, Tel. (81) 8356 9558, www.acentsdecoration.com, RFC: ADE050128252</p>
+        </div>
+    </div>
+</body>
+</html>

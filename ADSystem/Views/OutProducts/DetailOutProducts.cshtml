@@ -1,0 +1,188 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.OutProductsViewModel
+
+<style>
+    .center {
+        text-align: center;
+    }
+
+        .center form {
+            display: inline-block;
+        }
+</style>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12 center">
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Remisión</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="remision = '@Model.remision'"><b>{{remision}}</b></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Sucursal</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="branch = '@Model.Sucursal'">{{branch}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Fecha</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="dateTime = '@Model.Fecha'">{{dateTime}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Cliente</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="customer = '@Model.sCustomer'">{{customer}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Vendedor</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="sellerOne = '@Model.Vendedor'">{{sellerOne}}</span>-<span data-ng-init="sellerTwo = '@Model.Vendedor2'">{{sellerTwo}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Total de Productos</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="cantidadProductos = '@Model.CantidadProductos'"><i>{{cantidadProductos}}</i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Subtotal</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="subTotal = '@Model.Subtotal'"><i>{{subTotal | currency}}</i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Total</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="total = '@Model.Total'"><b>{{total | currency}}</b></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Restante</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="restante = '@Model.Restante'"><b>{{restante | currency}}</b></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Autorizado por:</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="checker = '@Model.Verificador'">{{checker}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <h3 class="panel-title">Productos</h3>
+        <br />
+        <div class="row" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.oDetail), '@Model.idSucursal')">
+            <div class="col-md-1 text-center">
+                <span class="color-red">Imagen</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Código</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Precio</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Salida</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Pendiente</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Devolución</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Venta</span>
+            </div>
+            <div class="col-md-1 text-center">
+            </div>
+            <br />
+            <br />
+            <div class="col-md-12" data-ng-init="LoadUsers()">
+                <div class="row" ng-repeat-start="item in $parent.items">
+                    <div class="col-md-1 text-center"><img class="img-product-list" src="{{item.urlImagen}}" /></div>
+                    <div class="col-md-2 text-center">{{item.Codigo}}</div>
+                    <div class="col-md-2 text-center">{{item.Precio | currency}}</div>
+                    <div class="col-md-1 text-center">{{item.Cantidad}}</div>
+                    <div class="col-md-1 text-center">{{item.Pendiente}}</div>
+                    <div class="col-md-2 text-center"><input type="number" id="dev{{item.idDetalleVista}}" style="width:60px;" ng-model="item.numDevolucion" name="devProduct" value="0" ng-hide="item.iEstatus != 1" min="0" max="{{item.Cantidad - (item.Devolucion + item.Venta + item.numVenta)}}" ng-readonly="(item.Cantidad - (item.Devolucion + item.Venta + item.numVenta)) == 0" /><span ng-show="item.iEstatus != 1">{{item.Devolucion}}</span></div>
+                    <div class="col-md-2 text-center"><input type="number" style="width:60px;" ng-model="item.numVenta" name="salProduct" value="0" ng-hide="item.iEstatus != 1" min="0" max="{{item.Cantidad - (item.Devolucion + item.Venta + item.numDevolucion)}}" ng-readonly="(item.Cantidad - (item.Devolucion + item.Venta + item.numDevolucion)) == 0" /><span ng-show="item.iEstatus != 1">{{item.Venta}}</span></div>
+                    <div class="col-md-1 text-center">
+                        <a role="button" data-toggle="collapse" href="#{{item.idDetalleVista}}" aria-expanded="false" aria-controls="{{item.idDetalleVista}}">
+                            <i class="fa fa-eye" style="left: 0px; color:#009289;"></i>
+                        </a>
+                    </div>
+                </div><br>
+                <div class="panel panel-default collapse" id="{{item.idDetalleVista}}" style="background-color:#f7f5f5; margin-bottom:10px;" ng-repeat-end>
+                    <div class="panel-body text-center">
+                        <h4 class="panel-title" style="font-size: 18px;">Detalle de producto</h4>
+                        <div class="row">
+                            <div class="col-md-2 text-center color-red">Devolución</div>
+                            <div class="col-md-2 text-center color-red">Venta</div>
+                            <div class="col-md-2 text-center color-red">Fecha</div>
+                            <div class="col-md-3 text-center color-red">Remisión</div>
+                            <div class="col-md-3 text-center color-red">Verificador</div>
+                        </div>
+                        <div class="row" ng-repeat="hist in item.oHistoryDetail">
+                            <div class="col-md-2 text-center">{{hist.Devolucion}}</div>
+                            <div class="col-md-2 text-center">{{hist.Venta}}</div>
+                            <div class="col-md-2 text-center">{{hist.Fecha | date:'dd-MM-yyyy'}}</div>
+                            <div class="col-md-3 text-center">{{hist.Remision}}</div>
+                            <div class="col-md-3 text-center">{{hist.Verificador}}</div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6 text-right">
+                <label class="col-sm-"><b>Verificado por:</b></label>
+            </div>
+            <div class="col-sm-6 text-left">
+                <select class="form-control" data-ng-model="Supervisor.idSupervisor" data-ng-options="option.NombreCompleto for option in usersOne">
+                    <option value="">Seleccione</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 center">
+                <button type="button" id="createQuotations" class="btn btn-primary button-search" style="background-color: #5cb85c; border-color: #4cae4c;" data-loading-text='Guardando...' data-ng-init="estatus = @Model.iEstatus" ng-disabled="estatus != 1" data-ng-click="createQuotations('@Model.remision')">Cotizar</button>&nbsp;&nbsp;&nbsp;<button type="button" id="saveUpdateStock" class="btn btn-primary button-search" data-loading-text='Guardando...' data-ng-init="estatus = @Model.iEstatus" ng-disabled="estatus != 1" data-ng-click="saveUpdateStock(@Model.idVista)">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

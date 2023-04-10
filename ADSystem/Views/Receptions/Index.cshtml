@@ -1,0 +1,135 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+
+@{
+    ViewBag.Title = "Recepciones";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Receptions/Add")"></script>
+
+<br />
+<div class="panel panel-default" id="panelReception" data-ng-controller="ReceptionsController" style="width:950px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Recepciones</h3>
+    </div>
+    <div class="panel-body" data-ng-init="LoadInit('@ViewBag.Seller')">
+        <div class="row">
+            <div class="col-md-4 text-left">
+                <label class="control-label">Recepción</label>
+                <h4>{{number}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Fecha y hora</label>
+                <h4 data-ng-init="dateTime = '@DateTime.Now.ToString("MM/dd/yyyy HH:mm")'">{{dateTime}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Sucursal</label>
+                <h4>{{branch}}</h4>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <form class="form-horizontal">                    
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Transferencia</label>
+                        <div class="col-sm-8">
+                            <input type="text" data-ng-model="transfernumber" />
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <div class="col-sm-12">
+                            <button type="button" id="search" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="GetTransfer()">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <h3 class="panel-title text-center">Productos</h3>
+        <br />
+        <div class="row">
+            <div class="col-md-1 text-center">
+                <span class="color-red">Imagen</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Código</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Descripción</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Precio</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Enviado</span>
+            </div>
+            <div class="col-md-2text-center">
+                <span class="color-red">Ingresado</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red"></span>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" ng-repeat="item in items">
+                    <div class="col-md-1 text-center"><img class="img-product-list" src="{{item.imagen}}" /></div>
+                    <div class="col-md-2 text-center">{{(item.codigo == null)? item.credito:item.codigo}}</div>
+                    <div class="col-md-2 text-center txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{item.desc}}">{{item.desc}}</p></div>
+                    <div class="col-md-2 text-center">{{item.prec | currency}}</div>
+                    <div class="col-md-1 text-center">{{item.enviado}}</div>
+                    <div class="col-md-2 text-center"><input type="text" maxlength="5" id="rec{{item.idProducto}}" ng-model="item.recibido" value="0" style="width:50px;"/></div>     
+                    <div class="col-md-1 text-center">
+                        <i class="fa fa-comments-o color-red" ng-click="OpenCommentsModal(item.idProducto, item.comentarios)"></i>
+                    </div>               
+                </div><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="saveReception" name="saveReception" class="btn btn-primary" data-ng-click="" ng-really-message="Desea finalizar la recepción?" ng-really-click="ValidateReception();" data-loading-text="Guardando...">Guardar</button>
+            </div>
+            <div class="col-md-5">
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL COMMENTS---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalComments" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Comentarios</h4>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="form-group hidden">
+                            <label for="productItem">ID</label>
+                            <input type="text" class="form-control" id="productItem" ng-model="productItem">
+                        </div>
+                        <div class="form-group">
+                            <label for="commentsItem">Comentarios</label>
+                            <textarea class="form-control" id="commentsItem" rows="3" ng-model="commentsItem" maxlength="400"></textarea>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-primary" ng-click="SaveComments()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

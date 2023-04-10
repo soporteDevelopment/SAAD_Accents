@@ -1,0 +1,1013 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.OutProductsViewModel
+
+@{
+    ViewBag.Title = "Ventas";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Sales")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Customers")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Offices")"></script>
+<script type="text/javascript" src="http://beneposto.pl/jqueryrotate/js/jQueryRotateCompressed.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script type="text/javascript">
+    function rotate() {
+        var value = 0
+        $("#imgName").rotate({
+            bind:
+            {
+                click: function () {
+                    value += 90;
+                    $(this).rotate({ animateTo: value })
+                }
+            }
+        });
+    }
+</script>
+
+<style>
+    #holder {
+        width: 100%;
+        height: 350px;
+        border: 5px dashed gray;
+        border-radius: 8px;
+        background: rgb(230,230,230);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        vertical-align: central;
+    }
+</style>
+
+<style>
+    .vcenter {
+        height: 180px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        float: none;
+        padding-left: 75px;
+    }
+</style>
+
+<br />
+<div class="panel panel-default" data-ng-controller="SalesController" style="width:950px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ventas</h3>
+    </div>
+    <div class="panel-body" data-ng-init="branchID = @ViewBag.IDBranch">
+        <div class="row">
+            <div class="col-md-4 text-left" data-ng-init="idView = @ViewBag.IDView">
+                <label class="control-label" data-ng-init="GetNumberRem()">Remisión</label>
+                <h4>{{remision}}</h4>
+            </div>
+            <div class="col-md-4 text-left" data-ng-init="idUserChecker = @ViewBag.idUserChecker">
+                <label class="control-label">Fecha y hora</label>
+                <h4 data-ng-init="dateTime = '@DateTime.Now.ToString("MM/dd/yyyy HH:mm")'">{{dateTime}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Sucursal</label>
+                <h4 data-ng-init="branch = '@ViewBag.Branch.Nombre'">{{branch}}</h4>
+            </div>
+        </div>
+        <br />
+        <br />
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#costumer" aria-controls="costumer" role="tab" data-toggle="tab">Cliente</a></li>
+            <li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">Productos</a></li>
+            <li role="presentation"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Resumen</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="costumer" data-ng-init="LoadInformation(@ViewBag.TypeCustomer, '@ViewBag.Customer', '@ViewBag.Office', @Newtonsoft.Json.JsonConvert.SerializeObject(@ViewBag.Users), '@ViewBag.Credit')">
+                <br />
+                <br />
+                <div class="row" data-ng-init="LoadCustomers()">
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Cliente</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="radio" ng-model="customer.type" value="moral"  />Moral
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <input type="radio" ng-model="customer.type" value="physical"  />Físico
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <input type="radio" ng-model="customer.type" value="office"  />Despacho
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Proyecto</label>
+                    </div>
+                    <div class="col-md-5 text-left">
+                        <input type="text" ng-model="project" value="" maxlength="300" style="width: 300px;" data-ng-init="project = '@Model.Proyecto'" uppercase />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+                        <select class="form-control" name="moralCustomer" ng-show="customer.type == 'moral'" data-ng-model="moralCustomer" data-ng-options="option.Nombre for option in moralCustomers" >
+                            <option value="">Seleccione</option>
+                        </select>
+                        <select class="form-control" name="physicalCustomer" ng-show="customer.type == 'physical'" data-ng-model="physicalCustomer" data-ng-options="option.Nombre for option in physicalCustomers" >
+                            <option value="">Seleccione</option>
+                        </select>
+                        <select class="form-control" name="officeCustomer" ng-show="customer.type == 'office'" data-ng-model="officeCustomer" data-ng-options="option.Nombre for option in offices"  data-ng-init="LoadOffices()">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="JavaScript:void(0);" ng-show="customer.type == 'moral'" class="btn btn-block btn-success" data-ng-click="AddMoralCustomer();">
+                            <small>Agregar cliente</small>
+                        </a>
+                        <a href="JavaScript:void(0);" ng-show="customer.type == 'physical'" class="btn btn-block btn-success" data-ng-click="AddPhysicalCustomer();">
+                            Agregar cliente
+                        </a>
+                        <a href="JavaScript:void(0);" ng-show="customer.type == 'office'" class="btn btn-block btn-success" data-ng-click="AddOffice();">
+                            Agregar desp.
+                        </a>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-2 text-left">
+                        <label class="control-label">Despacho</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <input type="checkbox" ng-model="checkedOffices">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-2" data-ng-init="LoadServices()">
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control" name="office" ng-show="checkedOffices" data-ng-model="office" data-ng-options="option.Nombre for option in offices">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="control-label">Vendedor(es)</label>
+                    </div>
+                    <div class="col-md-4" data-ng-init="LoadUsers()">
+                        <select class="form-control" data-ng-model="sellerOne" data-ng-options="option.NombreCompleto for option in usersOne" data-ng-change="LoadUsersButNot()">
+                            <option value="">Seleccione</option>
+                        </select>
+                        <br />
+                        <select class="form-control" data-ng-model="sellerTwo" data-ng-options="option.NombreCompleto for option in usersTwo">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="products">
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Subtotal</label>
+                            </div>
+                            <div class="col-md-8">
+                                <span>{{subTotal|currency}}</span>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Descuento %</label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <input type="checkbox" ng-model="checkedDiscount" ng-change="CalculateTotalCostWithoutDiscount();">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label"></label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <input type="number" ng-readonly="!checkedDiscount" ng-model="discount" ng-change="CalculateTotalCostWithoutDiscount();" min="0" max="100" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">IVA</label>
+                            </div>
+                            <div class="col-md-4" style="text-align:left;">
+                                <input type="checkbox" ng-model="checkedIVA" ng-change="CalculateTotalCost();">
+                            </div>
+                            <div class="col-md-4" style="text-align:left;">
+                                <span ng-show="checkedIVA">{{IVA|currency}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Total</label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <h3>{{total|currency}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button type="button" name="addServiceSale" class="btn btn-warning" data-ng-click="OpenModalService();">Servicio</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label">Producto</label>
+                            </div>
+                            <div class="col-md-7">
+                                <angucomplete id="product"
+                                              placeholder="Código"
+                                              pause="300"
+                                              selectedobject="selectedCode"
+                                              url="../../../Products/GetProductsForCodigo?codigo="
+                                              datafield="Codigos"
+                                              titlefield="Codigo"
+                                              inputclass="form-control form-control-small" />
+                            </div>
+                            <div class="col-md-3">
+                                <a href="JavaScript:void(0)" class="btn btn-block btn-success" data-ng-click="GetProduct();">
+                                    Agregar
+                                </a>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <h3 class="panel-title text-center">Productos</h3>
+                <br />
+                <div class="row" data-ng-init="loadSalesFromOutProduct(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Imagen</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Código</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Descripción</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Precio</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Unidades</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Subtotal</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Descuento %</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Total</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-1 text-center"><img class="img-product-list" src="{{item.imagen}}" /></div>
+                            <div class="col-md-2 text-center">{{(item.codigo == null)? item.credito:item.codigo}}</div>
+                            <div class="col-md-1 text-center txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{item.desc}}">{{item.desc}}</p></div>
+                            <div class="col-md-2 text-center">{{item.prec | currency}}</div>
+                            <div class="col-md-1 text-center"><input type="text" maxlength="5" ng-model="item.cantidad" ng-change="ValidateStock(item.idProducto);" style="width:50px;" ng-readonly="item.credito == true" /></div>
+                            <div class="col-md-1 text-center">{{item.prec * item.cantidad | currency}}</div>
+                            <div class="col-md-1 text-center"><input type="text" maxlength="3" min="0" max="100" ng-model="item.descuento" ng-change="CalculateTotalCostWithoutDiscount()" style="width:50px;" ng-readonly="item.credito == true" /></div>
+                            <div class="col-md-2 text-center"><label>{{ (item.cantidad * item.prec) - ((item.cantidad * item.prec) * (item.descuento/100)) | currency}}</label></div>
+                            <div class="col-md-1 text-center">
+                                <i class="fa fa-trash color-red" ng-click="DeleteProduct(item.idProducto)"></i>
+                                <i class="fa fa-comments-o color-red" ng-click="OpenCommentsModal(item.idProducto, item.comentarios)"></i>
+                                <i ng-show="item.idTipoPromocion == 3" class="fa fa-star color-yellow" ng-click="ShowParentProductModal(item.idProducto)"></i>
+                            </div>
+                        </div><br>
+                    </div>
+                </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="summary">
+                @*<br />
+                    <br />
+                    <i class="fa fa-floppy-o fa-2 color-red" ng-really-message="Está seguro que desea guardar en borrador esta venta?" ng-really-click="SaveEraserSale();" style="left:3%;"></i>*@
+                <br />
+                <br />
+                <div class="panel panel-success" style="width:100%;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">ARTÍCULO</div>
+                            <div class="col-md-3">CANT.</div>
+                            <div class="col-md-2">PRE.UNIT</div>
+                            <div class="col-md-2">DESCUENTO %</div>
+                            <div class="col-md-2">TOTAL</div>
+                        </div>
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-3">{{item.codigo}}</div>
+                            <div class="col-md-3">{{item.cantidad}}</div>
+                            <div class="col-md-2">{{item.prec | currency }}</div>
+                            <div class="col-md-2">{{item.descuento}}</div>
+                            <div class="col-md-2 ">{{ (item.cantidad * item.prec) - ((item.cantidad * item.prec) * (item.descuento/100)) | currency}}</div>
+                        </div>
+                        <br>
+                        <b>Venta Subtotal</b>&nbsp;<span>{{ subTotal | currency}}</span>
+                        <br />
+                        <b ng-show="checkedDiscount">Descuento %</b>&nbsp;<span ng-show="checkedDiscount">{{ discount }}</span>
+                        <br />
+                        <b ng-show="checkedIVA">IVA 16%</b>&nbsp;<span ng-show="checkedIVA">{{IVA|currency}}</span>
+                        <br />
+                        <b>Venta Total</b>&nbsp;<span>{{ total | currency }}</span>
+                        <br />
+                        <b ng-show="customer.type == 'moral'">Cliente {{moralCustomer.Nombre}}</b>
+                        <b ng-show="customer.type == 'physical'">Cliente {{physicalCustomer.Nombre}}</b>
+                        <b ng-show="customer.type == 'office'">Cliente {{officeCustomer.Nombre}}</b>
+                        <br />
+                        <b>Le atendío {{sellerOne.NombreCompleto}} --- {{sellerTwo.NombreCompleto}}</b>
+                        <br />
+                        <br />
+                        <br />
+                        <b>Fecha:</b>&nbsp;<span>{{ dateTime }}</span>
+                        <br />
+                        <b>Sucursal:</b>&nbsp;<span>{{ branch }}</span>
+                        <b></b>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" name="saveSale" class="btn btn-primary" data-ng-click="" ng-really-message="Está seguro que desea finalizar esta venta?" ng-really-click="ResumeSale();">Pagar</button>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <br />
+    </div>
+
+    <!----------------------------MODAL BRANCH---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModal" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                <div class="modal-body">
+                    <figure class="img-modal">
+                        <img src="@Url.Img("icon_sucursales.png")">
+                    </figure>
+                </div>
+                <div class="container-btn-modal">
+                    <div class="row">
+                        <div class="col-md-4" data-ng-click="SetBranchName('RÍO AMAZONAS', 2)">RÍO AMAZONAS</div>
+                        <div class="col-md-4" data-ng-click="SetBranchName('RÍO GUADALQUIVIR', 3)">RÍO GUADALQUIVIR</div>
+                        <div class="col-md-4" data-ng-click="SetBranchName('TEXTURA', 4)">TEXTURA</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL ADD MORAL CUSTOMER---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalAddMoralCustomer" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-include="includeURLMoral"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL ADD PHYSICAL CUSTOMER---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalAddPhysicalCustomer" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-include="includeURLPhysical"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL ADD OFFICE CUSTOMER---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalAddOfficeCustomer" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-include="includeURLOffice"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL SERVICE---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalService" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Servicio</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="descService">Servicio</label>
+                            <select class="form-control" name="descService" data-ng-model="newService.descService" data-ng-options="option.Descripcion for option in listServices">
+                                <option value="">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePriceService">Precio</label>
+                            <input type="text" class="form-control" id="salePriceService" ng-model="newService.salePriceService" ng-currency maxlength="15" placeholder="Precio">
+                        </div>
+                        <div class="form-group">
+                            <label for="amountService">Cantidad</label>
+                            <input type="text" class="form-control" id="amountService" ng-model="newService.amountService" maxlength="5" placeholder="Cantidad">
+                        </div>
+                        <div class="form-group">
+                            <label for="commentsService">Comentarios</label>
+                            <textarea class="form-control" id="commentsService" rows="3" ng-model="newService.commentsService" maxlength="400"></textarea>
+                        </div>
+                        <div class="form-group" data-ng-init="iniAddProduct()">
+                            <div id="file-content" class="table-responsive file">
+                                <center><label>Arrastre aqui el archivo de imagen que desea agregar</label></center>
+                                <div id="holder" class="" data-ng-model="rd" data-ng-click="RotateImage()">   </div>
+                                <br />
+                                * Se permiten imágenes con formato PNG, JPEG y GIF
+                                <br /><br />
+                                <br /><br />
+                                <input type="hidden" id="imgName" />
+                                <input type="button" id="loadImg" class="btn btn-block btn-success" value="Cargar imagen de servicio" data-ng-click="SaveUploadImg()" />
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="AddService()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <ul class="list-group">
+                        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL CREDIT---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalCredit" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Nota de Crédito</h4>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Código</label>
+                            <input type="text" class="form-control" id="searchStr" ng-model="searchStr" maxlength="12" placeholder="Ingrese código" uppercase>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-primary" ng-click="AddCredit()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL VALIDATION---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalValidation" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-body" id="txtValidation">
+
+                </div>
+                <div class="container-btn-modal">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL COMMENTS---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalComments" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Comentarios</h4>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="form-group hidden">
+                            <label for="productItem">ID</label>
+                            <input type="text" class="form-control" id="productItem" ng-model="productItem">
+                        </div>
+                        <div class="form-group">
+                            <label for="commentsItem">Comentarios</label>
+                            <textarea class="form-control" id="commentsItem" rows="3" ng-model="commentsItem" maxlength="400"></textarea>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-primary" ng-click="SaveComments()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL PAYMENT---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalPayment" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" style="width:1200px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Forma de pago</h4>
+                </div>
+                <div class="modal-body" style="max-height:600px; overflow-y: auto;">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <span class="color-red">Total <b>{{  total | currency }}</b></span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <span class="color-red" ng-show="msgTypesPayment">* El total de la venta debe de cubrirse, aún resta: {{ missing | currency }}</span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="panel panel-success" style="width:100%;">
+                        <div class="panel-body" data-ng-repeat="item in typesPaymentItems">
+
+                            <div class="row">
+                                <div class="col-sm-4">
+
+                                </div>
+                                <div class="col-sm-2">
+                                    Forma de Pago
+                                </div>
+                                <div class="col-sm-2">
+                                    <select class="form-control" data-ng-model="item.typesPayment">
+                                        <option value="1">Cheque</option>
+                                        <option value="2">Crédito</option>
+                                        <option value="3">Deposito</option>
+                                        <option value="4">Efectivo</option>
+                                        <option value="5">Tarjeta de Crédito</option>
+                                        <option value="6">Tarjeta de Débito</option>
+                                        <option value="7">Transferencia</option>
+                                        <option value="8">Nota de Crédito</option>
+                                        <option value="9">Intercambio</option>
+                                        <option value="10">Mercado Pago</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row" ng-show="item.typesPayment == 8">
+                                <div class="col-sm-2 text-right">
+                                    Nota de Crédito
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" ng-model="item.creditnote" placeholder="Nota de Crédito" uppercase>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" id="getCreditNote" name="getCreditNote" class="btn btn-primary" data-ng-click="GetCreditNote(item);" data-loading-text="Cargando...">Buscar</button>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="item.typesPayment != 8">
+                                <div class="col-sm-2 text-right">
+                                    Títular
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" ng-model="item.holder" ng-disabled="item.typesPayment == 2 || item.typesPayment == 3 || item.typesPayment == 4" placeholder="Nombre del Titular" uppercase>
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    No. de IFE
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" ng-model="item.numIFE" ng-disabled="item.typesPayment != 5 && item.typesPayment != 6" placeholder="Número de IFE" uppercase>
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    Banco
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" ng-model="item.bank" ng-disabled="item.typesPayment == 2 || item.typesPayment == 4" placeholder="Nombre del Banco" uppercase>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-4">
+
+                                </div>
+                                <div class="col-sm-2" ng-show="item.typesPayment == 5 || item.typesPayment == 6 ">
+                                    Terminales
+                                </div>
+                                <div class="col-sm-2">
+                                    <select class="form-control" ng-show="item.typesPayment == 5 || item.typesPayment == 6" name="idCatalogTerminalType" data-ng-model="item.idCatalogTerminalType" data-ng-options="option.idCatalogTerminalType as option.Name for option in terminalTypeStatus">
+                                        <option>Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4 text-right" ng-show="item.typesPayment == 7">
+                                    Banco Destino
+                                </div>
+                                <div class="col-sm-2">
+                                    <select style="width:115px" ng-show="item.typesPayment == 7" class="form-control" name="idCatalogBankAccount" data-ng-model="item.idCatalogBankAccount" data-ng-options="option.idCatalogBankAccount as option.Name for option in bankAccountStatus">
+                                        <option>Seleccione</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-2 text-right">
+                                    Tipo de Tarjeta
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    <select class="form-control" data-ng-model="item.typesCard" ng-disabled="item.typesPayment != 5 && item.typesPayment != 6">
+                                        <option value="1">American Express</option>
+                                        <option value="2">Master Card</option>
+                                        <option value="3">Visa</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2 text-right" ng-show="item.typesPayment == 1">
+                                    No. de Cheque
+                                </div>
+                                <div class="col-sm-2" ng-show="item.typesPayment == 1">
+                                    <input type="text" class="form-control" ng-model="item.numCheck" ng-disabled="item.typesPayment != 1" placeholder="Número de Cheque" uppercase>
+                                </div>
+                                <div class="col-sm-2 text-right" ng-show="item.typesPayment == 5" ng-init="GetPaymentMonths();">
+                                    Meses
+                                </div>
+                                <div class="col-sm-2" ng-show="item.typesPayment == 5">
+                                    <select class="form-control" data-ng-model="item.paymentMonth" data-ng-options="option.idPagoMeses as option.Meses for option in paymentMonths">
+                                        <option value="">Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    Cantidad
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" ng-model="item.amount" ng-currency placeholder="Cantidad" ng-readonly="item.typesPayment == 8">
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-2 text-right">
+                                    <label ng-show="item.typesPayment != 8">IVA</label>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" ng-show="item.typesPayment != 8" ng-model="item.IVA" ng-change="CalculateTotalCostTypesPayment(item);">
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    <label ng-show="item.typesPayment == 2">Fecha</label>
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    <input type="text" class="form-control" id="dateMaxPayment" ng-show="item.typesPayment == 2" datepicker-popup="{{format}}" ng-model="item.dateMaxPayment" is-open="item.openedMaxPayment" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openMaxPayment(this, $event)" show-button-bar="false" placeholder="Seleccione la fecha límite de pago" data-ng-init="item.dateMaxPayment = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                                </div>
+                                <div class="col-sm-2 text-right">
+                                    <button type="button" name="addTypePayment" class="btn btn-primary" data-ng-click="RemoveTypePayment();">Remover</button>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" name="addTypePayment" class="btn btn-success" data-ng-click="AddTypePayment();" style="width:100%; font-size:1.5em;">Agregar</button>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-2">
+
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" name="saveSale" class="btn btn-primary" ng-disabled="typesPaymentItems.length == 0" data-ng-click="SavePayment();" data-ng-disabled="buttonDisabled">Aceptar</button>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL PRINT BILLING---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalPrintSale" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Resumen de la Venta</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-success" style="width:100%;">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12"><b>{{remision}}</b></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">ARTÍCULO</div>
+                                <div class="col-md-3">CANT.</div>
+                                <div class="col-md-2">PRE.UNIT</div>
+                                <div class="col-md-2">DESC. %</div>
+                                <div class="col-md-2">TOTAL</div>
+                            </div>
+                            <div class="row" ng-repeat="item in items">
+                                <div class="col-md-3">{{item.codigo}}</div>
+                                <div class="col-md-3">{{item.cantidad}}</div>
+                                <div class="col-md-2">{{item.prec | currency}}</div>
+                                <div class="col-md-2">{{item.descuento}}</div>
+                                <div class="col-md-2">{{ (item.cantidad * item.prec) - ((item.cantidad * item.prec) * (item.descuento/100)) | currency}}</div>
+                            </div>
+                            <br>
+                            <b>Venta Subtotal</b>&nbsp;<span>{{ subTotal | currency}}</span>
+                            <br />
+                            <b ng-show="checkedDiscount">Descuento %</b>&nbsp;<span ng-show="checkedDiscount">{{ discount }}</span>
+                            <br />
+                            <b ng-show="checkedIVA">IVA 16%</b>&nbsp;<span ng-show="checkedIVA">{{IVA|currency}}</span>
+                            <br />
+                            <b>Venta Total</b>&nbsp;<span>{{ total | currency }}</span>
+                            <br />
+                            <b>Le atendío {{sellerOne.NombreCompleto}} --- {{sellerTwo.NombreCompleto}}</b>
+                            <br />
+                            <br />
+                            <br />
+                            <b>Fecha:</b>&nbsp;<span>{{ dateTime }}</span>
+                            <br />
+                            <b>Sucursal:</b>&nbsp;<span>{{ branch }}</span>
+                            <b></b>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <button type="button" name="printSale" class="btn btn-primary" data-ng-click="Print();">Imprimir</button>
+                                </div>
+                                <div class="col-md-4">
+
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" name="billSale" class="btn btn-primary" data-ng-click="Bill();">Facturar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL BILL---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalBill" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Factura</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-success" style="width:100%;">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">RFC</label>
+                                    <div class="col-sm-10">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control" id="rfcBill" ng-model="rfcBill" placeholder="Escriba el RFC" uppercase="">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <i class="fa fa-search color-red" data-ng-click="GetDataBill();"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Nombre</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="nameBill" ng-model="nameBill" placeholder="Escriba el nombre o razón social" uppercase>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Teléfono</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="phoneBill" ng-model="phoneBill" placeholder="Escriba el núm. de teléfono" uppercase>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Correo</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="mailBill" ng-model="mailBill" placeholder="Escriba el correo" uppercase>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Calle</label>
+                                <div class="col-sm-10">
+                                    <input type="text" maxlength="100" class="form-control" id="streetBill" data-ng-model="streetBill" placeholder="Escriba la calle" uppercase />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Num Exterior</label>
+                                <div class="col-sm-10">
+                                    <input type="text" maxlength="6" class="form-control" id="outNumberBill" data-ng-model="outNumberBill" placeholder="Escriba el número exterior" uppercase />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Num Interior</label>
+                                <div class="col-sm-10">
+                                    <input type="text" maxlength="6" class="form-control" id="intNumberBill" data-ng-model="intNumberBill" placeholder="Escriba el número interior" uppercase />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Colonia</label>
+                                <div class="col-sm-10">
+                                    <input type="text" maxlength="300" class="form-control" id="suburbBill" data-ng-model="suburbBill" placeholder="Escriba la colonia" uppercase />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Municipio</label>
+                                <div class="col-sm-10">
+                                    <input type="text" maxlength="300" class="form-control" name="townBill" id="townBill" data-ng-model="townBill" uppercase />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Estado</label>
+                                <div class="col-sm-10">
+                                    <input type="text" maxlength="300" class="form-control" name="stateBill" id="stateBill" data-ng-model="stateBill" uppercase />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">CP</label>
+                                <div class="col-sm-10">
+                                    <input type="text" maxlength="5" class="form-control" id="cpBill" data-ng-model="cpBill" placeholder="Escriba el código postal" numbers-only="numbers-only">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" name="sendBill" class="btn btn-primary" data-ng-click="SendBill();">Aceptar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL CREDIT-------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalCreditNote" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="thumbnail">
+                                <div class="vcenter text-center">
+                                    <h2>{{resCredit | currency}}</h2>
+                                </div>
+                                <div class="caption">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"><h3>Nota de Crédito</h3></li>
+                                        <li class="list-group-item">{{remisionCredit}}</li>
+                                        <li class="list-group-item">Valido hasta: {{finalDateCredit}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-btn-modal">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="PrintCredit(idCreditNote)">Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="ParentProductModal" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-control" name="parentProductId" data-ng-model="parentProductId" data-ng-options="option.idProducto as option.codigo for option in parentProducts">
+                        <option value="">Seleccione</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="SaveParentProduct()">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

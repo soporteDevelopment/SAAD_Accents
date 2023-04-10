@@ -1,0 +1,101 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Ordenes";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/OrderProducts")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="OrderProductsController" data-ng-init="idOrder = @Session["idOrder"].ToString()" style="width: 1200px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Productos de la Orden</h3>
+        <br />
+        <div class="col-sm-12 text-center">
+            <button type="button" class="btn btn-primary button-search" data-ng-click="AddOrderProduct()">AGREGAR</button>
+        </div>
+        <br />
+    </div>    
+    <div class="panel-body">
+        <div class="table-responsive" data-ng-init="listOrderProducts(0)" style="width:1175px;">
+            <table class="table table-striped">
+                <thead>  
+                    <tr>
+                        <td colspan="11">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>                  
+                    <tr>
+                        <th>#</th>
+                        <th>Imagen</th>
+                        <th>Orden</th>
+                        <th>Factura</th>
+                        <th style="width:180px;">Producto</th>
+                        <th>Código</th>
+                        <th style="width:300px;">Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio de Compra</th>
+                        <th>Precio de Venta</th>
+                        @*<th>Amazonas</th>
+                        <th>Guadalquivir</th>*@
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="o in OrderProducts">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td><img class="img-product-list" ng-src="{{o.urlImagen}}"></td>
+                        <td>{{o.Orden}}</td>
+                        <td>{{o.Factura}}</td>
+                        <td>{{o.Producto}}</td>
+                        <td>{{o.Codigo}}</td>
+                        <td>{{o.Descripcion}}</td>
+                        <td>{{o.Cantidad}}</td>
+                        <td>{{o.PrecioCompra | currency}}</td>
+                        <td>{{o.PrecioVenta | currency}}</td>
+                        @*<td data-ng-repeat="p in o._CantidadProductos">{{p.Cantidad}}</td>*@
+                        <td class="pull-left">
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Orders", "UpdateOrderProduct") == 1" data-ng-click="UpdateOrderProduct(o.idOrden,o.idProducto)"><i class="fa fa-pencil color-red"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Orders", "DeleteProductOrder") == 1" data-ng-click="" ng-really-message="Esta seguro que desea eliminar el producto?" ng-really-click="DeleteProductOrder(o.idOrden, o.idProducto)"> <i class="fa fa-trash color-red"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="11">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+

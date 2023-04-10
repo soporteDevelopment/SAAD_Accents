@@ -1,0 +1,428 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+
+@{
+
+	var main = (List<string>)Session["_Main"];
+
+}
+
+<!--MENU-->
+<section class="menu-mobil">
+	<div class="menu_bar">
+		<a href="#" class="bt-menu">
+			<i class="fa fa-bars">
+
+			</i>
+		</a>
+	</div>
+
+	<nav>
+		<ul>
+			<li class="submenu">
+				<a href="JavaScript:void(0);">
+					CONFIGURACIÓN
+					<img src="@Url.Img("icondesple.png")" />
+				</a>
+				<ul class="children">
+
+					@if (main.Contains("Actions"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">ACCIONES</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Actions/Index">LISTADO</a></li>
+								<li><a href="~/Actions/AddAction">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("Modules"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">MÓDULO</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Modules/Index">LISTADO</a></li>
+								<li><a href="~/Modules/AddModule">NUEVO</a></li>
+							</ul>
+						</li>
+
+					}
+
+					@if (main.Contains("Profiles"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">PERFILES</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Profiles/Index">LISTADO</a></li>
+								<li><a href="~/Profiles/AddProfile">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("Users"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">USUARIOS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Users/Index">LISTADO</a></li>
+								<li><a href="~/Users/AddUser">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("System"))
+					{
+						<li>
+							<a href="~/System/Index">SISTEMA</a>
+						</li>
+					}
+					<li>
+						<a href="~/Tickets/Index">TICKET</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="submenu">
+				<a href="JavaScript:void(0);">
+					TIENDA EN LINEA
+					<img src="@Url.Img("icondesple.png")" />
+				</a>
+				<ul class="children">
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">BANNERS</a>
+						<ul class="childrenTwo">
+							<li><a href="~/Banners/Index">LISTADO</a></li>
+							<li><a href="~/Banners/Add">NUEVO</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="~/MetropolitanAreas/Index">ÁREA METROPOLITANA</a>
+					</li>
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">CLIENTES</a>
+						<ul class="childrenTwo">
+							<li><a href="~/CustomersVirtualStore/Index">LISTADO</a></li>
+						</ul>
+					</li>
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">VENTAS</a>
+						<ul class="childrenTwo">
+							<li><a href="~/SalesOnLine/Index">LISTADO</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+
+			@if (main.Contains("INTELLIGENCE"))
+			{
+				<li class="submenu">
+					<a href="JavaScript:void(0);">
+						REPORTES
+						<img src="@Url.Img("icondesple.png")" />
+					</a>
+					<ul class="children">
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">VENTAS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/SalesIntelligence/TotalSalesView">VENTAS POR MES</a></li>
+								<li><a href="~/TotalSalesBySeller/Index">VENTAS POR VENDEDOR</a></li>
+								<li><a href="~/SalesIntelligence/SalesCategoriesView">VENTAS POR CATEGORÍAS</a></li>
+								<li><a href="~/SalesIntelligence/CreditSalesView">VENTAS CREDITO</a></li>
+								<li><a href="~/SalesIntelligence/SalesServicesView">VENTAS POR SERVICIOS</a></li>
+								<li><a href="~/SalesIntelligence/ViewsView">SALIDA VISTAS</a></li>
+							</ul>
+						</li>
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">INVENTARIO</a>
+							<ul class="childrenTwo">
+								<li><a href="~/SalesIntelligence/CurrentInventoryView">INVENTARIO POR DIA</a></li>
+								<li><a href="~/SalesIntelligence/ProductsPurchasedDateView">FECHA COMPRA PROD.</a></li>
+							</ul>
+						</li>
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">CLIENTES</a>
+							<ul class="childrenTwo">
+								<li><a href="~/SalesIntelligence/OriginCustomersView">ORIGEN CLIENTES</a></li>
+							</ul>
+						</li>
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">COMISIONES</a>
+							<ul class="childrenTwo">
+								<li><a href="~/INTELLIGENCE/Sales">VENDEDORES</a></li>
+								<li><a href="~/INTELLIGENCE/SalesOffices">DESPACHOS</a></li>
+								<li><a href="~/INTELLIGENCE/SpecialCommisions">ESPECIALES</a></li>
+							</ul>
+						</li>
+						<li class="subsubmenu">
+							<a href="~/SALESINTELLIGENCE/Quotations">COTIZACIONES</a>
+						</li>
+					</ul>
+				</li>
+			}
+
+			<li class="submenu">
+				<a href="JavaScript:void(0);">
+					INVENTARIO
+					<img src="@Url.Img("icondesple.png")" />
+				</a>
+				<ul class="children">
+
+					@if (main.Contains("Customers"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">CLIENTES</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Customers/Index">LISTADO</a></li>
+								<li><a href="~/Customers/AddMoralCustomer">CLIENTE MORAL</a></li>
+								<li><a href="~/Customers/AddPhysicalCustomer">CLIENTE FÍSICO</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("OFFICES"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">DESPACHOS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Offices/Index">LISTADO</a></li>
+								<li><a href="~/Offices/AddOffice">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("STOCK"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">INVENTARIO</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Stock/List">LISTADO</a></li>
+								<li><a href="~/Stock/Index">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">REPARACIONES</a>
+						<ul class="childrenTwo">
+							<li><a href="~/Repairs/Index">LISTADO</a></li>
+							<li><a href="~/Repairs/AddRepair">NUEVO</a></li>
+						</ul>
+					</li>
+
+					<li class="subsubmenu">
+						<a href="~/Binnacle/Index">BITÁCORA</a>
+					</li>
+
+					@if (main.Contains("Providers"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">PROVEEDORES</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Providers/Index">LISTADO</a></li>
+								<li><a href="~/Providers/AddProvider">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("Orders"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">ORDENES</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Orders/Index">LISTADO</a></li>
+								<li><a href="~/Orders/AddOrder">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+				</ul>
+			</li>
+			<li class="submenu">
+				<a href="JavaScript:void(0);">
+					CATÁLOGOS
+					<img src="@Url.Img("icondesple.png")" />
+				</a>
+				<ul class="children">
+					@if (main.Contains("Catalogs"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">PROVEEDORES</a>
+							<ul class="childrenTwo">
+								<li><a href="~/CatalogProvider/Index">LISTADO</a></li>
+								<li><a href="~/CatalogProvider/Add">NUEVO</a></li>
+							</ul>
+						</li>
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">MARCAS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/CatalogBrand/List">LISTADO</a></li>
+								<li><a href="~/CatalogBrand/Add">NUEVO</a></li>
+							</ul>
+						</li>
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">CATEGORÍAS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/CatalogCategory/Index">LISTADO</a></li>
+								<li><a href="~/CatalogCategory/AddCategory">NUEVO</a></li>
+							</ul>
+						</li>
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">CATÁLOGOS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Catalogs/Index">LISTADO</a></li>
+								<li><a href="~/Catalogs/AddCatalog">NUEVO</a></li>
+							</ul>
+						</li>
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">PRÉSTAMOS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/CatalogView/Index">LISTADO</a></li>
+								<li><a href="~/CatalogView/Add">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+				</ul>
+			</li>
+			<li class="submenu">
+				<a href="JavaScript:void(0);">
+					PRODUCTOS
+					<img src="@Url.Img("icondesple.png")" />
+				</a>
+				<ul class="children">
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">CATEGORIAS</a>
+						<ul class="childrenTwo">
+							<li><a href="~/Categories/Index">LISTADO</a></li>
+							<li><a href="~/Categories/AddCategory">NUEVO</a></li>
+						</ul>
+					</li>
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">PRODUCTOS</a>
+						<ul class="childrenTwo">
+							<li><a href="~/Products/Index">LISTADO</a></li>
+							<li><a href="~/Products/AssigningCategory">CATEGORIZAR</a></li>
+							<li><a href="~/Products/AddProduct">NUEVO</a></li>
+							<li><a href="~/Products/PrintTickets">IMPRIMIR CÓDIGOS</a></li>
+						</ul>
+					</li>
+
+					@if (main.Contains("SERVICES"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">SERVICIOS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Services/Index">LISTADO</a></li>
+								<li><a href="~/Services/AddService">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+
+					@*@if (main.Contains("Promotions"))
+						{*@
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">PROMOCIONES</a>
+						<ul class="childrenTwo">
+							<li><a href="~/Promotions/Index">LISTADO</a></li>
+							<li><a href="~/Promotions/Add">NUEVO</a></li>
+						</ul>
+					</li>
+					@*}*@
+
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">TRANSFERENCIAS</a>
+						<ul class="childrenTwo">
+							<li><a href="~/Transfers/List">LISTADO</a></li>
+							<li><a href="~/Transfers/Index">NUEVO</a></li>
+						</ul>
+					</li>
+
+					<li class="subsubmenu">
+						<a href="JavaScript:void(0);">RECEPCIONES</a>
+						<ul class="childrenTwo">
+							<li><a href="~/Receptions/List">LISTADO</a></li>
+							<li><a href="~/Receptions/Index">NUEVO</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+
+			<li class="submenu">
+				<a href="JavaScript:void(0);">
+					PUNTO DE VENTA
+					<img src="@Url.Img("icondesple.png")" />
+				</a>
+				<ul class="children">
+
+					@if (main.Contains("CREDITS"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">NOTAS DE CRÉDITO</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Credits/Index">LISTADO</a></li>
+								<li><a href="~/Credits/AddCredit">NUEVO</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("QUOTATIONS"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">COTIZACIÓN</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Quotations/ListQuotations">LISTADO</a></li>
+								<li><a href="~/Quotations/Index">NUEVO</a></li>
+								<li><a href="~/Quotations/Dollar">DÓLAR</a></li>
+								<li><a href="~/UnifyQuotations/Index">UNIFICAR</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("OUTPRODUCTS"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">SALIDAS A VISTA</a>
+							<ul class="childrenTwo">
+								<li><a href="~/OutProducts/ListEraserOutProducts">BORRADORES</a></li>
+								<li><a href="~/OutProducts/ListOutProducts">LISTADO</a></li>
+								<li><a href="~/OutProducts/Index">NUEVO</a></li>
+								<li><a href="~/UnifyOutProduct/ListUnifyOutProducts">UNIFICAR</a></li>
+							</ul>
+						</li>
+					}
+
+					@if (main.Contains("SALES"))
+					{
+						<li class="subsubmenu">
+							<a href="JavaScript:void(0);">VENTAS</a>
+							<ul class="childrenTwo">
+								<li><a href="~/Sales/ListEraserSales">BORRADORES</a></li>
+								<li><a href="~/Sales/ListSales">LISTADO</a></li>
+								<li><a href="~/Sales/Index">NUEVO</a></li>
+								<li><a href="~/Sales/IndexAllStores">ESPECIAL</a></li>
+							</ul>
+						</li>
+					}
+				</ul>
+			</li>
+
+			@if (main.Contains("ENTRIES") || main.Contains("CASHREPORT"))
+			{
+				<li class="submenu">
+					<a href="JavaScript:void(0);">
+						CAJA
+						<img src="@Url.Img("icondesple.png")" />
+					</a>
+					<ul class="children">
+						<li><a href="~/Entries/Index">NUEVO</a></li>
+						<li><a href="~/CashReport/Index">REPORTES</a></li>
+						<li><a href="~/SalesIntelligence/DailyCutView">CORTE DIARIO</a></li>
+					</ul>
+				</li>
+			}
+
+		</ul>
+	</nav>
+</section>
+<!--MENU-->

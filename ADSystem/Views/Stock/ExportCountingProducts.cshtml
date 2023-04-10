@@ -1,0 +1,84 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using System.Globalization;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+@model List<ADEntities.ViewModels.ProductViewModel>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>PRODUCTOS</title>
+    <link href="~/Content/Print/css/print.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700" rel="stylesheet">
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("lodash.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angucomplete")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/PrintProducts")"></script>
+    <script type="text/javascript" src="@Url.Js("ngProgress")"></script>
+    <script type="text/javascript" src="@Url.Js("acute.select")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-animate.min")"></script>
+    <script type="text/javascript" src="@Url.Js("toaster")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-currency")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-filter")"></script>
+
+</head>
+
+<body data-ng-app="General" data-ng-controller="GeneralController">
+    <div class="contenedor">  
+        <section class="tb-productos" data-ng-controller="PrintProducts" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+            <table style="width: 100%; text-align: left;" >
+                <tr>
+                    <th class="txt-data" style="width: 15%; text-align: center;">
+                        <strong>
+                            CÓDIGO
+                        </strong>
+                    </th>
+                    <th class="txt-data" style="width: 55%; text-align: center;">
+                        <strong>
+                            DESCRIPCIÓN
+                        </strong>
+                    </th>
+                    <th class="txt-data" style="width: 15%; text-align: center;">
+                        <strong>
+                            TOTAL
+                        </strong>
+                    </th>
+                    <th class="txt-data" style="width: 15%; text-align: center;">
+                        <strong>
+                            CONTADOS
+                        </strong>
+                    </th>
+                </tr>
+                <tr ng-repeat="item in items">
+                    <td class="txt-data"  style="width: 15%; text-align: center;">
+                        {{item.Codigo}}
+                    </td>
+                    <td class="txt-data" style="width: 55%; text-align: center;">
+                        {{item.Descripcion}}
+                    </td>
+                    <td class="txt-data" style="width: 15%; text-align: center;">
+                        {{item.Total}}
+                    </td>
+                    <td class="txt-data" style="width: 15%; text-align: center;">
+                        _________________
+                    </td>
+                </tr>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

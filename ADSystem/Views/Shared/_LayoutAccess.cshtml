@@ -1,0 +1,84 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>@ViewData["Title"]</title>
+
+    <link rel="shortcut icon" href="@Url.Img("favicon.png")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/normalize")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/styles")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/bootstrap")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/font-awesome")" />
+    <link href='https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,300,200,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/ngProgress")" />
+    <link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/toaster")" />
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ngProgress")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-animate.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("toaster")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/Access")"></script>
+</head>
+<body data-ng-app="access" data-ng-controller="AccessController" data-ng-enter="save()">
+
+    <header class="header-container">
+        <figure class="logo-loguin logoAccents">
+            <img src="@Url.Img("logo.png")" />
+        </figure>
+    </header>
+    <toaster-container toaster-options="{'timeOut': 10000, 'closeButton':true, 'positionClass': 'toast-top-left'}"></toaster-container>
+    <footer class="footer-container">
+        @RenderBody()
+    </footer>
+    <!----------------------------MODAL---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModal" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <figure class="img-modal">
+                        <img src="@Url.Img("icon_sucursales.png")">
+                    </figure>
+                </div>
+                <div class="container-btn-modal">
+                    <a href="javascript:void(0);" data-ng-click="redirectHome(2)">
+                        <p class="txt-pro-modal-left">RÍO AMAZONAS</p>
+                    </a>
+                    <a href="javascript:void(0);" data-ng-click="redirectHome(3)">
+                        <p class="txt-pro-modal-right">RÍO GUADALQUIVIR</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalRecoverPassword" aria-labelledby="modalRecoverPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="no">Correo</label>
+                        <input type="email" name="email" data-ng-model="email" class="form-control" placeholder="Ingrese su correo" autocomplete="off" required />
+                    </div>
+                </div>
+                <div class="container-btn-modal center-block">
+                    <button type="button" class="btn btn-primary btn-sm" data-ng-click="recoverPassword()">Enviar</button>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

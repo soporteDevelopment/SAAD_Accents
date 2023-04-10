@@ -1,0 +1,88 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.SaleViewModel
+
+<style>
+    .center {
+        text-align: center;
+    }
+
+        .center form {
+            display: inline-block;
+        }
+</style>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3 class="panel-title">Formas de Pago</h3>
+        <br />
+        <div class="row" data-ng-init="GetTypesPaymentForPrint(@Model.idVenta)">
+            <div class="col-md-2 text-center">
+                <span class="color-red">Forma</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Cantidad</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Fecha Pago</span>
+            </div>
+            <div class="col-md-3 text-center">
+                <span class="color-red">Cuenta</span>
+            </div>
+            <div class="col-md-3 text-center">
+                <span class="color-red">Voucher</span>
+            </div>
+            <br />
+        </div>
+        <div class="row">
+            <div class="col-md-12">                
+                <div class="row" ng-repeat="item in TypesPayment" ng-hide="item.typesPayment == 2 && item.amount == 0">
+                    <div class="col-md-2 text-center">{{item.sTypePayment}} {{item.CreditNote}}</div>
+                    <div class="col-md-2 text-center">{{item.amount | currency}}</div>                    
+                    <div class="col-md-2 text-center">{{item.DatePayment | jsDate | date:'shortDate'}}</div>
+                    <div class="col-md-3 text-center">{{item._Cuenta}}</div>
+                    <div class="col-md-3 text-center">{{item._voucher}}</div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <h3 class="panel-title">Productos</h3>
+        <br />
+        <div class="row" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.oDetail))">
+            <div class="col-md-2 text-center">
+                <span class="color-red">Código</span>
+            </div>
+            <div class="col-md-4 text-center">
+                <span class="color-red">Descripción</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Precio</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Unidades</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Descuento</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Total</span>
+            </div>
+            <br />
+            <br />
+            <div class="col-md-12">
+                <div class="row" ng-repeat="item in items">
+                    <div class="col-md-2 text-center">{{item.Codigo}}</div>
+                    <div class="col-md-4 text-center">{{item.Descripcion}}</div>
+                    <div class="col-md-2 text-center">{{item.Precio | currency}}</div>
+                    <div class="col-md-1 text-center">{{item.Cantidad}}</div>
+                    <div class="col-md-1 text-center">{{item.Descuento}} %</div>  
+                    <div class="col-md-2 text-center"><label>{{ (item.Cantidad * item.Precio) - ((item.Cantidad * item.Precio) * (item.Descuento/100)) | currency}}</label></div>
+                </div><br>
+            </div>
+        </div>        
+    </div>
+</div>
+
+

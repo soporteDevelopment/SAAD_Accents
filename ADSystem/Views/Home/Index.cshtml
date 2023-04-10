@@ -1,0 +1,142 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@*@using System;
+    @using System.Collections.Generic;
+    @using System.Linq;*@
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/fullcalendar.min")" />
+<script type="text/javascript" src="@Url.Js("fullcalendar")"></script>
+<script type="text/javascript" src="@Url.Js("locale-all")"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript" src="@Url.Js("Class/Modules")"></script>
+
+<section class="home-welcome-container">
+    <p class="home-welcome-txt-t">BIENVENIDO A ACCENTS</p>
+    <p class="home-welcome-txt-s">@Session["_Branch"].ToString().ToUpper()</p>
+</section>
+
+@{
+
+    var main = (List<string>)Session["_Main"];
+
+}
+
+<section class="Menu-home" data-ng-controller="HomeController" ng-init="PendingOutProducts(@Session["_PendingViews"])" style="min-height: 480px;">
+    <div class="container">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#sales" aria-controls="sales" role="tab" data-toggle="tab">Ventas</a></li>
+            <li role="presentation"><a href="#salesOnLine" aria-controls="salesOnLine" role="tab" data-toggle="tab" ng-click="GetSalesOnLine();">Tienda Virtual</a></li>
+            <li role="presentation"><a href="#task" aria-controls="task" role="tab" data-toggle="tab" ng-click="GetEvents();">Agenda</a></li>
+            <li role="presentation"><a href="#pending" aria-controls="products" role="tab" data-toggle="tab">Vistas</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="sales">
+                <div id="chart_div" style="width: 800px; height: 500px; margin-left:10%;"></div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="salesOnLine">
+                <ul class="list-group">
+                    <li data-ng-repeat="s in Sales" class="list-group-item"><div class="row"><div class="col-md-2">{{s.Remision}}</div><div class="col-md-4">{{s.Cliente.Nombre}} {{s.Cliente.Apellidos}}</div><div class="col-md-4">{{s.Fecha | jsDate | date:'short'}}</div><div class="col-md-2">{{s.TipoEntrega}}</div></div></li>
+                </ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="task" style="max-height: 500px;">
+                <div class="fc fc-unthemed fc-ltr" id="calendar">
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="pending">
+                <ul class="list-group">
+                    <li data-ng-repeat="o in Pendings" class="list-group-item"><div class="row"><div class="col-md-2">{{o.remision}}</div><div class="col-md-4">{{ o.ClienteFisico }}{{ o.ClienteMoral }}{{ o.Despacho }}</div><div class="col-md-2">{{o.Vendedor}}</div><div class="col-md-4">{{o.Fecha | jsDate | date:'short'}}</div></div></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalEvents" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Eventos de Hoy</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group" data-ng-repeat="event in events">
+                        <a href="JavaScript:void(0);" class="list-group-item">
+                            <h4 class="list-group-item-heading"><b>{{event.title}}</b></h4>
+                            <p class="list-group-item-text">
+                                Hora:{{event.start}}-{{event.end}}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['bar'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        var chartDiv = document.getElementById('chart_div');
+
+        var sales = new Array();
+
+        $.ajax({
+            url: "/Sales/GetSalesForChart",
+            method: 'POST',
+            success: function (response) {
+                if (response.success == 1) {
+
+                    sales.push(['Ventas', 'Ventas mes pasado', 'Ventas mes actual']);
+
+                    $.each(response.oData.Sales, function (key, value) {
+                        sales.push([value.Vendedor, value.VentasMesPasado, value.VentasMesActual]);
+                    });
+
+                    var data = google.visualization.arrayToDataTable(sales);
+
+                    var formatter = new google.visualization.NumberFormat(
+                        { prefix: '$', negativeColor: 'red', negativeParens: true });
+                    formatter.format(data, 1);
+                    formatter.format(data, 2);
+
+                    var materialOptions = {
+                        width: 900,
+                        chart: {
+                            title: 'Ventas',
+                            subtitle: ''
+                        }
+                    };
+
+                    function drawMaterialChart() {
+                        var materialChart = new google.charts.Bar(chartDiv);
+                        materialChart.draw(data, google.charts.Bar.convertOptions(materialOptions));
+                    }
+
+                    drawMaterialChart();
+
+                } else if (response.failure == 1) {
+                    alert(response.oData.Error);
+                } else if (response.noLogin == 1) {
+                    window.location = "/Access/Close";
+                }
+            },
+            error: function () {
+                alert('Ocurrío un error');
+            }
+        });
+
+    };
+</script>
+
+

@@ -1,0 +1,102 @@
+﻿@media print {
+
+    @page {
+        size: 2.4in;
+        margin: 0cm;
+    }
+
+    html, body {
+        width: 100%;
+        height: auto;
+        display: block;
+        font-family: "Times New Roman", Georgia, Serif;
+        font-size: 10pt;
+        margin: 0in;
+        padding: 0in;
+        padding-top: 0in;
+        padding-left: 0in;
+    }
+
+    .container {
+        display: inline-block;
+    }
+
+    .row {
+        width: 60%;
+        display: inline-block;
+        margin: 0px;
+        border: 0px;
+        page-break-after: always;
+    }
+
+        .row:before,
+        .row:after {
+            display: table;
+            content: " ";
+        }
+
+        .row:after {
+            clear: both;
+        }
+
+    .col {
+        position: relative;
+        min-height: 1px;   
+        page-break-after: auto;
+        margin:0px;
+    }
+
+    .col {
+        float: left;
+        margin-left: 0;
+        width: 100%;
+    }
+
+
+    .properties {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+        padding: 0px;
+        border-style: dotted;
+        border-width: 1px;
+        border-color: #000000;
+        text-align: center;
+    }
+
+        .properties > img {
+            width: 100%;
+            height: 22px;
+        }
+
+    p, span {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .properties > p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        line-height: 16px; /* fallback */
+        max-height: 32px; /* fallback */
+        -webkit-line-clamp: 1; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+
+    .code {
+        font-size: 12px;
+        font-weight: bold;
+        font-style: italic;
+    }
+
+    .cost {
+        text-align: center;
+        margin-top: 5px;
+        font-size: 12px;
+        font-style: italic;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+}

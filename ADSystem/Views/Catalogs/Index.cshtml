@@ -1,0 +1,120 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Catálogos";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Catalogs/List")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Catálogos</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CatalogsController" data-ng-enter="Get()">
+        <form class="form-horizontal" style="margin-left:20%;width:60%;">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Código</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="code" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Modelo</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="model" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Volúmen</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="volumen" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Proveedor</label>
+                <select class="form-control" name="idProvider" id="idProvider" data-ng-model="idProvider" data-ng-options="option.idProveedor as option.Nombre for option in Providers" required></select>
+                <code class="has-error" ng-show="frmCatalog.idProvider.$error.required && frmCatalog.$dirty">Requerido!</code>
+            </div>
+            <div class="form-group">
+                <label>Categoría</label>
+                <select class="form-control" name="idCategory" id="idCategory" data-ng-model="idCategory" data-ng-options="option.idCategoria as option.Nombre for option in Categories" required></select>
+                <code class="has-error" ng-show="frmCatalog.idCategory.$error.required && frmCatalog.$dirty">Requerido!</code>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="search" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="Get()">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive" data-ng-init="Init();">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Imagen</th>
+                        <th>Código</th>
+                        <th>Modelo</th>
+                        <th>Volumen</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="c in catalogs">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td><img class="img-product-list" src="../Content/Catalogs/{{c.Imagen}}"></td>
+                        <td>{{c.Codigo}}</td>
+                        <td>{{c.Modelo}}</td>
+                        <td>{{c.Volumen}}</td>
+                        <td class="pull-left">
+                            <a href="javascript:void(0);">
+                                <input type="number" data-ng-model="c.Cantidad" min="0" max="100" />
+                                <i class="fa fa-print color-red" style="position:static;" data-ng-click="PrintTicket(c.idCatalogo)"></i>
+                            </a>
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Catalogs", "UpdateCatalog") == 1" data-ng-click="Update(c.idCatalogo)"><i class="fa fa-pencil color-red" style="position:static;"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,218 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Ordenes";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Orders")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ordenes</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="OrdersController" data-ng-enter="listOrders()" style="width:850px;">
+        <br />
+        <br />
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Buscar desde</label>
+                <div class="col-sm-10">
+                    <select class="form-control" data-ng-model="searchSince" data-ng-init="searchSince = 1">
+                        <option value="1">Todo</option>
+                        <option value="2">Rango de Fechas</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" data-ng-show="searchSince == 2">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-md-4 text-left">
+                            <input type="radio" ng-model="searchType" value="1" />Fecha Compra
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <input type="radio" ng-model="searchType" value="2" />Fecha Entrega
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <input type="radio" ng-model="searchType" value="3" />Fecha Captura
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" data-ng-show="searchSince == 2">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <div class="form-group" data-ng-show="searchSince == 2">
+                        <label class="col-sm-2 control-label text-left">Desde</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" placeholder="Seleccione la fecha inicial de consulta" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group" data-ng-show="searchSince == 2">
+                        <label class="col-sm-2 control-label text-left">Hasta</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="dateUntil" datepicker-popup="{{format}}" data-ng-model="dateUntil" is-open="openedUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntil($event)" show-button-bar="false" placeholder="Seleccione la fecha final de consulta" data-ng-init="dateUntil = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Estatus</label>
+                <div class="col-sm-10" style="margin-top:10px; margin-bottom:10px">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="radio" ng-model="status" value="1" />Todo
+                        </div>
+                        <div class="col-md-4 ">
+                            <input type="radio" ng-model="status" value="2" />Pendiente
+                        </div>
+                        <div class="col-md-4 ">
+                            <input type="radio" ng-model="status" value="3" />Liberado
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Orden</label>
+                <div class="col-sm-10">
+                    <angucomplete id="orders"
+                                  placeholder="Escriba el número de la orden"
+                                  pause="300"
+                                  selectedobject="selectedOrder"
+                                  url="../../../Orders/GetOrdersForName?order="
+                                  datafield="Orders"
+                                  titlefield="Orden"
+                                  minlength="1"
+                                  inputclass="form-control form-control-small" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Factura</label>
+                <div class="col-sm-10">
+                    <angucomplete id="bills"
+                                  placeholder="Escriba el número de la factura"
+                                  pause="300"
+                                  selectedobject="selectedBill"
+                                  url="../../../Orders/GetBillsForName?bill="
+                                  datafield="Bills"
+                                  titlefield="Factura"
+                                  inputclass="form-control form-control-small" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Proveedor</label>
+                <div class="col-sm-10">
+                    <angucomplete id="brands"
+                                  placeholder="Escriba el nombre del proveedor"
+                                  pause="300"
+                                  selectedobject="selectedProvider"
+                                  url="../../../Products/GetProductsForBrands?brand="
+                                  datafield="Brands"
+                                  titlefield="Nombre"
+                                  minlength="1"
+                                  inputclass="form-control form-control-small" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Código de Producto</label>
+                <div class="col-sm-10">
+                    <angucomplete id="product"
+                                  placeholder="Escriba el código del producto"
+                                  pause="300"
+                                  selectedobject="selectedCodigo"
+                                  url="../../../Products/GetProductsForCodigo?codigo="
+                                  datafield="Codigos"
+                                  titlefield="Codigo"
+                                  inputclass="form-control form-control-small" />
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchOrden" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listOrders()">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Orden</th>
+                        <th>Factura</th>
+                        <th>Proveedor</th>
+                        <th>Fecha Compra</th>
+                        <th>Fecha Entrega</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="o in Orders">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{o.Orden}}</td>
+                        <td>{{o.Factura}}</td>
+                        <td>{{o.Empresa}}</td>
+                        <td>{{o.FechaCompra | jsDate | date:'shortDate'}}</td>
+                        <td>{{o.FechaEntrega  | jsDate | date:'shortDate'}}</td>
+                        <td class="pull-left">
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-sm dropdown-toggle" style="width:80px; background-color:{{s.sEstatus}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Opciónes<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" style="min-width:78px; max-width:78px;">
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Orders", "UpdateOrder") == 1" data-ng-click="UpdateOrder(o.idOrden)"><i class="fa fa-pencil color-red"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Orders", "IndexOrdersProducts") == 1" data-ng-click="IndexOrdersProducts(o.idOrden, o.idEmpresa)"><i class="fa fa-eye color-red"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Orders", "DeleteOrder") == 1" data-ng-click="" ng-really-message="Está seguro que desea eliminar la orden?" ng-really-click="DeleteOrder(o.idOrden)"> <i class="fa fa-trash color-red"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Products", "PrintAllTicketsOfOrder") == 1" data-ng-click="" ng-really-message="Está seguro que desea imprimir los códigos de la orden?" ng-really-click="PrintAllTicketsOfOrder(o.idOrden)"> <i class="fa fa-print color-red"></i></a></li>
+                                    <li><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Orders", "UpdateOrderStatus") == 1" data-ng-click="" ng-really-message="Está seguro que desea cambiar el estatus de la orden?" ng-really-click="UpdateOrderStatus(o.idOrden, o.Estatus)"> <i class="fa fa-circle color-{{o.sEstatus}}"></i></a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+

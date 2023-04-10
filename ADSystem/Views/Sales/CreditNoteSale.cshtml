@@ -1,0 +1,276 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.SaleViewModel
+
+<style>
+    .center {
+        text-align: center;
+    }
+
+        .center form {
+            display: inline-block;
+        }
+</style>
+
+<br />
+<div class="panel panel-default" style="margin-right:50px; margin-left:50px;">
+    <div class="panel-body" style="width:1100px;">
+        <div class="row">
+            <div class="col-md-12 center">
+                <div class="row" ng-show="@Model.Estatus == 3">
+                    <div class="col-md-6 text-right">
+                        <label><b>Estatus</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span><b>CANCELADO</b></span>
+                    </div>
+                </div>
+                <div class="row" data-ng-init="GetNumberRem()">
+                    <div class="col-md-6 text-right">
+                        <label><b>Remisión</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="remision = '@Model.Remision'"><b>{{remision}}</b></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Sucursal</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="branch = '@Model.Sucursal'">{{branch}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Fecha</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="dateTime = '@Model.Fecha'">{{dateTime}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Cliente</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="customer = '@Model.ClienteFisico'">{{customer}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Referido por</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="office = '@Model.DespachoReferencia'">{{office}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Vendedor</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="sellerOne = '@Model.Usuario1'">{{sellerOne}}</span>-<span data-ng-init="sellerTwo = '@Model.Usuario2'">{{sellerTwo}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Subtotal</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="subTotal = '@Model.Subtotal'"><i>{{subTotal | currency}}</i></span>
+                        <span class="hidden" data-ng-init="totalNotasCredito = '@Model.TotalNotasCredito'"><i>{{totalNotasCredito}}</i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Descuento</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="discount = '@Math.Truncate((decimal)Model.Descuento)'">{{discount}}%</span>
+                    </div>
+                </div>
+                @{
+                    if (Model.IVA > 0)
+                    {
+                        <div class="row">
+                            <div class="col-md-6 text-right">
+                                <label><b>IVA</b></label>
+                            </div>
+                            <div class="col-sm-6 text-left" ng-init="CalculateTotalForDetail(subTotal, discount, totalNotasCredito);">
+                                <span>{{IVADetail | currency}}</span>
+                            </div>
+                        </div>
+                    }
+                }
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Total</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="total = ((@Model.Total < 0)? 0 : @Model.Total)"><b>{{total | currency}}</b></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
+        <br />
+        <h3 class="panel-title">Formas de Pago</h3>
+        <br />
+        <div class="row" data-ng-init="GetTypesPaymentForSale(@Model.idVenta)">
+            <div class="col-md-1 text-center">
+                <span class="color-red">Forma</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Cantidad</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Estatus</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Fecha</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Cuenta</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Voucher</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Nota/Crédito</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red"></span>
+            </div>
+            <br />
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" ng-repeat="item in TypesPayment" ng-hide="item.typesPayment == 2 || item.amount == 0">
+                    <div class="col-md-1 text-center">{{item.sTypePayment}}</div>
+                    <div class="col-md-1 text-center">{{item.amount | currency}}</div>
+                    <div class="col-md-2 text-center">
+                        <select class="form-control" data-ng-model="item.Estatus" id="{{'sStatusSale' + item.idTypePayment }}" data-ng-disabled="true" ng-hide="item.typesPayment == 8">
+                            <option value="1">Saldada</option>
+                            <option value="2">Pendiente</option>
+                            <option value="3">Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        {{item.bCalendar | jsDate | date:'shortDate'}}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <select class="form-control" data-ng-model="item.idCuenta" id="{{'sCuenta' + item.idTypePayment }}" data-ng-disabled="true" ng-hide="item.typesPayment == 8">
+                            <option value="" class="">Seleccione</option>
+                            <option value="1">BANORTE ACCENTS</option>
+                            <option value="2">BANREGIO ACCENTS</option>
+                            <option value="3">BANORTE ANNA</option>
+                            <option value="4">BANREGIO ANNA</option>
+                            <option value="5">COMPASS ANNA</option>
+                            <option value="6">COMPASS FERNANDA</option>
+                            <option value="7">EFECTIVO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        {{item._voucher}}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        {{item.CreditNote}}
+                    </div>
+                    <div class="col-md-1 text-left">
+                        <input type="checkbox" data-ng-model="item.Seleccionado" ng-click="CalculateTotalCreditNote()" ng-hide="item.Estatus == 3">
+                    </div>
+                </div>
+                <div class="row hide" ng-repeat-start="item in TypesPayment" ng-hide="item.typesPayment == 2">
+                </div>
+                <div class="row" ng-repeat-end data-ng-show="item.typesPayment == 2" ng-repeat="hist in item.HistoryCredit">
+                    <div class="col-md-1  text-center">{{hist.FormaPago}}</div>
+                    <div class="col-md-1 text-center">{{hist.Cantidad  | currency}}</div>
+                    <div class="col-md-2 text-center">
+                        <select class="form-control" data-ng-model="statusCredit" data-ng-init="statusCredit = hist.Estatus" data-ng-disabled="true">
+                            <option value="1">Saldada</option>
+                            <option value="2">Pendiente</option>
+                            <option value="3">Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        {{hist.Fecha | jsDate | date:'shortDate'}}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <select class="form-control" data-ng-model="hist.idCuenta" id="{{'sCuenta' + hist.idTypePayment }}" data-ng-disabled="true">
+                            <option value="" class="">Seleccione</option>
+                            <option value="1">BANORTE ACCENTS</option>
+                            <option value="2">BANREGIO ACCENTS</option>
+                            <option value="3">BANORTE ANNA</option>
+                            <option value="4">BANREGIO ANNA</option>
+                            <option value="5">COMPASS ANNA</option>
+                            <option value="6">COMPASS FERNANDA</option>
+                            <option value="7">EFECTIVO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        {{hist._voucher}}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        {{hist.CreditNote}}
+                    </div>
+                    <div class="col-md-1 text-left">
+                        <input type="checkbox" data-ng-model="hist.Seleccionado" ng-click="CalculateTotalCreditNote()" ng-hide="hist.Estatus == 3">
+                    </div>
+                </div>
+                <div class="row" ng-repeat="item in TypesPayment | filter : {typesPayment : 2} | filter: greaterThan('amount', 0)">
+                    <div class="col-md-1 text-center">{{item.sTypePayment}}</div>
+                    <div class="col-md-1 text-center">{{item.amount | currency}}</div>
+                    <div class="col-md-2 text-center">
+                        <select class="form-control" data-ng-model="item.Estatus" id="{{'sStatusSale' + item.idTypePayment }}" data-ng-disabled="true">
+                            <option value="1">Saldada</option>
+                            <option value="2">Pendiente</option>
+                            <option value="3">Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        {{item.DatePayment | jsDate | date:'shortDate'}}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <select class="form-control" data-ng-model="item.idCuenta" id="{{'sCuenta' + item.idTypePayment }}" data-ng-disabled="true">
+                            <option value="" class="">Seleccione</option>
+                            <option value="1">BANORTE ACCENTS</option>
+                            <option value="2">BANREGIO ACCENTS</option>
+                            <option value="3">BANORTE ANNA</option>
+                            <option value="4">BANREGIO ANNA</option>
+                            <option value="5">COMPASS ANNA</option>
+                            <option value="6">COMPASS FERNANDA</option>
+                            <option value="7">EFECTIVO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        {{item._voucher}}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        {{item.CreditNote}}
+                    </div>
+                    <div class="col-md-1 text-left">
+                        <input type="checkbox" data-ng-model="item.Seleccionado" ng-click="CalculateTotalCreditNote()" ng-hide="item.Estatus == 3">
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4 text-right">
+                Total:&nbsp;&nbsp;{{totalCreditNote | currency}}
+            </div>
+            <div class="col-md-4 text-right">
+                <textarea class="form-control" rows="3" ng-model="paymentCreditNote.Comments" axlength="400" placeholder="Comentarios" uppercase></textarea>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary" ng-click="SaveCreditNote(@Model.idVenta,'@Model.idClienteFisico','@Model.idClienteMoral', '@Model.idDespacho')">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

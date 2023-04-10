@@ -1,0 +1,368 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Clientes Tienda Virtual";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/SalesOnLine/List")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $(".datepickerSales").datetimepicker({
+            format: 'MM-DD-YYYY'
+        });
+    });
+
+</script>
+
+<style>
+    .clsDatePicker {
+        z-index: 100000;
+    }
+</style>
+
+<br />
+<div class="panel panel-default" style="width:1210px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ventas en Línea</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="SalesOnLineController" data-ng-enter="getSales()">
+        <form class="form-horizontal" style="margin-left:300px;width:500px;" ng-init="getSales()">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Desde</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" placeholder="Seleccione la fecha inicial de consulta" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Hasta</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateUntil" datepicker-popup="{{format}}" data-ng-model="dateUntil" is-open="openedUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntil($event)" show-button-bar="false" placeholder="Seleccione la fecha final de consulta" data-ng-init="dateUntil = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Estatus</label>
+                <div class="col-sm-10">
+                    <select class="form-control" data-ng-model="idStatus" data-ng-options="option.value as option.text for option in optionsStatus">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Cliente</label>
+                <div class="col-sm-10">
+                    <input type="text" data-ng-model="customer" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Vendedor asignado</label>
+                <div class="col-sm-10">
+                    <input type="text" data-ng-model="user" />
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchActions" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="getSales()">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Remision</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Estatus</th>
+                        <th>Vendedor</th>
+                        <th>Subtotal</th>
+                        <th>Total</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="s in sales">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{s.Remision}}</td>
+                        <td>{{s.Cliente.Nombre}} {{s.Cliente.Apellidos}}</td>
+                        <td>{{s.Fecha | jsDate | date:'shortDate'}}</td>
+                        <td>{{s.NombreEstatus}}</td>
+                        <td>{{s.Vendedor.NombreCompleto}}</td>
+                        <td>{{s.Subtotal | currency}}</td>
+                        <td>{{s.Total | currency}}</td>
+                        <td class="pull-left">
+                            <a href="javascript:void(0);" data-ng-click="print(s.IdVenta)">
+                                <i class="fa fa-print color-red"></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0);" data-ng-click="getDetail(s.IdVenta)">
+                                <i class="fa fa-eye color-red"></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0);" data-ng-click="openModalStatus(s.IdVenta, s.Estatus, s.IdSucursal)">
+                                <i class="fa fa-circle-o color-red"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="openModalStatus" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Estatus de Venta</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="descService">Estatus</label>
+                            <select class="form-control" data-ng-model="status" data-ng-options="option.value as option.text for option in optionsStatus">
+                                <option value="">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group" ng-show="status == 3">
+                            <label for="descService">Sucursal</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" data-ng-model="branch">
+                                    <option value="">Seleccione</option>
+                                    <option value="2">Ámazonas</option>
+                                    <option value="3">Guadalquivir</option>
+                                    <option value="4">Textura</option>
+                                </select>
+                            </div>                            
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="updateStatus()">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalSaleOnLine" aria-labelledby="modalReloadPage" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Venta en Línea</h4>
+                    </div>
+                    <div class="modal-body" id="detailShoppingCart">
+                        <div class="row">
+                            <div class="col-md-12 center">
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Remisión</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span><i>{{sale.Remision}}</i></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Cliente</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span><i>{{sale.Cliente.Nombre}} {{sale.Cliente.Apellidos}}</i></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Fecha</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span><i>{{sale.Fecha | jsDate | date:'shortDate'}}</i></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Estatus</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span><i>{{sale.NombreEstatus}}</i></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Subtotal</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span>
+                                            <i>
+                                                {{sale.Subtotal | currency}}
+                                            </i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Descuento</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span>{{sale.Descuento}}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Total</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span><i>{{sale.Total | currency}}</i></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Entregar en</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span><i>{{sale.TipoEntrega}}</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--ASIGNAR VENDEDOR-->
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label><b>Vendedor asignado</b></label>
+                                </div>
+                                <div class="col-sm-3 text-left">
+                                    <select class="form-control" data-ng-model="idUser" data-ng-options="option.idUsuario as option.NombreCompleto for option in Users">
+                                        <option value="">Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2 text-left">
+                                    <i class="fa fa-floppy-o fa-2 color-red" ng-click="updateAssignedUser();" style="left:3%;"></i>
+                                </div>
+                            </div>
+                            <!--NUMERO DE FACTURA-->
+                            <div class="row" ng-show="sale.Estatus == 5">
+                                <div class="col-md-6 text-right">
+                                    <label><b>Num. Factura</b></label>
+                                </div>
+                                <div class="col-sm-3 text-left">
+                                    <input type="text" data-ng-model="bill" />
+                                </div>
+                                <div class="col-sm-2 text-left">
+                                    <i class="fa fa-floppy-o fa-2 color-red" ng-click="updateBillNumber();" style="left:3%;"></i>
+                                </div>
+                            </div>
+                            <!--DATOS DE ENVIO-->
+                            <div class="row" ng-show="sale.IdTipoEntrega == 2">
+                                <div class="col-md-6 text-right">
+                                    <label><b>Proveedor de Envío</b></label>
+                                </div>
+                                <div class="col-sm-3 text-left">
+                                    <input type="text" data-ng-model="sendingProvider" />
+                                </div>
+                                <div class="col-sm-2 text-left">
+                                    <i class="fa fa-floppy-o fa-2 color-red" ng-click="updateSendingData();" style="left:3%;"></i>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="sale.IdTipoEntrega == 2">
+                                <div class="col-md-6 text-right">
+                                    <label><b>Núm. de Guía</b></label>
+                                </div>
+                                <div class="col-sm-3 text-left">
+                                    <input type="text" data-ng-model="guideNumber" />
+                                </div>
+                                <div class="col-sm-2 text-left">
+                                    <i class="fa fa-floppy-o fa-2 color-red" ng-click="updateSendingData();" style="left:3%;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <h3 class="panel-title">Productos</h3>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-1 text-center">
+                                <span class="color-red">Imagen</span>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span class="color-red">Código</span>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span class="color-red">Descripción</span>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span class="color-red">Precio</span>
+                            </div>
+                            <div class="col-md-1 text-center">
+                                <span class="color-red">Unidades</span>
+                            </div>
+                            <div class="col-md-1 text-center">
+                                <span class="color-red">Descuento</span>
+                            </div>
+                            <div class="col-md-1 text-center">
+                                <span class="color-red">Total</span>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                        </div>
+                        <div class="row" ng-repeat-start="item in sale.Productos">
+                            <div class="col-md-1 text-center"><img class="img-product-list" src="{{item.Producto.Imagen}}"></div>
+                            <div class="col-md-2 text-center">{{item.Producto.Codigo}}</div>
+                            <div class="col-md-2 text-center txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{item.Producto.Descripcion}}">{{item.Producto.Descripcion}}</p></div>
+                            <div class="col-md-2 text-center">{{item.Precio | currency}}</div>
+                            <div class="col-md-1 text-center">{{item.Cantidad}}</div>
+                            <div class="col-md-1 text-center">{{item.Descuento}} %</div>
+                            <div class="col-md-2 text-center"><label>{{ (item.Cantidad * item.Precio) - ((item.Cantidad * item.Precio) * (item.Descuento/100)) | currency}}</label></div>
+                            <div class="col-md-1 text-left">
+                                <a role="button" data-toggle="collapse" href="#{{item.IdDetalleVenta}}" aria-expanded="false" aria-controls="{{item.IdDetalleVenta}}">
+                                    <i class="fa fa-eye" style="left: 0px; color:#009289;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="panel panel-default collapse" id="{{item.IdDetalleVenta}}" style="background-color:#f7f5f5; margin-bottom:10px;" ng-repeat-end>
+                            <div class="panel-body text-center">
+                                <h4 class="panel-title" style="font-size: 18px;">Distribución</h4>                                
+                                <div class="row" ng-repeat="dist in item.Distribucion">
+                                    <div class="col-md-2 text-center">{{dist.Sucursal}}</div>
+                                    <div class="col-md-2 text-center">{{dist.Cantidad}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Commission";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Commissions/Commissions")"></script>
+
+<br />
+<div class="panel panel-default" style="width:1210px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Comisiones</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CommissionsController">
+        <div class="table-responsive" ng-init="Init(@ViewBag.idUser)">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Limite Inferior</th>
+                        <th>Limite Superior</th>
+                        <th>Sueldo Mensual</th>
+                        <th>Porcentaje Comision</th>
+                        <th>Bono Uno</th>
+                        <th>Bono Dos</th>
+                        <th>Bono Tres</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="commission in Commissions">
+                        <td>
+                            <input type="text" data-ng-model="commission.LimiteInferior" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="commission.LimiteSuperior" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="commission.SueldoMensual" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="commission.PorcentajeComision" />
+                        </td>                       
+                        <td>
+                            <input type="text" data-ng-model="commission.BonoUno" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="commission.BonoDos" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="commission.BonoTres" />
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" data-ng-click="Update(commission)" title="Guardar"><i class="fa fa-floppy-o fa-2 color-red" style="left: 0px;"></i></a>
+                            <a href="javascript:void(0);" data-ng-click="Remove(commission.idComision)" title="Eliminar"><i class="fa2 fa-trash color-red" style="left: 0px;"></i></a>
+                        </td>
+                    </tr>
+                    <tr class="animate-repeat">
+                        <td>
+                            <input type="text" data-ng-model="LimiteInferior" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="LimiteSuperior" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="SueldoMensual" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="PorcentajeComision" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="BonoUno" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="BonoDos" />
+                        </td>
+                        <td>
+                            <input type="text" data-ng-model="BonoTres" />
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" data-ng-click="Add()" title="Guardar"><i class="fa fa-floppy-o fa-2 color-red" style="left: 0px;"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

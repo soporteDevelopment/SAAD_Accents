@@ -1,0 +1,62 @@
+﻿
+@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+@model List<ADEntities.ViewModels.ProductViewModel>
+
+<!DOCTYPE html>
+
+<html ng-app>
+<head lang="en">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Impresión</title>
+
+    <link rel="shortcut icon" href="@Url.Img("favicon.png")" />
+
+    <link href="~/Content/CSS/stylestickets.css?@DateTime.Now" media="print" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,600,400italic' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+
+</head>
+<body>
+
+    @for (int i = 0; i <= Model.Count - 1; i++)
+    {
+
+        for (int j = 0; j <= Model[i].Cantidad - 1; j ++)
+        {
+            <div class="row" style="margin-left:20%;padding:0;">
+
+                <div class="col" style="margin:0px;padding:0;">
+                    <table>
+                        <tr>
+
+                            <td class="properties">
+                                <img src='@Url.Action("Barcode", "Products", new { pedido = Model[i].idProducto.ToString("D12") }, Request.Url.Scheme)' />
+                                <p class="code">@Model[i].Codigo</p>
+                                <p class="description" style="font-size: 8px;">@Model[i].Descripcion.ToUpper()</p>
+                                <span class="cost">{{ @Model[i].PrecioVenta | currency }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        }
+
+    }
+    
+    <br />
+
+    <script type="text/javascript">
+        window.print();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="aff5d269b458447489bd8c3807eb20fe" Name="Diagram1" ZoomLevel="55">
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tAccione" Width="1.5" PointX="12.75" PointY="110" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tActividadVendedore" Width="1.5" PointX="14.25" PointY="218.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tAreaMetropolitana" Width="1.5" PointX="12" PointY="117.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tAtencionCliente" Width="1.5" PointX="5.75" PointY="0.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tBanner" Width="1.5" PointX="14.25" PointY="201.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tBitacoraProducto" Width="1.5" PointX="3" PointY="145" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tBitacoraProductosInventario" Width="1.5" PointX="8.25" PointY="273.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tBorradorDetalleVenta" Width="1.5" PointX="30.5" PointY="137.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tBorradorDetalleVista" Width="1.5" PointX="8.25" PointY="150.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tBorradorServicioVista" Width="1.5" PointX="8.25" PointY="154.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tBorradorVenta" Width="1.5" PointX="19.25" PointY="138.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tBorradorVista" Width="1.5" PointX="3" PointY="149.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCantidadProductosOrden" Width="1.5" PointX="3" PointY="137.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCarrito" Width="1.5" PointX="28" PointY="125.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoCategoria" Width="1.5" PointX="14.25" PointY="221.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoCuentaBanco" Width="1.5" PointX="35.25" PointY="172.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoDetalleDevolucion" Width="1.5" PointX="17.25" PointY="146.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoDetalleVista" Width="1.5" PointX="6" PointY="149.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoMarca" Width="1.5" PointX="14.25" PointY="131.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoProveedor" Width="1.5" PointX="12" PointY="120.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogo" Width="1.5" PointX="19.5" PointY="169.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoSubcategoria" Width="1.5" PointX="19.5" PointY="176.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoSucursal" Width="1.5" PointX="6" PointY="141.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoTipoTerminale" Width="1.5" PointX="35.25" PointY="168.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCatalogoVista" Width="1.5" PointX="11" PointY="150.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCategoria" Width="1.5" PointX="20" PointY="127.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tClientesFisico" Width="1.5" PointX="22.5" PointY="161.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tClientesMorale" Width="1.5" PointX="16.5" PointY="157.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tClientesTiendaVirtual" Width="1.5" PointX="25.75" PointY="124" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tComisione" Width="1.5" PointX="14.25" PointY="197.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tControle" Width="1.5" PointX="10.5" PointY="110.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCotizacion" Width="1.5" PointX="9" PointY="134.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCotizacionDetalle" Width="1.5" PointX="24.5" PointY="141.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCuentaBancariaINT" Width="1.5" PointX="17.75" PointY="124.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCuentaBancariaMXN" Width="1.5" PointX="17.75" PointY="121.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tCuenta" Width="1.5" PointX="33" PointY="160.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDatosFacturacion" Width="1.5" PointX="5.75" PointY="3.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDescuento" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDespacho" Width="1.5" PointX="19.5" PointY="160.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleCarrito" Width="1.5" PointX="30.5" PointY="143.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleCredito" Width="1.5" PointX="39.25" PointY="144" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleDevolucione" Width="1.5" PointX="35.5" PointY="136.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleHistoricoComisione" Width="1.5" PointX="16.5" PointY="175.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleMesaRegalo" Width="1.5" PointX="36.25" PointY="141.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetallePedido" Width="1.5" PointX="41.25" PointY="150.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetallePromocion" Width="1.5" PointX="29.5" PointY="130.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleRecepcion" Width="1.5" PointX="24.5" PointY="135.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleReparacione" Width="1.5" PointX="6" PointY="154.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleTransferencia" Width="1.5" PointX="27.5" PointY="135.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleVenta" Width="1.5" PointX="27.5" PointY="141" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleVentaEnLinea" Width="1.5" PointX="30.5" PointY="147.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleVentaMesaRegalo" Width="1.5" PointX="41.5" PointY="144.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDetalleVista" Width="1.5" PointX="33.25" PointY="140.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tDistribucionVentaEnLinea" Width="1.5" PointX="6" PointY="137.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tEmpresa" Width="1.5" PointX="3" PointY="1" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tEntrada" Width="1.5" PointX="33" PointY="145.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tErrore" Width="1.5" PointX="14.25" PointY="113.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tEstado" Width="1.5" PointX="7.5" PointY="131.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tEstatusTicket" Width="1.5" PointX="17" PointY="130.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tEstatusVentasEnLinea" Width="1.5" PointX="2.75" PointY="6.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tEvento" Width="1.5" PointX="14.25" PointY="209.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tFacturacionTiendaVirtual" Width="1.5" PointX="28" PointY="120.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tFormaPago" Width="1.5" PointX="35.25" PointY="178" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tFormaPagoCredito" Width="1.5" PointX="37.5" PointY="169.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tFormaPagoMesaRegalo" Width="1.5" PointX="40.5" PointY="155.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tHistorialCredito" Width="1.5" PointX="35.25" PointY="157" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tHistoricoComisione" Width="1.5" PointX="14.25" PointY="175.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tHistoricoRecepcion" Width="1.5" PointX="26.75" PointY="132.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tHistoricoReparacione" Width="1.5" PointX="14.25" PointY="148.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tHistoricoTransferencia" Width="1.5" PointX="29.75" PointY="133.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tInventario" Width="1.5" PointX="3" PointY="273.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tMarca" Width="1.5" PointX="7.75" PointY="0.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tMateriale" Width="1.5" PointX="20" PointY="145.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tMesaRegalo" Width="1.5" PointX="30" PointY="151.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tMunicipio" Width="1.5" PointX="9.75" PointY="130.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tNacionalidad" Width="1.5" PointX="0.75" PointY="2.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tNivelAcademico" Width="1.5" PointX="9.75" PointY="124.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tNotasCredito" Width="1.5" PointX="33" PointY="151.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tOrden" Width="1.5" PointX="22.25" PointY="116" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tOrdenProducto" Width="1.5" PointX="24.5" PointY="131.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tOrigenCliente" Width="1.5" PointX="14.25" PointY="193.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tOrigenVenta" Width="1.5" PointX="6.75" PointY="134.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tPagoMes" Width="1.5" PointX="14.25" PointY="214.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tPedido" Width="1.5" PointX="9" PointY="144.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tPerfilAccione" Width="1.5" PointX="15" PointY="127.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tPerfile" Width="1.5" PointX="9.75" PointY="127.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tPrioridadTicket" Width="1.5" PointX="17" PointY="142.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tProducto" Width="1.5" PointX="22.25" PointY="132" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tProductosInventario" Width="1.5" PointX="5.25" PointY="273.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tProductosSucursal" Width="1.5" PointX="6" PointY="145.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tPromocione" Width="1.5" PointX="14.25" PointY="142.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tProveedore" Width="1.5" PointX="20" PointY="120.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tRecepcione" Width="1.5" PointX="16.5" PointY="136.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tReparacione" Width="1.5" PointX="14.25" PointY="120.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tReporteCaja" Width="1.5" PointX="30.75" PointY="164" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tReporteComisionesEspeciale" Width="1.5" PointX="14.25" PointY="189.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tReporteVentasComisione" Width="1.5" PointX="14.25" PointY="205.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tReporteVentasComisionesDespacho" Width="1.5" PointX="21.75" PointY="156.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tRespaldoDetalleVentaEnLinea" Width="1.5" PointX="32.5" PointY="132" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tRespaldoDiarioInventario" Width="1.5" PointX="7.75" PointY="3.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tRespaldoProductosSucursal" Width="1.5" PointX="3" PointY="141.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tRespaldoVentasEnLinea" Width="1.5" PointX="30.25" PointY="124.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tSalida" Width="1.5" PointX="35.25" PointY="146.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tServicio" Width="1.5" PointX="30.25" PointY="120.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tServicioVista" Width="1.5" PointX="35.25" PointY="153.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tSubcategoria" Width="1.5" PointX="20" PointY="147.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tSucursale" Width="1.5" PointX="0.75" PointY="142.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tTicket" Width="1.5" PointX="19.25" PointY="130.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tTipoCotizacion" Width="1.5" PointX="6.75" PointY="128.375" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tTipoEntrega" Width="1.5" PointX="7.75" PointY="7.75" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tTipoMoneda" Width="1.5" PointX="20" PointY="117" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tTipoNotaCredito" Width="1.5" PointX="30.75" PointY="160.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tTipoPromocion" Width="1.5" PointX="12" PointY="158.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tTipoTicket" Width="1.5" PointX="17" PointY="133" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tTransferencia" Width="1.5" PointX="14.25" PointY="136" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tUsuarioEvento" Width="1.5" PointX="16.5" PointY="168.875" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tUsuario" Width="1.5" PointX="12" PointY="126.125" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tVentaMesaRegalo" Width="1.5" PointX="38.25" PointY="149.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tVenta" Width="1.5" PointX="24.75" PointY="161.5" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tVentasEnLinea" Width="1.5" PointX="22.25" PointY="144.625" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tVista" Width="1.5" PointX="27" PointY="149.25" />
+        <EntityTypeShape EntityType="admDB_SAADDBModel.tReporteDiarioInventario" Width="1.5" PointX="4.75" PointY="8.75" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tAcciones__idCon__5CD6CB2B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPerfilAc__idAcc__6FE99F9F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tActivida__idUsu__297722B6" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tAreaMetr__idMun__6F9F86DC" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBanners__Creado__2354350C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBanners__Modifi__24485945" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBitacora__idPro__72B0FDB1" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBitacora__idSuc__73A521EA" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBitacora__idUsu__74994623" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBitacora__idInv__0B7CAB7B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBitacora__idPro__0C70CFB4" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idBor__37703C52" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idCre__3864608B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idPro__1CA7377D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idPro__2077C861" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idPro__395884C4" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idTip__1BB31344" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idBor__251C81ED" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idPro__2610A626" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idSuc__2704CA5F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idBor__5DEAEAF5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idSer__1D7B6025" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idCli__3A4CA8FD" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idCli__3B40CD36" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idDes__1F63A897" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idDes__3C34F16F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idSuc__3D2915A8" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idUsu__3E1D39E1" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idUsu__3F115E1A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idCli__27F8EE98" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idCli__28ED12D1" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idDes__29E1370A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idDes__36470DEF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idSuc__2AD55B43" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idUsu__2BC97F7C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tBorrador__idUsu__2CBDA3B5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCantidad__idOrd__5EBF139D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCantidad__idPro__5FB337D6" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCantidad__idSuc__60A75C0F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCarrito__idClie__4850AF91" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleC__idCar__4944D3CA" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idCar__5792F321" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idTip__597B3B93" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentasEn__idCar__5A6F5FCC" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Cread__7211DF33" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idCat__1372D2FE" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idCat__7C8F6DA6" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Modif__7306036C" />
+        <AssociationConnector Association="admDB_SAADDBModel.fk_idCuentaBancos" />
+        <AssociationConnector Association="admDB_SAADDBModel.fk_idCuentaBancosF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idDet__73FA27A5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idVer__74EE4BDE" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idCat__192BAC54" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idSuc__76D69450" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idVis__77CAB889" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Cread__78BEDCC2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idCat__1466F737" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idPro__79B300FB" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Modif__7AA72534" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idPro__155B1B70" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Cread__127EAEC5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idCat__1837881B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idSub__164F3FA9" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Modif__174363E2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Cread__7B9B496D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Modif__7D8391DF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Cread__7E77B618" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idSuc__005FFE8A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Modif__015422C3" />
+        <AssociationConnector Association="admDB_SAADDBModel.fk_idTipoTerminales" />
+        <AssociationConnector Association="admDB_SAADDBModel.fk_idTipoTerminalesF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Cread__024846FC" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idCli__033C6B35" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idCli__04308F6E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idDes__0524B3A7" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idDes__0618D7E0" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idSuc__070CFC19" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__idUsu__08012052" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCatalogo__Modif__08F5448B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__idCat__71D1E811" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tSubcateg__idCat__797309D9" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tClientes__Cread__26BAB19C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tClientes__idMun__0697FACD" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tClientes__idOri__09E968C4" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tClientes__idOri__0ADD8CFD" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idCli__6EC0713C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMesaRega__idNov__4277DAAA" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMesaRega__idNov__436BFEE3" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tNotasCre__idCus__47A6A41B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPedidos__idClie__4D2A7347" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentaMes__idCli__4830B400" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idClien__2F9A1060" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idClien__41B8C09B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tClientes__Cread__27AED5D5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tClientes__idMun__078C1F06" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tClientes__idOri__453F38BC" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idCli__6FB49575" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tNotasCre__idCus__489AC854" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPedidos__idClie__4E1E9780" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentaMes__idCli__4924D839" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idClien__308E3499" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idClien__42ACE4D4" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tClientes__idMun__7093AB15" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFacturac__idCli__52CE3E04" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idCli__5887175A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentasEn__idCli__5B638405" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tComision__idUsu__6D6238AF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idCot__74794A92" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idDes__52E34C9D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idDes__70A8B9AE" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idOri__37E53D9E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idSuc__719CDDE7" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idTip__6D823440" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idUsu__72910220" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idUsu__73852659" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idVis__3D491139" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idCot__758D6A5C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idCotiz__119F9925" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idCre__756D6ECB" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idPro__1D9B5BB6" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idPro__1F83A428" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idPro__76619304" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idSuc__4EA8A765" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tCotizaci__idTip__1E8F7FEF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProveedo__idCue__787EE5A0" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProveedo__idCue__778AC167" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__idCue__269AB60B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoria__idCue__2A6B46EF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDespacho__Cread__28A2FA0E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDespacho__idMun__19AACF41" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDespacho__idOri__46335CF5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMesaRega__idDes__408F9238" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tNotasCre__idDes__65F62111" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPedidos__idDesp__4F12BBB9" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tReporteV__idDes__3C89F72A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentaMes__idDes__4A18FC72" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentaMes__idDes__4B0D20AB" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idDespa__2057CCD0" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idDespa__318258D2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idDespa__44952D46" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idDespa__467D75B8" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleC__idPro__4A38F803" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleC__idPro__4B2D1C3C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleC__idNot__40F9A68C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleC__idPro__41EDCAC5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleC__idSer__7908F585" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleC__idSuc__42E1EEFE" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleD__idDet__7B264821" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleD__idVer__705EA0EB" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleH__idHis__33DFA290" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleM__idMes__3AD6B8E2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleM__idPro__3BCADD1B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleM__idSer__3CBF0154" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleP__idCre__4B422AD5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleP__idPed__4C364F0E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleP__idPro__16EE5E27" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleP__idPro__17E28260" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleR__Cread__2E06CDA9" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleR__idPro__2D12A970" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleR__idRec__2C1E8537" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleR__Modif__2EFAF1E2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoric__idDet__57FD0775" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleR__idPro__65570293" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleR__idRep__6462DE5A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleR__idSuc__664B26CC" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoric__idDet__69279377" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleT__Cread__21A0F6C4" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleT__idPro__20ACD28B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleT__idTra__1FB8AE52" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleT__Modif__22951AFD" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoric__idDet__55209ACA" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idCre__43D61337" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idPro__18D6A699" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idPro__1ABEEF0B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idPro__44CA3770" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idSuc__4CC05EF3" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idTip__19CACAD2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idVen__3552E9B6" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idPro__4C214075" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idPro__4D1564AE" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idSer__4E0988E7" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idVen__4EFDAD20" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDistribu__idDet__4FF1D159" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idCre__3DB3258D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idPro__3EA749C6" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idVen__3F9B6DFF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idPro__382F5661" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idSuc__39237A9A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idUsu__3BFFE745" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDetalleV__idVis__373B3228" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDistribu__idPro__50E5F592" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tDistribu__idSuc__51DA19CB" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tEmpresas__idNac__6A30C649" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tEntrada__Creado__795DFB40" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tEntrada__Entreg__7869D707" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tEntrada__idRepo__05C3D225" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tEntrada__idVent__01F34141" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tEntrada__Modifi__7A521F79" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__idEnt__7ADC2F5E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoria__idEnt__7BD05397" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tSalida__idEntra__07AC1A97" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tErrores__idUsua__6B24EA82" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMunicipi__estad__6CC31A31" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTickets__idEsta__0CC5D56F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tEventos__idUsua__31D75E8D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tUsuarioE__idEve__34B3CB38" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__idNot__4AD81681" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__idPag__4262CC11" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__idVen__75235608" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__Cread__7152C524" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__idHis__45BE5BA9" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__idNot__4BCC3ABA" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__idPag__4356F04A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__Modif__7246E95D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tFormaPag__Canti__00750D23" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoria__idVen__742F31CF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoric__idVen__310335E5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoric__Cread__6B0FDBE9" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tHistoric__idSuc__6A1BB7B0" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tInventar__idSuc__46B27FE2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__idInv__4B7734FF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__idMat__72C60C4A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMesaRega__idNot__4183B671" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMesaRega__idSuc__4460231C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMesaRega__idUsu__45544755" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMesaRega__idUsu__46486B8E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tMesaRega__idVen__473C8FC7" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentaMes__idMes__4C0144E4" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tUsuarios__idMun__7A672E12" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tUsuarios__idNiv__7B5B524B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tNotasCre__Cread__6E765879" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tNotasCre__idTip__79E80B25" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tNotasCre__idVen__498EEC8D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tNotasCre__idVen__4A8310C6" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tNotasCre__Modif__6F6A7CB2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tOrden__idEmpres__6D0D32F4" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tOrden__TipoMone__1CFC3D38" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tOrdenPro__idOrd__6E01572D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tOrdenPro__idPro__6EF57B66" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tOrigenCl__Cread__407A839F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tOrigenCl__Modif__416EA7D8" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idOrige__36F11965" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPagoMese__Cread__3CA9F2BB" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPagoMese__Modif__3D9E16F4" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPedidos__idSucu__5006DFF2" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPedidos__idUsua__50FB042B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPedidos__idUsua__51EF2864" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPerfilAc__idPer__70DDC3D8" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tUsuarios__idPer__7C4F7684" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTickets__idPrio__0DB9F9A8" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__Cread__75C27486" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__idPro__4C6B5938" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__idPro__73BA3083" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__idPro__75A278F5" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__idSub__74AE54BC" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__Modif__76B698BF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idPro__53C2623D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idPro__72E607DB" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tProducto__idSuc__76969D2E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPromocio__Cread__131DCD43" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPromocio__idTip__1229A90A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tPromocio__Modif__1411F17C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idPro__54B68676" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRecepcio__Cread__284DF453" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRecepcio__idSuc__2759D01A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRecepcio__idTra__369C13AA" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRecepcio__idUsu__2665ABE1" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRecepcio__Modif__2942188C" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tReparaci__Cread__60924D76" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tReparaci__idUsu__5F9E293D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tReparaci__Modif__618671AF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tSalida__idRepor__06B7F65E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tReporteC__idVen__52442E1F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tReporteV__idVen__731B1205" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idVenta__39AD8A7F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idVenta__3D7E1B63" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idRes__55AAAAAF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idSer__569ECEE8" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idSuc__73DA2C14" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tRespaldo__idUsu__74CE504D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tSalida__CreadoP__7F16D496" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tSalida__fkSalid__08A03ED0" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tSalida__idVenta__02E7657A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tSalida__Modific__000AF8CF" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tSalida__Recibid__7E22B05D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tServicio__idSer__4D5F7D71" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tServicio__idVis__4E53A1AA" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTransfer__idSuc__19FFD4FC" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTransfer__idSuc__1AF3F935" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tUsuarios__idSuc__7D439ABD" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentaMes__idSuc__4CF5691D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idSucur__32767D0B" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentasEn__idSuc__5C57A83E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idSucur__4589517F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTickets__Autori__2E26C93A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTickets__Creado__0BD1B136" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTickets__idTipo__0EAE1DE1" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTickets__idUsua__1DF06171" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTickets__Modifi__0FA2421A" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTransfer__Cread__1BE81D6E" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTransfer__idUsu__190BB0C3" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tTransfer__Modif__1CDC41A7" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tUsuarioE__idUsu__35A7EF71" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentaMes__idUsu__4DE98D56" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentaMes__idUsu__4EDDB18F" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idUsuar__336AA144" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentas__idUsuar__345EC57D" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVentasEn__idVen__5D4BCC77" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idUsuar__3DE82FB7" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idUsuar__3EDC53F0" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idUsuar__4F47C5E3" />
+        <AssociationConnector Association="admDB_SAADDBModel.FK__tVistas__idVenta__66EA454A" />
+        <AssociationConnector Association="admDB_SAADDBModel.tUsuarioSucursales" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

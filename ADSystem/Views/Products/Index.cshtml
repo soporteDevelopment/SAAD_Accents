@@ -1,0 +1,247 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+
+@{
+    ViewBag.Title = "Productos";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+
+<script type="text/javascript" src="@Url.Js("Class/Products")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="ProductsController" data-ng-enter="listProducts(0)" style="width:1200px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Productos</h3>
+    </div>
+    <div class="panel-body" data-ng-init="pageInit(@Session["page"], @Session["pageSize"]);">
+        <br />
+        <br />
+        <form class="form-horizontal" style="margin-left:300px;width:690px;">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Código</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Codigo" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Descripción</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Description" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Precio</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="productPrecio" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Categoría</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="Category" id="Category" data-ng-model="Category" ng-change="GetSubcategoriesOnList()" data-ng-options="option.Nombre for option in Categories">
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+            </div>
+			<div class="form-group">
+                <label class="col-sm-2 control-label">Subcategoría</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="Subcategory" id="Subcategory" data-ng-model="Subcategory" data-ng-options="option.Nombre for option in Subcategories">
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Color</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Color" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Material</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Material" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Proveedor</label>
+                <div class="col-sm-10">
+                    <angucomplete id="brands"
+                                  placeholder="Buscar por marca"
+                                  pause="300"
+                                  selectedobject="selectedProvider"
+                                  url="../../../Products/GetProductsForBrands?brand="
+                                  datafield="Brands"
+                                  titlefield="Nombre"
+                                  inputclass="form-control form-control-small" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Sucursal</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="branch" data-ng-model="branch">
+                        <option value="">Todas</option>
+                        <option value="2">Ámazonas</option>
+                        <option value="3">Guadalquivir</option>
+                        <option value="4">Textura</option>
+                        <option value="5">Taller</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Ordenar por</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="orderBy" data-ng-model="orderBy">
+                        <option value="1">Código</option>
+                        <option value="2">Precio</option>
+                        <option value="3">Inventario</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">&nbsp;</label>
+                <div class="col-sm-10">
+                    <input type="checkbox" ng-model="ascending" ng-true-value="true" />Menor a mayor
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" ng-model="ascending" ng-true-value="false" />Mayor a menor
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchProduct" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listProducts(0)">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive" style="width:1190px;" ng-init="loadFilters()">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="10">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Imagen</th>
+                        <th>Codigo</th>
+                        <th style="width:300px;">Descripción</th>
+                        <th>Precio</th>
+                        <th>Proveedor</th>
+                        <th>Medidas</th>
+                        <th ng-show="branch == '' || branch == 2">Amazonas</th>
+                        <th ng-show="branch == '' || branch == 3">Guadalquivir</th>
+                        <th ng-show="branch == '' || branch == 4">Textura</th>
+                        <th ng-show="branch == ''">Total</th>
+                        <th>Vista</th>
+                        <th data-ng-show="@HtmlHelperExtension.Icon("Repairs","Index") == 1">Taller</th>
+                        <th style="width:96px;">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="c in Products">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td><img class="img-product-list" data-ng-click="ZoomImage(c.urlImagen)" ng-src="{{c.urlImagen}}"></td>
+                        <td>{{c.Codigo}}</td>
+                        <td>{{c.Descripcion}}</td>
+                        <td>{{c.PrecioVenta | currency}}</td>
+                        <td>{{c.Proveedor}}</td>
+                        <td>{{c.Medida}}</td>
+                        <td data-ng-repeat="p in c._Existencias" ng-show="branch == '' || p.idSucursal == branch">{{p.Existencia}}</td>
+                        <td ng-show="branch == ''">{{c.Total}}</td>
+                        <td>
+                            <table data-ng-show="c.Vista > 0" style="font-size:12px;text-align:center;width:85px;">
+                                <tr><td><b>Total</b></td><td><b>{{c.Vista}}</b></td></tr>
+                                <tr><td>Remisión</td><td>Cant.</td></tr>
+                                <tr data-ng-repeat="d in c.oDetailView" style="font-weight:bold;"><td>{{d.Remision}}</td><td>{{d.Cantidad}}</td></tr>
+                            </table>
+                        </td>
+                        <td data-ng-show="@HtmlHelperExtension.Icon("Repairs","Index") == 1">{{c.Taller}}</td>
+                        <td class="pull-left">
+                            <a href="#" data-ng-show="@HtmlHelperExtension.Icon("Products","UpdateProductOnLine") == 1" data-ng-click="UpdateProductOnLine(c.idProducto)"><i class="fa2 fa-pencil-square-o color-red"></i></a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Products","UpdateProduct") == 1" data-ng-click="UpdateProduct(c.idProducto)"><i class="fa2 fa-pencil color-red"></i></a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Products", "UpdateStatusProducto") == 1" data-ng-click="" ng-really-message="Esta seguro que desea eliminar el producto?" ng-really-click="ValidateUpdateStatusProducto(c.idProducto, c.Estatus)"> <i class="fa2 fa-trash color-red"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalZoomImage" aria-labelledby="modalReloadPage" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <img style="width:500px;height:500px;" ng-src="{{ZoomUrlImage}}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalUpdateCategoryOnLine" aria-labelledby="modalReloadPage" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="msgModalUpdateCategoryOnLine">
+                    <div ng-include="includeCategoryURL"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalUpdateProductOnLine" aria-labelledby="modalReloadPage" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="msgModalUpdateProductOnLine">
+                    <div ng-include="includeURL"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
