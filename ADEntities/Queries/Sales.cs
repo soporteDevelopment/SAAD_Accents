@@ -400,7 +400,7 @@ namespace ADEntities.Queries
 					oVentas.Proyecto = project;
 					oVentas.idDespachoReferencia = idOfficeReference;
 					oVentas.idSucursal = idBranch;
-					oVentas.Fecha = Convert.ToDateTime(dateSale);
+					oVentas.Fecha = DateTime.Now;//Convert.ToDateTime(dateSale);
 					oVentas.CantidadProductos = amountProducts;
 					oVentas.Subtotal = subtotal;
 					oVentas.Descuento = discount;
@@ -472,7 +472,7 @@ namespace ADEntities.Queries
 					oVentas.Proyecto = project;
 					oVentas.idDespachoReferencia = idOfficeReference;
 					oVentas.idSucursal = idBranch;
-					oVentas.Fecha = Convert.ToDateTime(dateSale);
+					oVentas.Fecha = DateTime.Now;//Convert.ToDateTime(dateSale);
 					oVentas.CantidadProductos = amountProducts;
 					oVentas.Subtotal = subtotal;
 					oVentas.Descuento = discount;
@@ -1734,7 +1734,7 @@ namespace ADEntities.Queries
 					oHistory.Cantidad = amount;
 					oHistory.Restante = left;
 					oHistory.Comentario = comments;
-					oHistory.Fecha = dtInsert;
+					oHistory.Fecha = DateTime.Now;//dtInsert;
 					oHistory.Estatus = status;
 
 					context.tHistorialCreditoes.Add(oHistory);
