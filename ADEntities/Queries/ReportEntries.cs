@@ -131,6 +131,7 @@ namespace ADEntities.Queries
 		{
 			using (var context = new admDB_SAADDBEntities())
 			{
+				report.Fecha = DateTime.Now;
 				context.tReporteCajas.Add(report);
 				context.SaveChanges();
 				return report.idReporteCaja;

@@ -157,7 +157,7 @@ namespace ADEntities.Queries
 
                     tVista.CantidadProductos = oVista.CantidadProductos;
                     tVista.Estatus = oVista.Estatus;
-                    tVista.Fecha = oVista.Fecha;
+                    tVista.Fecha = DateTime.Now;//oVista.Fecha;
                     tVista.idClienteFisico = oVista.idClienteFisico;
                     tVista.idClienteMoral = oVista.idClienteMoral;
                     tVista.idDespacho = oVista.idDespacho;

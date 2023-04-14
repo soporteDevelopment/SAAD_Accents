@@ -207,7 +207,7 @@ namespace ADEntities.Queries
                     {
                         reception.Estatus = TypesReceptions.CompletedReception;
                     }
-
+                    reception.Fecha = DateTime.Now;
                     context.tRecepciones.Add(reception);
                     context.SaveChanges();
 

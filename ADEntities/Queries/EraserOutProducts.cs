@@ -126,7 +126,7 @@ namespace ADEntities.Queries
                     tBorradorVista tVista = new tBorradorVista();
 
                     tVista.CantidadProductos = oVista.CantidadProductos;
-                    tVista.Fecha = oVista.Fecha;
+                    tVista.Fecha = DateTime.Now;//oVista.Fecha;
                     tVista.idClienteFisico = oVista.idClienteFisico;
                     tVista.idClienteMoral = oVista.idClienteMoral;
                     tVista.idDespacho = oVista.idDespacho;

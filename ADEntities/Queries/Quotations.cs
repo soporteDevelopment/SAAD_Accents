@@ -211,7 +211,7 @@ namespace ADEntities.Queries
 					oQuotation.Proyecto = project;
 					oQuotation.idDespachoReferencia = idOfficeReference;
 					oQuotation.idSucursal = idBranch;
-					oQuotation.Fecha = Convert.ToDateTime(dateSale);
+					oQuotation.Fecha = DateTime.Now;//Convert.ToDateTime(dateSale);
 					oQuotation.CantidadProductos = amountProducts;
 					oQuotation.Subtotal = subtotal;
 					oQuotation.Descuento = discount;
@@ -258,7 +258,7 @@ namespace ADEntities.Queries
 					oQuotation.Proyecto = project;
 					oQuotation.idDespachoReferencia = idOfficeReference;
 					oQuotation.idSucursal = idBranch;
-					oQuotation.Fecha = Convert.ToDateTime(dateSale);
+					oQuotation.Fecha = DateTime.Now;//Convert.ToDateTime(dateSale);
 					oQuotation.CantidadProductos = amountProducts;
 					oQuotation.Subtotal = subtotal;
 					oQuotation.Descuento = discount;
@@ -307,7 +307,7 @@ namespace ADEntities.Queries
 					oQuotation.Proyecto = project;
 					oQuotation.idDespachoReferencia = idOfficeReference;
 					oQuotation.idSucursal = idBranch;
-					oQuotation.Fecha = Convert.ToDateTime(dateSale);
+					oQuotation.Fecha = DateTime.Now;//Convert.ToDateTime(dateSale);
 					oQuotation.CantidadProductos = amountProducts;
 					oQuotation.Subtotal = subtotal;
 					oQuotation.Descuento = discount;
@@ -424,7 +424,7 @@ namespace ADEntities.Queries
 					oQuotation.Proyecto = project;
 					oQuotation.idDespachoReferencia = idOfficeReference;
 					oQuotation.idSucursal = idBranch;
-					oQuotation.Fecha = Convert.ToDateTime(dateSale);
+					oQuotation.Fecha = DateTime.Now;//Convert.ToDateTime(dateSale);
 					oQuotation.CantidadProductos = amountProducts;
 					oQuotation.Subtotal = subtotal;
 					oQuotation.Descuento = discount;

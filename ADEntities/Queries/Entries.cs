@@ -123,6 +123,7 @@ namespace ADEntities.Queries
         {
             using (var context = new admDB_SAADDBEntities())
             {
+                entry.Fecha = DateTime.Now;
                 context.tEntradas.Add(entry);
                 context.SaveChanges();
                 return entry.idEntrada;
