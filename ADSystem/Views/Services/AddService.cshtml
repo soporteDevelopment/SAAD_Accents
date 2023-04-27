@@ -1,0 +1,163 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Servicios";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Services")"></script>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Servicio</h3>
+    </div>
+    @*<div class="panel-body" data-ng-controller="ServicesController">*@
+<div class="panel-body" data-ng-controller="ServicesController" data-ng-init="LoadTypeMeasure()">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="description">Descripción</label>
+                <input type="text" maxlength="200" class="form-control" id="description" name="description" data-ng-model="newService.Description" placeholder="Escriba la descripción" uppercase />
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" style="display: flex; justify-content:center; align-items:center">
+                <div style="display: flex; justify-content:center; align-items:center">
+                    <a ng-click="OpenModalAddMeasure()" style="cursor:pointer; font-size:2rem; font-weight:600;">Agregar medida</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <div style="display: flex; justify-content:start; align-items:center ">
+                    <label for="installation" style="padding-right: 5px;">Instalación</label>
+                    <input type="checkbox" style="height:18px;" id="installation" name="installation" data-ng-model="newService.Installation" ng-true-value="1" ng-false-value="0" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="items.length > 0">
+        <h3 class="panel-title text-center">Medidas Estándar</h3>
+        <br />
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <span class="color-red">Tipo de Medida</span>
+            </div>
+            <div class="col-md-4 text-center">
+                <span class="color-red">Valor Medida</span>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" ng-repeat="item in items">
+                    <div class="col-md-6 text-center">{{item.measureDesc}}</div>
+                    <div class="col-md-4 text-center">{{item.measureValue}}</div>
+                    <div class="col-md-2" style="display:flex;">
+                        <i class="fa fa-pencil color-red" style="cursor:pointer" title="Editar" ng-show="item.idMeasureType" ng-click="EditMeasureType(item)"></i>
+                        <i class="fa fa-trash color-red" style="cursor:pointer; padding-left:15px" title="Eliminar" ng-click="DeleteMeasureType(item.idMeasureType)"></i>
+                    </div>
+                </div><br>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL MEASURES ---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalMeasures" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Datos de  Medida</h4>
+                </div>
+                <div class="modal-body" id="txtValidation">
+                    <div class="row" style="min-height:150px; display:flex; justify-content:center; align-items:center">
+                        <div class="col-md-4">
+                            <label for="typeMeasures">Tipo de medida</label>
+                            <select class="form-control" name="typeMeasures" data-ng-model="newService.typeMeasures" data-ng-options="option.NombreMedida for option in listTypeMeasures">
+                                <option value="">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="valueMeasure" style="display:flex; justify-content:center; align-items:center;">Valor de medida</label>
+                            <div style="display:flex; justify-content:center; align-items:center;">
+                                <input type="number" name="valueMeasure" id="valueMeasure" ng-model="newService.valueMeasure" /> <span style="padding-left:5px">Cm.</span>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div style="display: flex; justify-content: center; align-items: center; margin-top: 27px; ">
+                                <button type="button" class="btn btn-danger" ng-click="AddMeasureToService()">Aceptar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="container-btn-modal">
+                    <div class="row ">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!----------------------------MODAL EDIT MEASURE TYPE---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalEditMeasureType" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Editar Medidas</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="min-height:150px; display:flex; justify-content:center; align-items:center">
+                        <div class="col-md-4">
+                            <label>Tipo de medida</label>
+                            <select class="form-control" name="typeMeasures" data-ng-model="newService.typeMeasures" data-ng-options="option.NombreMedida for option in listTypeMeasures" ng-disabled="true">
+                                <option value="">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="valueMeasure" style="display:flex; justify-content:center; align-items:center;">Valor de medida</label>
+                            <div style="display:flex; justify-content:center; align-items:center;">
+                                <input type="number" id="valueMeasureEdit" name="valueMeasureEdit" ng-model="newService.valueMeasure" />
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div style="display: flex; justify-content: center; align-items: center; margin-top: 27px; ">
+                                <button type="button" class="btn btn-danger" ng-click="SaveEditMeasureService()">Actualizar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <ul class="list-group">
+                        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    
+    @Html.Raw(HtmlHelperExtension.Button("Services", "SaveAddService", "SaveAddService", "SaveAddService", "Guardar", "", "", "SaveAddService()", "btn btn-primary", "Guardando..."))
+
+    <br />
+    <ul class="list-group">
+        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+    </ul>
+</div>
+
+
+
+
+
+</div>
+

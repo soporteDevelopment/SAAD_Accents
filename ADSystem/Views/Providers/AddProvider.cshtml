@@ -1,0 +1,200 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.ProviderViewModel
+
+@{
+    ViewBag.Title = "Proveedores";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Providers")"></script>
+
+<div class="panel panel-default" data-ng-app="providers" data-ng-init="Init();">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Proveedor XYXY</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="ProvidersController">
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#step1" aria-controls="provider1" role="tab" data-toggle="tab">Empresa</a></li>
+            <li role="presentation"><a href="#step2" aria-controls="provider2" role="tab" data-toggle="tab">Sitio Web</a></li>
+            <li role="presentation"><a href="#step3" aria-controls="provider3" role="tab" data-toggle="tab">Contacto</a></li>
+            <li role="presentation"><a href="#step4" aria-controls="provider4" role="tab" data-toggle="tab">Datos Bancarios</a></li>
+        </ul>
+
+        <form>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="step1">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label>Empresa</label>
+                            <input type="text" maxlength="150" class="form-control" id="company" data-ng-model="newProvider.Company" placeholder="Escriba el nombre de la empresa" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Razón Social</label>
+                            <input type="text" maxlength="150" class="form-control" id="rsocial" data-ng-model="rsocial" placeholder="Escriba la razón social" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre Comercial</label>
+                            <input type="text" maxlength="150" class="form-control" id="ncommerce" data-ng-model="ncommerce" placeholder="Escriba el nombre comercial" uppercase />
+                        </div>
+                        @*<div class="form-group">
+            <label>Marca</label>
+            <select class="form-control" name="idBrand" id="idBrand" data-ng-model="newProvider.Brand" data-ng-options="option.Nombre for option in Brands"></select>
+        </div>*@
+                        <div class="form-group">
+                            <label>Domicilio Fiscal</label>
+                            <input type="text" maxlength="150" class="form-control" id="domFiscal" data-ng-model="domFiscal" placeholder="Escriba el domicilio fiscal" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Domicilio Entrega</label>
+                            <input type="text" maxlength="150" class="form-control" id="domEntrega" data-ng-model="domEntrega" placeholder="Escriba el domicilio entrega" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Nacionalidad</label>
+                            <input type="text" maxlength="150" class="form-control" id="nacionalidad" data-ng-model="nacionalidad" placeholder="Escriba la nacionalidad" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>RFC</label>
+                            <input type="text" maxlength="20" class="form-control" id="empRFC" data-ng-model="empRFC" placeholder="Escriba el RFC de la empresa" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Regimen Fiscal</label>
+                            <input type="text" maxlength="100" class="form-control" id="regimenFiscal" data-ng-model="regimenFiscal"  placeholder="Escriba el Regimen Fiscal de la empresa" uppercase/>
+                        </div>
+                        <div class="form-group">
+                            <label>Proveedor Servicios Medida</label>
+                            <input type="checkbox" id="proveedorPedidosMedida"  data-ng-model="boolPedidosMedida" data-ng-checked="" data-ng-change="GetTypeService();"><br />
+                            <div class="check-element animate-show" data-ng-show="boolPedidosMedida">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Tipo de Servicio</label>
+                                        <select class="form-control" name="idTipoServicio" id="idTipoServicio" data-ng-model="idTipoServicio" data-ng-options="option.idTipoServicio as option.Descripcion for option in TipoServicios">
+                                            <option value="">Seleccione</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="step2">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label>Sitio Web</label>
+                            <input type="text" maxlength="100" class="form-control" id="sitioWeb" data-ng-model="sitioWeb" placeholder="Escriba el Sitio Web de la empresa" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Sitio Web Catálogo</label>
+                            <input type="text" maxlength="120" class="form-control" id="sitioWebCat" data-ng-model="sitioWebCat" placeholder="Escriba el Sitio Web del Catálogo" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Usuario</label>
+                            <input type="text" maxlength="50" class="form-control" id="userWeb" data-ng-model="userWeb" placeholder="Escriba el nombre del usuario" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Contraseña</label>
+                            <input type="text" maxlength="20" class="form-control" id="passWeb" data-ng-model="passWeb" placeholder="Escriba la contraseña" />
+                        </div>
+                    </section>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="step3">
+                    <section class="container-tab">
+
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" maxlength="100" class="form-control" id="name" data-ng-model="newProvider.Name" placeholder="Escriba el nombre del proveedor" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" maxlength="200" class="form-control" id="email" data-ng-model="email" placeholder="Escriba el email del proveedor" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Telefono</label>
+                            <input type="text" maxlength="12" class="form-control" id="telephone" data-ng-model="telephone" placeholder="Escriba el número de teléfono" />
+                        </div>
+                        <div class="form-group">
+                            <label>Crédito</label>
+                            <input type="checkbox" data-ng-model="boolCredit"><br />
+                            <div class="check-element animate-show" data-ng-show="boolCredit">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Crédito </label>
+                                        <input type="text" maxlength="4" class="form-control" id="credit" data-ng-model="credit" ng-currency placeholder="Cantidad de crédito otorgado" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Días de crédito</label>
+                                        <input type="text" maxlength="4" class="form-control" id="creditDays" data-ng-model="creditDays" placeholder="Días de crédito otorgados" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="step4">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label>Cuenta Bancaria MXN</label>
+                            <input type="radio" ng-model="bankType" name="bankType" value="1"><br />
+                            <div class="check-element animate-show" ng-show="bankType == 1">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Banco</label>
+                                        <input type="text" maxlength="100" class="form-control" id="bankMEX" data-ng-model="bankMEX" placeholder="Escriba el nombre del banco" uppercase />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Títular</label>
+                                        <input type="text" maxlength="200" class="form-control" id="holderMEX" data-ng-model="holderMEX" placeholder="Escriba el nombre del titular" uppercase />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CLABE</label>
+                                        <input type="text" maxlength="20" class="form-control" id="clabeMEX" data-ng-model="clabeMEX" placeholder="Escriba la CLABE">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Cuenta</label>
+                                        <input type="text" maxlength="20" class="form-control" id="countMEX" data-ng-model="countMEX" placeholder="Escriba el número de cuenta" numbers-only="numbers-only">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Sucursal</label>
+                                        <input type="text" maxlength="100" class="form-control" id="branchMEX" data-ng-model="branchMEX" placeholder="Escriba el nombre de la sucursal" uppercase />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>RFC</label>
+                                        <input type="text" maxlength="16" class="form-control" id="rfcMEX" data-ng-model="rfcMEX" placeholder="Escriba el RFC" uppercase />
+                                    </div>
+                                </div>
+                            </div>
+                            <label>Cuenta Bancaria Int.</label>
+                            <input type="radio" ng-model="bankType" name="bankType" value="2"><br />
+                            <div class="check-element animate-show" ng-show="bankType == 2">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Datos</label>
+                                        <textarea class="form-control" maxlength="400" id="dataINT" cols="100" rows="10" data-ng-model="dataINT" placeholder="Escriba los datos de la cuenta" uppercase></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Flete&nbsp;(%)</label>
+                            <input type="text" maxlength="9" class="form-control" id="freight" data-ng-model="freight" ng-currency placeholder="Escriba el costo del flete" />
+                        </div>
+                        <div class="form-group">
+                            <label>Importación&nbsp;(%)</label>
+                            <input type="text" maxlength="9" class="form-control" id="costImport" data-ng-model="costImport" ng-currency placeholder="Escriba el costo de la importación" />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </form>
+
+        @Html.Raw(HtmlHelperExtension.Button("Providers", "SaveAddProvider", "SaveAddProvider", "SaveAddProvider", "Guardar", "", "", "SaveAddProvider()", "btn btn-primary", "Guardando..."))
+
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>

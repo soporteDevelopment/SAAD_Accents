@@ -1,0 +1,181 @@
+﻿@using System.Web.MVC;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "PreQuotationsSales";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<style>
+    .table {
+        width: 3500px;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+    .table-container {
+        overflow-x: hidden;
+    }
+    .child {
+        cursor:pointer;        
+    }
+
+</style>
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/bootstrap-datetimepicker")" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.es.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".date-picker").datepicker({
+            format: "mm-yyyy",
+            startView: "months",
+            minViewMode: "months",
+            language: 'es'
+        });
+    });
+
+</script>
+
+<script type="text/javascript" src="@Url.Js("Class/SalesIntelligence/PreQuotationsSales")"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+
+<br />
+<div class="panel panel-default" data-ng-controller="PreQuotationsSalesController" style="width:1000px;">
+    <div class="panel-heading" data-ng-init="LoadDataCatalogs()">
+        <h3 class="panel-title">Reporte Pre Cotizaciones</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div style="display:flex; justify-content:center; align-items:center">
+                    <div class="col-md-6">
+                        <label>Desde</label>
+                        <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" placeholder="Seleccione la fecha inicial de consulta" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="display:flex; justify-content:center; align-items:center">
+                    <div class="col-md-6">
+                        <label>Hasta</label>
+                        <input type="text" class="form-control" id="dateUntil" datepicker-popup="{{format}}" data-ng-model="dateUntil" is-open="openedUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntil($event)" show-button-bar="false" placeholder="Seleccione la fecha final de consulta" data-ng-init="dateUntil = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div style="display:flex; justify-content:center; align-items:center">
+                    <div class="col-md-6">
+                        <label for="number">N° Precotización</label>
+                        <input type="text" class="form-control" id="number" ng-model="preQuotationNumber" uppercase />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="display:flex; justify-content:center; align-items:center">
+                    <div class="col-md-6">
+                        <label for="project">Proyecto</label>
+                        <input type="text" class="form-control" id="project" ng-model="project" uppercase />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div style="display:flex; justify-content:center; align-items:center">
+                    <div class="col-md-6">
+                        <label for="customer">Cliente</label>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="radio" name="type" id="moralCustomer" value="moral" />Moral
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <input type="radio" name="type" id="physicalCustomer" value="physical" />Físico
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <input type="radio" name="type" id="officeCustomer" value="office" />Despacho
+                            </div>
+                        </div>
+                        <br />
+                        <select class="form-control" id="customers" data-ng-model="customers" data-ng-options="option.Nombre for option in customerList">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div style="display:flex; justify-content:center; align-items:center">
+                    <div class="col-md-6">
+                        <label for="seller">Vendedor(es)</label>
+                        <select class="form-control" id="seller" data-ng-model="seller" data-ng-options="option.NombreCompleto for option in sellers">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4" style="display:flex; justify-content:center; align-items:center"><button style="width:60%" type="button" id="searchReport" class="btn btn-primary btn-large button-search" data-loading-text='Buscando...' data-ng-click="LoadPreQuotations(0,10)">Buscar</button></div>
+            <div class="col-md-4"></div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <img src="@Url.Img("icon_excel.png")" alt="exportar" title="Descargar Excel" style="width:25px;height:25px; cursor:pointer" data-ng-click="DownloadPreQuotationsReport();" />
+            </div>
+        </div>
+        <br />
+        <div class="row parent">
+            <div class="table-responsive" >
+                <div class="col-md-12 table-container">
+                    <table class="table table-striped" >
+                        <thead>
+                            <tr>
+                                <th scope="col">Pre Cotización</th>
+                                <th scope="col">Cliente Físico</th>
+                                <th scope="col">Cliente Moral</th>
+                                <th scope="col">Despacho</th>
+                                <th scope="col">Vendedor</th>
+                                <th scope="col">Sucursal</th>
+                                <th scope="col">Proyecto</th>
+                                <th scope="col">Nueva</th>
+                                <th scope="col">En Cotización</th>
+                                <th scope="col">Asignada</th>
+                                <th scope="col">En Proceso de Venta</th>
+                                <th scope="col">Pendiente de Ordenar</th>
+                                <th scope="col">Ordenada</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="q in preQuotations">
+                                <td class="child">{{q.Numero}}</td>
+                                <td class="child">{{q.ClienteF}}</td>
+                                <td class="child">{{q.ClienteM}}</td>
+                                <td class="child">{{q.Despacho}}</td>
+                                <td class="child">{{q.Vendedor}}</td>
+                                <td class="child">{{q.Sucursal}}</td>
+                                <td class="child">{{q.Proyecto}}</td>
+                                <td class="child">{{q.Nueva | jsDate | date:'shortDate'}}</td>
+                                <td class="child">{{q.En_Cotizacion | jsDate | date:'shortDate'}}</td>
+                                <td class="child">{{q.Asignada | jsDate | date:'shortDate'}}</td>
+                                <td class="child">{{q.En_Proceso_de_Venta | jsDate | date:'shortDate'}}</td>
+                                <td class="child">{{q.Pendiente_de_Ordenar | jsDate | date:'shortDate'}}</td>
+                                <td class="child">{{q.Ordenada | jsDate | date:'shortDate'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+

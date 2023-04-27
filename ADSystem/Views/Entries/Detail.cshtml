@@ -1,0 +1,66 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.EntryViewModel
+
+<div class="panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ingreso</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label>Entregada Por</label>
+            <select class="form-control" data-ng-model="entry.DeliveredBy" data-ng-init="entry.DeliveredBy='@Model.EntregadaPor'" data-ng-options="option.idUsuario as option.NombreCompleto for option in sellers">
+                <option value="">Seleccione</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Otro</label>
+            <input type="text" maxlength="250" class="form-control" data-ng-model="entry.DeliveredAnotherBy" data-ng-init="entry.DeliveredAnotherBy='@Model.EntregadaOtro'" placeholder="Entregada por otro" uppercase />
+        </div>
+        <div class="form-group">
+            <input type="radio" ng-model="entry.Type" value="1" data-ng-click="cleanAmount()"/>Remisión
+            <input type="radio" ng-model="entry.Type" value="2" data-ng-click="cleanAmount()"/>Directo
+        </div>
+        <div class="form-group" data-ng-show="entry.Type == 1">
+            <label>Venta</label>
+            <angucomplete id="idSale"
+                          placeholder="Remision"
+                          pause="300"
+                          selectedobject="entry.idSale"
+                          url="../../../Sales/GetRemissions?remission="
+                          datafield="Sales"
+                          titlefield="Remision"
+                          inputclass="form-control form-control-small" />
+        </div>
+        <div class="form-group" data-ng-show="entry.Type == 1">
+            <label>Obtener Pagos</label>
+            <button type="button" class="btn btn-success" data-ng-click="getPayments()">Buscar</button>
+        </div>
+        <div class="form-group" data-ng-show="entry.Type == 1">
+            <ul class="list-group" data-ng-model="list">
+                <li class="list-group-item" data-ng-repeat="item in payments">
+                    <input type="checkbox" id="{{item.idPayment}}" data-ng-model="item.Selected" data-ng-checked="item.Selected" data-ng-change="calculateTotal()"><span id="{{item.idPayment}}">{{item.Amount | currency}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="form-group">
+            <label>Cantidad</label>
+            <input type="text" maxlength="200" class="form-control" data-ng-model="entry.Amount" data-ng-init="entry.Amount='@Model.Cantidad'" data-ng-readonly="entry.Type == 1" data-ng placeholder="Cantidad" />
+        </div>
+        <div class="form-group">
+            <label>Comentarios</label>
+            <textarea rows="4" cols="50" class="form-control" data-ng-model="entry.Comments" data-ng-init="entry.Comments='@Model.Comentarios'" placeholder="Escriba comentarios" uppercase />
+        </div>
+        <div class="form-group text-center" data-ng-show="entryId == null">
+            <button type="button" class="btn btn-primary button-search" data-ng-click="saveAddEntry()">Agregar</button>
+        </div>
+        <div class="form-group text-center" data-ng-show="entryId != null">
+            <button type="button" class="btn btn-primary button-search" data-ng-click="saveUpdate()">Guardar</button>
+        </div>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+    </ul>
+</div>
+

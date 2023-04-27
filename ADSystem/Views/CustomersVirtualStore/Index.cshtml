@@ -1,0 +1,171 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Clientes Tienda Virtual";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/CustomersVirtualStore/List")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Clientes Tienda Virtual</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CustomersController">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Nombre</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="name" />
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchActions" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="Get()">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Celular</th>
+                        <th>Correo</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="c in customers">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{c.Nombre}}</td>
+                        <td>{{c.Apellidos}}</td>
+                        <td>{{c.TelefonoCelular}}</td>
+                        <td>{{c.Correo}}</td>
+                        <td class="pull-left">
+                            <a href="javascript:void(0);" data-ng-click="GetShoppingCart(c.idCliente)"><i class="fa fa-shopping-cart color-red"></i></a>
+                            &nbsp;&nbsp;
+                            <a href="javascript:void(0);" ng-really-message="Esta seguro que desea cambiar el estatus del cliente?" data-ng-click="UpdateStatus(c.idCliente, c.Activo)"><i class="fa fa-power-off color-red" data-ng-show="c.Activo == 0"></i><i class="fa fa-power-off color-green" data-ng-show="c.Activo == 1"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalShoppingCart" aria-labelledby="modalReloadPage" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Carrito de Compras</h4>
+                    </div>
+                    <div class="modal-body" id="detailShoppingCart">
+                        <div class="row">
+                            <div class="col-md-12 center">
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Subtotal</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span><i>{{shoppingCart.Subtotal | currency}}</i></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Descuento</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span>{{shoppingCart.Descuento}}%</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 text-right">
+                                        <label><b>Total</b></label>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <span><i>{{shoppingCart.Total | currency}}</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                        <br />
+                        <h3 class="panel-title">Productos</h3>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 text-center">
+                                <span class="color-red">Código</span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <span class="color-red">Descripción</span>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span class="color-red">Precio</span>
+                            </div>
+                            <div class="col-md-1 text-center">
+                                <span class="color-red">Unidades</span>
+                            </div>
+                            <div class="col-md-1 text-center">
+                                <span class="color-red">Descuento</span>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span class="color-red">Total</span>
+                            </div>
+                        </div>
+                        <div class="row" ng-repeat="item in shoppingCart.Productos">
+                            <div class="col-md-2 text-center">{{item.Producto.Codigo}}</div>
+                            <div class="col-md-4 text-center">{{item.Producto.Descripcion}}</div>
+                            <div class="col-md-2 text-center">{{item.Precio | currency}}</div>
+                            <div class="col-md-1 text-center">{{item.Cantidad}}</div>
+                            <div class="col-md-1 text-center">{{item.Descuento}} %</div>
+                            <div class="col-md-2 text-center"><label>{{ (item.Cantidad * item.Precio) - ((item.Cantidad * item.Precio) * (item.Descuento/100)) | currency}}</label></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

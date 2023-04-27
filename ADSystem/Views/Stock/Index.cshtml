@@ -1,0 +1,435 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Stock")"></script>
+
+<style>
+    .container-tab {
+        width: 100%;
+    }
+    .img-responsive {
+        margin: 0 auto;
+        width: 32px;
+    }
+</style>
+
+<br />
+<div class="panel panel-default" data-ng-app="customers" style="width:1300px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Inventario</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="StockController" ng-init="onInit()">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#step1" aria-controls="Actual" role="tab" data-toggle="tab">Inv. Actual</a></li>
+            <li role="presentation"><a href="#step2" aria-controls="Contabilizados" role="tab" data-toggle="tab">Contabilizados</a></li>
+            <li role="presentation"><a href="#step3" aria-controls="Resumen" role="tab" data-toggle="tab">Resumen</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="step1">
+                <section class="container-tab">
+                    <form class="form-horizontal" style="margin-left:250px;width:690px;">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="Codigo" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Descripción</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="Description" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Precio</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="productPrecio" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Categoría</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="Category" id="Category" data-ng-model="Category" data-ng-options="option.Nombre for option in Categories">
+                                    <option value="">Seleccione...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Color</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="Color" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Material</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="Material" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Proveedor</label>
+                            <div class="col-sm-10">
+                                <angucomplete id="brands"
+                                              placeholder="Buscar por marca"
+                                              pause="300"
+                                              selectedobject="selectedProvider"
+                                              url="../../../Products/GetProductsForBrands?brand="
+                                              datafield="Brands"
+                                              titlefield="Nombre"
+                                              inputclass="form-control form-control-small" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Menor a mayor</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" ng-model="orderASC" />
+                            </div>
+                        </div>
+                        <div class="form-group text-center">
+                            <div class="col-sm-12">
+                                <button type="button" id="searchProduct" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listProducts(0)">Buscar</button>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group text-center">
+                            <div class="col-sm-12">
+                                <img src="@Url.Img("icon_excel.png")" alt="Exportar" class="img-responsive" data-ng-click="exportCountingProducts()" />
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <div class="table-responsive" style="width:1190px;">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td colspan="10">
+                                        <div class="">
+                                            <ul class="pagination">
+                                                <li data-ng-class="prevPageDisabled()">
+                                                    <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                                </li>
+                                                <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                                    <a href="javascript:void(0);">{{n + 1}}</a>
+                                                </li>
+                                                <li data-ng-class="nextPageDisabled()">
+                                                    <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Imagen</th>
+                                    <th>Codigo</th>
+                                    <th style="width:300px;">Descripción</th>
+                                    <th>Precio</th>
+                                    <th>Proveedor</th>
+                                    <th>{{branch}}</th>
+                                    <th>Vista</th>
+                                    <th>Inventario</th>
+                                    <th style="width:116px;">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="animate-repeat" data-ng-repeat="c in Products">
+                                    <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                                    <td><img class="img-product-list" ng-src="{{c.urlImagen}}"></td>
+                                    <td>{{c.Codigo}}</td>
+                                    <td>{{c.Descripcion}}</td>
+                                    <td>{{c.PrecioVenta | currency}}</td>
+                                    <td>{{c.Proveedor}}</td>
+                                    <td data-ng-repeat="p in c._Existencias">{{p.Existencia}}</td>
+                                    <td>
+                                        <table data-ng-show="c.Vista > 0" style="font-size:12px;text-align:center;width:85px;">
+                                            <tr><td><b>Total</b></td><td><b>{{c.Vista}}</b></td></tr>
+                                            <tr><td>Remisión</td><td>Cant.</td></tr>
+                                            <tr data-ng-repeat="d in c.oDetailView" style="font-weight:bold;"><td>{{d.Remision}}</td><td>{{d.Cantidad}}</td></tr>
+                                        </table>
+                                    </td>
+                                    <td><input type="number" min="0" max="100" ng-model="c.Cantidad" /></td>
+                                    <td class="pull-left">
+                                        <a href="javascript:void(0);" ng-click="openModalPrintBarCode(c.idProducto)"><i class="fa2 fa-print color-red"></i></a>&nbsp;&nbsp;
+                                        <a href="javascript:void(0);" ng-click="UpdateProduct(c.idProducto)"><i class="fa2 fa-pencil-square-o color-red"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="10">
+                                        <div class="">
+                                            <ul class="pagination">
+                                                <li data-ng-class="prevPageDisabled()">
+                                                    <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                                </li>
+                                                <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                                    <a href="javascript:void(0);">{{n + 1}}</a>
+                                                </li>
+                                                <li data-ng-class="nextPageDisabled()">
+                                                    <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="step2">
+                <section class="container-tab">
+                    <form class="form-horizontal" style="margin-left:250px;width:690px;">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Código</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="CodigoStock" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Descripción</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="DescriptionStock" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Precio</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="productPrecioStock" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Categoría</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="Category" id="Category" data-ng-model="CategoryStock" data-ng-options="option.Nombre for option in Categories">
+                                    <option value="">Seleccione...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Color</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="ColorStock" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Material</label>
+                            <div class="col-sm-10">
+                                <input data-ng-model="MaterialStock" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Proveedor</label>
+                            <div class="col-sm-10">
+                                <angucomplete id="brands"
+                                              placeholder="Buscar por marca"
+                                              pause="300"
+                                              selectedobject="selectedProviderStock"
+                                              url="../../../Products/GetProductsForBrands?brand="
+                                              datafield="Brands"
+                                              titlefield="Nombre"
+                                              inputclass="form-control form-control-small" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Diferencias</label>
+                            <div class="col-sm-10">
+                                <input type="checkbox" data-ng-model="difference" data-ng-change="setPagination()" />
+                            </div>
+                        </div>
+                        <div class="form-group text-center">
+                            <div class="col-sm-12">
+                                <button type="button" id="searchProductStock" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listProductsStock(0)">Buscar</button>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group text-center">
+                            <div class="col-sm-12">
+                                <img src="@Url.Img("icon_excel.png")" alt="Exportar" class="img-responsive" data-ng-click="exportDifference()" />
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <div class="table-responsive" style="width:1190px;">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td colspan="10">
+                                        <div class="">
+                                            <ul class="pagination">
+                                                <li data-ng-class="prevPageDisabledStock()">
+                                                    <a href="javascript:void(0);" data-ng-click="prevPageStock()">« Ant</a>
+                                                </li>
+                                                <li data-ng-repeat="n in rangeStock()" data-ng-class="{activePageStock: (n) == currentPageStock}" data-ng-click="setPageStock(n)">
+                                                    <a href="javascript:void(0);">{{n + 1}}</a>
+                                                </li>
+                                                <li data-ng-class="nextPageDisabledStock()">
+                                                    <a href="javascript:void(0);" data-ng-click="nextPageStock()">Sig »</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Imagen</th>
+                                    <th>Codigo</th>
+                                    <th style="width:300px;">Descripción</th>
+                                    <th>Precio</th>
+                                    <th>Proveedor</th>
+                                    <th>Anterior</th>
+                                    <th>Inventario</th>
+                                    <th>Vista</th>
+                                    <th>Verificar</th>
+                                    <th style="width:116px;">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="animate-repeat" data-ng-repeat="c in ProductsStock">
+                                    <td>{{($index + (itemsPerPageStock * currentPageStock)) + 1}}</td>
+                                    <td><img class="img-product-list" ng-src="{{c.urlImagen}}"></td>
+                                    <td>{{c.Codigo}}</td>
+                                    <td>{{c.Descripcion}}</td>
+                                    <td>{{c.PrecioVenta | currency}}</td>
+                                    <td>{{c.Proveedor}}</td>
+                                    <td>{{c.CantidadAnterior}}</td>
+                                    <td><input type="number" min="0" max="100" ng-model="c.CantidadActual" /></td>
+                                    <td>
+                                        <table data-ng-show="c.Vista > 0" style="font-size:12px;text-align:center;width:85px;">
+                                            <tr><td><b>Total</b></td><td><b>{{c.Vista}}</b></td></tr>
+                                            <tr><td>Remisión</td><td>Cant.</td></tr>
+                                            <tr data-ng-repeat="d in c.oDetailView" style="font-weight:bold;"><td>{{d.Remision}}</td><td>{{d.Cantidad}}</td></tr>
+                                        </table>
+                                    </td>
+                                    <td class="color-red">{{((c.CantidadAnterior - c.CantidadActual) <= 0)? 0 : c.CantidadAnterior - c.CantidadActual}}</td>
+                                    <td class="pull-left">
+                                        <a href="javascript:void(0);" ng-click="openModalPrintBarCode(c.idProducto)"><i class="fa2 fa-print color-red"></i></a>&nbsp;&nbsp;
+                                        <a href="javascript:void(0);" ng-click="UpdateProductStock(c)"><i class="fa2 fa-refresh color-red"></i></a>
+                                        <a href="javascript:void(0);" ng-click="UpdateProduct(c.idProducto)"><i class="fa2 fa-pencil-square-o color-red"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="10">
+                                        <div class="">
+                                            <ul class="pagination">
+                                                <li data-ng-class="prevPageDisabledStock()">
+                                                    <a href="javascript:void(0);" data-ng-click="prevPageStock()">« Ant</a>
+                                                </li>
+                                                <li data-ng-repeat="n in rangeStock()" data-ng-class="{activePageStock: (n) == currentPageStock}" data-ng-click="setPageStock(n)">
+                                                    <a href="javascript:void(0);">{{n + 1}}</a>
+                                                </li>
+                                                <li data-ng-class="nextPageDisabledStock()">
+                                                    <a href="javascript:void(0);" data-ng-click="nextPageStock()">Sig »</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </section>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="step3">
+                <section class="container-tab">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Cantidad</th>
+                        </tr>
+                        <tr>
+                            <td>Cant. de artìculos con diferencias negativas</td>
+                            <td><button type="button" class="btn btn-warning">{{amountNegatives}}</button></td>
+                        </tr>
+                        <tr>
+                            <td>Cant. de artìculos con diferencias positivas</td>
+                            <td><button type="button" class="btn btn-success">{{amountPositives}}</button></td>
+                        </tr>
+                        <tr>
+                            <td>Cant. artículos inventario anterior</td>
+                            <td><button type="button" class="btn btn-default">{{amountOldStock}}</button></td>
+                        </tr>
+                        <tr>
+                            <td>Cant. artículos inventario actual</td>
+                            <td><button type="button" class="btn btn-default">{{amountNewStock}}</button></td>
+                        </tr>
+                        <tr>
+                            <td>Total $ inventario anterior</td>
+                            <td><button type="button" class="btn btn-info">{{costOldStock | currency}}</button></td>
+                        </tr>
+                        <tr>
+                            <td>Total $ inventario actual</td>
+                            <td><button type="button" class="btn btn-info">{{costNewStock | currency}}</button></td>
+                        </tr>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <button type="button" class="btn btn-primary button-search" style="width:201px;" ng-click="SaveStock()">Guardar</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        
+        <!----------------------------MODAL BRANCH---------------------------->
+        <div class="modal" tabindex="-1" role="dialog" id="modalSetBranch" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <table>
+                            <tr><td>Sucursal&nbsp;</td></tr>
+                            <tr><td></td></tr>
+                            <tr><td><input type="radio" ng-model="IDBranch" value="2" />&nbsp;RÍO AMAZONAS</td></tr>
+                            <tr><td><input type="radio" ng-model="IDBranch" value="3" />&nbsp;RÍO GUADALQUIVIR</td></tr>
+                            <tr><td><input type="radio" ng-model="IDBranch" value="4" />&nbsp;TEXTURA</td></tr>
+                        </table>
+                        <br />
+                        <table>
+                            <tr>
+                                <td>Mes&nbsp;</td>
+                                <td><input type="text" class="form-control" id="dateStart" datepicker-popup="MM/yyyy" ng-model="dateStart" is-open="openedStart" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" datepicker-mode="'month'" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openStart($event)" show-button-bar="false" placeholder="Seleccione un mes" data-ng-init="dateStart = '@DateTime.Now.ToString("MM/yyyy")'" readonly /></td>
+                            </tr>
+                        </table>
+                        <br />
+                        <button type="button" class="btn btn-primary button-search" ng-click="StartStock()" style="margin-left:38px;width:201px;padding-left:3px;">Iniciar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!----------------------------MODAL PRINT BARCODE---------------------------->
+        <div class="modal" tabindex="-1" role="dialog" id="modalPrintBarcode" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label>Cantidad</label>
+                                <input data-ng-model="amountImpressions" />
+                            </div>
+                            <button type="button" class="btn btn-primary" ng-click="PrintBarCode()">Aceptar</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

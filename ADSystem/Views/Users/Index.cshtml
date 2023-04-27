@@ -1,0 +1,108 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Usuarios";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Users")"></script>
+
+<br />
+<div class="panel panel-default" style="width:1210px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Usuarios</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="UsersController">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Correo</th>
+                        <th>Contraseña</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="u in Users">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{u.Nombre}}</td>
+                        <td>{{u.Apellidos}}</td>
+                        <td>{{u.Correo}}</td>
+                        <td>{{u.Contrasena}}</td>
+                        <td class="pull-left" style="padding-left: 0px;">
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Users", "UpdateUser") == 1" data-ng-click="UpdateUser(u.idUsuario)"><i class="fa fa-pencil color-red"></i></a>&nbsp;
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Users", "UpdateUser") == 1" data-ng-click="Commissions(u.idUsuario)"><i class="fa fa-money color-red"></i></a>&nbsp;
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Users", "UpdateStatusUser") == 1" data-ng-click="UpdateStatusUser(u.idUsuario, u.Estatus)"><i class="fa fa-power-off color-red" data-ng-show="u.Estatus == 0"></i><i class="fa fa-power-off color-green" data-ng-show="u.Estatus == 1"></i></a>&nbsp;
+                            <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Users", "UpdatePasswordFromUser") == 1" data-ng-click="UpdatePassword(u.idUsuario)"><i class="fa fa-key color-red"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalUpdatePassword" aria-labelledby="modalUpdatePasswordLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">                        
+                        <div class="form-group">
+                            <label class="no">Nueva contraseña</label>
+                            <input type="password" name="password" data-ng-model="password" class="form-control" placeholder="Ingrese su nueva contraseña" autocomplete="off" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="no">Confirmar contraseña</label>
+                            <input type="password" name="confirmPassword" data-ng-model="confirmPassword" class="form-control" placeholder="Confirme su nueva contraseña" autocomplete="off" required />
+                        </div>
+                    </div>
+                    <div class="container-btn-modal center-block">
+                        <button type="button" id="btnChangePassword" class="btn btn-primary" data-ng-click="UpdatePasswordFromUser()"  data-loading-text="Cargando...">Enviar</button>
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

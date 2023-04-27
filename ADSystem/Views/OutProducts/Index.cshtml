@@ -1,0 +1,536 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+
+@{
+    ViewBag.Title = "Salidas a Vista";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/OutProductsCreate")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Customers")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Offices")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="OutProductsController" style="width:930px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Salidas a Vista</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4 text-left">
+                <label class="control-label">Remisión</label>
+                <h4>{{oremision}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Fecha y hora</label>
+                <h4 data-ng-init="dateTime = '@DateTime.Now.ToString("MM/dd/yyyy HH:mm")'">{{dateTime}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Sucursal</label>
+                <h4 data-ng-init="branch = '@ViewBag.Branch.Nombre'">{{branch}}</h4>
+            </div>
+        </div>
+        <br />
+        <br />
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#costumer" aria-controls="costumer" role="tab" data-toggle="tab">Cliente</a></li>
+            <li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">Productos</a></li>
+            <li role="presentation"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Resumen</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="costumer">
+                <br />
+                <br />
+                <div class="row" data-ng-init="LoadCustomers()">
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Cliente</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="radio" ng-model="customer.type" value="moral" ng-change="CleanAnotherCustomer(1)" />Moral
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <input type="radio" ng-model="customer.type" value="physical" ng-change="CleanAnotherCustomer(2)" />Físico
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <input type="radio" ng-model="customer.type" value="office" ng-change="CleanAnotherCustomer(3)" />Despacho
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Proyecto</label>
+                    </div>
+                    <div class="col-md-5 text-left">
+                        <input type="text" ng-model="project" value="" maxlength="300" style="width: 300px;" uppercase />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+                        <select class="form-control" name="moralCustomer" ng-show="customer.type == 'moral'" data-ng-model="moralCustomer" data-ng-options="option.Nombre for option in moralCustomers">
+                            <option value="">Seleccione</option>
+                        </select>
+                        <select class="form-control" name="physicalCustomer" ng-show="customer.type == 'physical'" data-ng-model="physicalCustomer" data-ng-options="option.Nombre for option in physicalCustomers">
+                            <option value="">Seleccione</option>
+                        </select>
+                        <select class="form-control" name="officeCustomer" ng-show="customer.type == 'office'" data-ng-model="officeCustomer" data-ng-options="option.Nombre for option in offices" data-ng-init="LoadOffices()">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="JavaScript:void(0);" ng-show="customer.type == 'moral'" class="btn btn-block btn-success" data-ng-click="AddMoralCustomer();">
+                            Agregar cliente
+                        </a>
+                        <a href="JavaScript:void(0);" ng-show="customer.type == 'physical'" class="btn btn-block btn-success" data-ng-click="AddPhysicalCustomer();">
+                            Agregar cliente
+                        </a>
+                        <a href="JavaScript:void(0);" ng-show="customer.type == 'office'" class="btn btn-block btn-success" data-ng-click="AddOffice();">
+                            Agregar desp.
+                        </a>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-2 text-left">
+                        <label class="control-label">Despacho</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <input type="checkbox" ng-model="checkedOffices">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control" name="office" ng-show="checkedOffices" data-ng-model="office" data-ng-options="option.Nombre for option in offices">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+				<div class="row" data-ng-init="outSellerOne = '@ViewBag.Seller'">
+					<div class="col-md-2">
+						<label class="control-label">Vendedor(es)</label>
+					</div>
+					<div class="col-md-4" data-ng-init="LoadUsers()">
+						<select class="form-control" data-ng-model="sellerOne" data-ng-options="option.NombreCompleto for option in usersOne" data-ng-change="LoadUsersButNot()">
+							<option value="">Seleccione</option>
+						</select>
+						<br />
+						<select class="form-control" data-ng-model="sellerTwo" data-ng-options="option.NombreCompleto for option in usersTwo">
+							<option value="">Seleccione</option>
+						</select>
+					</div>
+				</div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="products">
+                <br />
+                <br />
+                <div class="row" data-ng-init="LoadServices()">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Subtotal</label>
+                            </div>
+                            <div class="col-md-8">
+                                <span>{{subTotal|currency}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Total</label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <h3>{{total|currency}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="checkbox" ng-model="checkedFreight">&nbsp;&nbsp;&nbsp;Flete
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label class="control-label">Producto</label>
+                            </div>
+                            <div class="col-md-7">
+                                <angucomplete id="product"
+                                              placeholder="Código"
+                                              pause="300"
+                                              selectedobject="selectedCode"
+                                              url="../../../Products/GetProductsForCodigo?codigo="
+                                              datafield="Codigos"
+                                              titlefield="Codigo"
+                                              inputclass="form-control form-control-small" />
+                            </div>
+                            <div class="col-md-3">
+                                <a href="JavaScript:void(0)" class="btn btn-block btn-success" data-ng-click="GetProduct();">
+                                    Agregar
+                                </a>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <h3 class="panel-title text-center">Productos</h3>
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Imagen</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Código</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Descripción</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Precio</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Unidades</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Total</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-1"><img class="img-product-list" src="{{item.imagen}}" /></div>
+                            <div class="col-md-2">{{item.codigo}}</div>
+                            <div class="col-md-2 txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{item.desc}}">{{item.desc}}</p></div>
+                            <div class="col-md-2">{{item.prec | currency}}</div>
+                            <div class="col-md-1"><input type="text" maxlength="5" ng-model="item.cantidad" ng-change="ValidateStock(item.idProducto);" style="width:50px;" /></div>
+                            <div class="col-md-2"><label ng-model="item.costo">{{ item.cantidad * item.prec | currency}}</label></div>
+                            <div class="col-md-2">
+                                <i class="fa fa-trash color-red" ng-click="DeleteProduct(item.idProducto)"></i>
+                                <i class="fa fa-comments-o color-red" ng-click="OpenCommentsModal(item.idProducto, item.comentarios)"></i>
+                            </div>
+                        </div><br>
+                    </div>
+                </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="summary">
+                <br />
+                <br />
+                <i class="fa fa-floppy-o fa-2 color-red" ng-click="SaveEraserOutProduct();" style="left:3%;"></i>
+                <br />
+                <br />
+                <div class="panel panel-success" style="width:100%;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">ARTÍCULO</div>
+                            <div class="col-md-3">CANT.</div>
+                            <div class="col-md-3">PRE.UNIT</div>
+                            <div class="col-md-3">TOTAL</div>
+                        </div>
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-3">{{item.codigo}}</div>
+                            <div class="col-md-3">{{item.cantidad}}</div>
+                            <div class="col-md-3">{{item.prec | currency }}</div>
+                            <div class="col-md-3">{{ item.cantidad * item.prec | currency}}</div>
+                        </div>
+                        <br />
+                        <b>Subtotal</b>&nbsp;<span>{{   subTotal | currency }}</span>
+                        <br />                        
+                        <b>Venta Total</b>&nbsp;<span>{{ total | currency }}</span>
+                        <br />
+                        <b ng-show="customer.type == 'moral'">Cliente {{moralCustomer.Nombre}}</b>
+                        <b ng-show="customer.type == 'physical'">Cliente {{physicalCustomer.Nombre}}</b>
+                        <b ng-show="customer.type == 'office'">Cliente {{officeCustomer.Nombre}}</b>
+                        <br />
+                        <b>Le atendío: {{sellerOne.NombreCompleto}} --- {{sellerTwo.NombreCompleto}}</b>
+                        <br />
+                        <br />
+                        <br />
+                        <b>Fecha:</b>&nbsp;<span>{{ dateTime }}</span>
+                        <br />
+                        <b>Sucursal:</b>&nbsp;<span>{{ branch }}</span>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-3"><b>Revisó la salida:</b></div>
+                            <div class="col-md-3">
+                                <select class="form-control" data-ng-model="sellerThree" data-ng-options="option.NombreCompleto for option in usersTwo">
+                                    <option value="">Seleccione</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" name="confirmOutProducts" class="btn btn-primary" ng-click="ConfirmOutProducts();" ng-disabled="buttonDisabled">Enviar</button>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+    </div>
+
+    <!----------------------------MODAL BRANCH---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModal" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-ng-init="SetBranch(@ViewBag.IDBranch)">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <figure class="img-modal">
+                        <img src="@Url.Img("icon_sucursales.png")">
+                    </figure>
+                </div>
+                <div class="container-btn-modal">
+                    <div class="row">
+                        <div class="col-md-4" data-ng-click="SetBranchName('RÍO AMAZONAS', 2)">RÍO AMAZONAS</div>
+                        <div class="col-md-4" data-ng-click="SetBranchName('RÍO GUADALQUIVIR', 3)">RÍO GUADALQUIVIR</div>
+                        <div class="col-md-4" data-ng-click="SetBranchName('TEXTURA', 4)">TEXTURA</div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL ADD MORAL CUSTOMER---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalAddMoralCustomer" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <div ng-include="includeURLMoral"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL ADD PHYSICAL CUSTOMER---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalAddPhysicalCustomer" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <div ng-include="includeURLPhysical"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL ADD OFFICE CUSTOMER---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="openModalAddOfficeCustomer" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div ng-include="includeURLOffice"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL SERVICE---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalService" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-header">
+                    <h4 class="modal-title">Agregar Servicio</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="descService">Servicio</label>
+                            <select class="form-control" name="descService" data-ng-model="newService.descService" data-ng-options="option.Descripcion for option in listServices">
+                                <option value="">Seleccione</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="salePriceService">Precio</label>
+                            <input type="text" class="form-control" id="salePriceService" ng-model="newService.salePriceService" ng-currency maxlength="8" placeholder="Precio">
+                        </div>
+                        <div class="form-group">
+                            <label for="amountService">Cantidad</label>
+                            <input type="text" class="form-control" id="amountService" ng-model="newService.amountService" maxlength="5" placeholder="Cantidad">
+                        </div>
+                        <div class="form-group">
+                            <label for="commentsService">Comentarios</label>
+                            <textarea class="form-control" id="commentsService" rows="3" ng-model="newService.commentsService" maxlength="400"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="AddService()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <ul class="list-group">
+                        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL COMMENTS---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalComments" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Comentarios</h4>
+                </div>
+                <div class="modal-body">
+                    <form autocomplete="off">
+                        <div class="form-group hidden">
+                            <label for="productItem">ID</label>
+                            <input type="text" class="form-control" id="productItem" ng-model="productItem">
+                        </div>
+                        <div class="form-group">
+                            <label for="commentsItem">Comentarios</label>
+                            <textarea class="form-control" id="commentsItem" rows="3" ng-model="commentsItem" maxlength="400"></textarea>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <button type="button" class="btn btn-primary" ng-click="SaveComments()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL VALIDATION---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalValidation" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="txtValidation">
+
+                </div>
+                <div class="container-btn-modal">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL PRINT BILLING---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalPrint" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-header">
+                    <h4 class="modal-title">Resumen de la Salida a Vista</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-success" style="width:100%;">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12"><b>{{oremision}}</b></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">ARTÍCULO</div>
+                                <div class="col-md-3">CANT.</div>
+                                <div class="col-md-3">PRE.UNIT</div>
+                                <div class="col-md-3">TOTAL</div>
+                            </div>
+                            <div class="row" ng-repeat="item in items">
+                                <div class="col-md-3">{{item.codigo}}</div>
+                                <div class="col-md-3">{{item.cantidad}}</div>
+                                <div class="col-md-3">{{item.prec | currency }}</div>
+                                <div class="col-md-3">{{ item.cantidad * item.prec | currency}}</div>
+                            </div>
+                            <br>
+                            <b>Subtotal</b>&nbsp;<span>{{ subTotal | currency}}</span>
+                            <br />                            
+                            <b>Total</b>&nbsp;<span>{{ total | currency }}</span>
+                            <br />
+                            <b>Le atendío {{sellerOne.NombreCompleto}} --- {{sellerTwo.NombreCompleto}}</b>
+                            <br />
+                            <br />
+                            <br />
+                            <b>Fecha:</b>&nbsp;<span>{{ dateTime }}</span>
+                            <br />
+                            <b>Sucursal:</b>&nbsp;<span>{{ branch }}</span>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-3"><b>Revisó la salida:</b></div>
+                                <div class="col-md-3">
+                                    &nbsp;<span>{{ sellerThree.NombreCompleto }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" name="printOutProducts" class="btn btn-primary" data-ng-click="Print();">Imprimir</button>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

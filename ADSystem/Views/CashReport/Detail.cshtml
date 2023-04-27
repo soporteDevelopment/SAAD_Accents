@@ -1,0 +1,84 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.ReportEntriesViewModel
+
+<div class="panel panel-default" style="margin-right:50px; margin-left:50px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Reporte de Efectivo</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="ReportsController" ng-init="loadInit(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+        <br />
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 text-right">
+                    <label><b>Fecha</b></label>
+                </div>
+                <div class="col-sm-6 text-left">
+                    <span>{{report.Fecha | date:'shortDate'}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 text-right">
+                    <label><b>Ingreso</b></label>
+                </div>
+                <div class="col-sm-6 text-left">
+                    <span>{{report.CantidadIngreso | currency}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 text-right">
+                    <label><b>Egreso</b></label>
+                </div>
+                <div class="col-sm-6 text-left">
+                    <span>{{report.CantidadEgreso | currency}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 text-right">
+                    <label><b>Comentarios</b></label>
+                </div>
+                <div class="col-sm-6 text-left">
+                    <span>{{report.Comentarios}}</span>
+                </div>
+            </div>
+            <br />
+            <h3 class="panel-title">Detalle</h3>
+            <br />
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <h3>Ingresos</h3>
+                </div>
+                <div class="col-md-6">
+                    <h3>Egresos</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="list-group" data-ng-repeat="entry in report.Ingresos">
+                        <a href="JavaScript:void(0);" class="list-group-item">
+                            <h4 class="list-group-item-heading">{{entry.Fecha | date:'short'}}</h4>
+                            <p class="list-group-item-text">
+                                Se recibío la cantidad de <b>{{entry.Cantidad | currency}}</b> por <b>{{entry.Entregada}}{{entry.EntregadaOtro}}</b>
+                                <br />
+                                Remisión: <b>{{entry.Remision}}</b>
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="list-group" data-ng-repeat="egress in report.Egresos">
+                        <a href="JavaScript:void(0);" class="list-group-item">
+                            <h4 class="list-group-item-heading">{{egress.Fecha | date:'short'}}</h4>
+                            <p class="list-group-item-text">
+                                Se entregó la cantidad de <b>{{egress.Cantidad | currency}}</b> a <b>{{egress.Recibida}}{{egress.RecibidaOtro}}</b>
+                                <br />
+                                Remisión: <b>{{entry.Remision}}</b>
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

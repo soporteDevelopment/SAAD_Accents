@@ -1,0 +1,205 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@using ADSystem.Common;
+
+
+@{
+    ViewBag.Title = "Préstamos";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+<script type="text/javascript" src="@Url.Js("Class/CatalogView/List")"></script>
+<script type="text/javascript" src="@Url.Js("Class/EditHeaderOutProduct")"></script>
+
+<br />
+<div class="panel panel-default" style="width:1210px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Préstamos</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CatalogViewController" style="width: 1230px;">
+        <br />
+        <br />
+        <form class="form-horizontal" style="margin-left:300px;width:500px;" data-ng-init="LoadInit();">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Desde</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" placeholder="Seleccione la fecha inicial de consulta" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Hasta</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateUntil" datepicker-popup="{{format}}" data-ng-model="dateUntil" is-open="openedUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntil($event)" show-button-bar="false" data-ng-init="dateUntil = '@DateTime.Now.ToString("MM/dd/yyyy")'" placeholder="Seleccione la fecha final de consulta" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Número</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="number" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Cliente</label>
+                <div class="col-sm-10">
+                    <input type="text" data-ng-model="customer" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Catálogo</label>
+                <div class="col-sm-10">
+                    <input type="text" data-ng-model="catalogCode" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Estatus</label>
+                <div class="col-sm-10">
+                    <select class="form-control" data-ng-model="status">
+                        <option value="1">Completado</option>
+                        <option value="2">Pendiente</option>
+                        <option value="3">Cancelada</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchViews" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="GetViews(0,20)">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive" style="width:1200px;">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="11">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:120px;">Número</th>
+                        <th style="width:180px;">Cliente</th>
+                        <th style="width:180px;">Vendedor</th>
+                        <th>Fecha</th>
+                        <th>Cantidad</th>
+                        <th>Pendiente</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="o in Catalogs">
+                        <td>{{o.Numero}}</td>
+                        <td><div class="txt-describe">{{o.NombreCliente}}</div></td>
+                        <td><div class="txt-describe">{{o.Usuario}}</div></td>
+                        <td>{{o.Fecha | jsDate | date:'shortDate'}}</td>
+                        <td>{{o.CantidadProductos}}</td>
+                        <td>{{o.CantidadPendiente}}</td>
+                        <td class="text-left">
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-sm btn-success dropdown-toggle" style="width:80px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Opciónes<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" style="min-width:78px; max-width:78px;">
+                                    <li>
+                                        <a href="javascript:void(0);" title="Estatus" data-ng-click="ChangeStatus(o.idVista,o.Estatus)">
+                                            <i class="fa fa-circle color-{{o.ColorEstatus}}" style="left: 0px;"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" title="Detalle" data-ng-click="GetDetail(o.idVista)">
+                                            <i class="fa fa-eye color-red" style="left: 0px;"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" title="Enviar Correo" data-ng-click="SendMail(o.idVista)">
+                                            <i class="fa fa-envelope color-red" style="left: 0px;"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" title="Imprimir" data-ng-click="Print(o.idVista)">
+                                            <i class="fa fa-print color-red" style="left: 0px;"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="11">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="ModalCatalogViewStatus" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-header">
+                        <h4 class="modal-title">Estatus de Préstamo</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="descService">Estatus</label>
+                                <select class="form-control" data-ng-model="status">
+                                    <option value="1">Pendiente</option>
+                                    <option value="2">Cancelada</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-primary" ng-show="status != null" ng-click="UpdateStatus()">Aceptar</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="ModalDetailCatalogView" aria-labelledby="modalReloadPage" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-header">
+                        <h4 class="modal-title">Detalle de Préstamo</h4>
+                    </div>
+                    <div class="modal-body" id="ModalCatalogViewDetail">
+                        <div ng-include="includeURLCatalogViewDetail"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

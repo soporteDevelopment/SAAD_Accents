@@ -1,0 +1,68 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Textiles";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/CatalogTextiles/Add")"></script>
+<script type="text/javascript" src="@Url.Js("/xlsx.full.min")"></script>
+
+
+<style>
+    #holder {
+        /*margin: 10px;*/
+        width: 100%;
+        height: 350px;
+        border: 5px dashed gray;
+        border-radius: 8px;
+        background: rgb(230,230,230);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        vertical-align: central;
+    }
+</style>
+
+<br />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Textiles</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CatalogTextilesController">
+        <div class="row">
+            <div class="col-md-12">
+                <form>
+                    <input class="form-control form-control-lg" style="height: 47px;" type="file" id="excel-file" />
+                    <br />
+                    <button class="btn btn-success" type="button" id="upload-btn" ng-click="SaveAdd()">Cargar</button>
+                </form>
+            </div>
+        </div>
+        <!----------------------------ERROR DATOS EXCEL---------------------------->
+        <div class="modal" tabindex="-1" role="dialog" id="openErrorModal" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" data-ng-init="SetBranch(@ViewBag.IDBranch)">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Errores del archivo</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div ng-repeat="item in msgErrorsFinal">
+                            <div style="display:flex; justify-content:center; align-items:center;">
+                                <div style="text-align:justify; ">{{item}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-btn-modal">    
+                        <button class="btn btn-danger" data-dismiss="modal" >Aceptar</button>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+

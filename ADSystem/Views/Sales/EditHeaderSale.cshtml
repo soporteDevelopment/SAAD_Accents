@@ -1,0 +1,224 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.SaleViewModel
+
+<style>
+    .center {
+        text-align: center;
+    }
+
+    .center form {
+        display: inline-block;
+    }
+</style>
+
+<br />
+<div class="panel panel-default" data-ng-controller="EditSalesController">
+    <div class="panel-body">
+        <code ng-show="!frmLogin.$valid && frmLogin.$dirty">Revise la información</code><br>
+        <form id="frmLogin" name="frmLogin">
+            <div class="row">
+                <div class="col-md-12 center" data-ng-init="LoadInformation(@ViewBag.TypeCustomer, '@ViewBag.Customer', '@ViewBag.Office', @Newtonsoft.Json.JsonConvert.SerializeObject(@ViewBag.Users),  @Newtonsoft.Json.JsonConvert.SerializeObject(@Model))">
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Remisión</b></label>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <span data-ng-init="remision = '@Model.Remision'"><b>{{remision}}</b></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Sucursal</b></label>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <span data-ng-init="branch = '@Model.Sucursal'">{{branch}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Fecha</b></label>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <span data-ng-init="dateTime = '@Model.Fecha'">{{dateTime}}</span>
+                        </div>
+                    </div>
+                    <div class="row" data-ng-init="LoadCustomers()">
+                        <div class="col-md-6 text-right">
+                            <label><b>Tipo de Clientes</b></label>
+                        </div>
+                        <div class="col-md-6 text-left">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <input type="radio" name="type" ng-model="type" value="moral" />Moral
+                                </div>
+                                <div class="col-md-2 text-left">
+                                    <input type="radio" name="type" ng-model="type" value="physical" />Físico
+                                </div>
+                                <div class="col-md-2 text-left">
+                                    <input type="radio" name="type" ng-model="type" value="office" />Despacho
+                                </div>
+                            </div>
+                            <code class="has-error" ng-show="frmLogin.type.$error.required && frmLogin.$dirty">Requerido!</code>
+                        </div>
+                    </div>                    
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Cliente</b></label>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" name="moralCustomer" ng-show="type == 'moral'" ng-required="type == 'moral'" data-ng-model="moralCustomer" data-ng-options="option.Nombre for option in moralCustomers">
+                                <option value="">Seleccione</option>
+                            </select>
+                            <select class="form-control" name="physicalCustomer" ng-show="type == 'physical'" ng-required="type == 'physical'" data-ng-model="physicalCustomer" data-ng-options="option.Nombre for option in physicalCustomers">
+                                <option value="">Seleccione</option>
+                            </select>
+                            <select class="form-control" name="officeCustomer" ng-show="type == 'office'" ng-required="type == 'office'" data-ng-model="officeCustomer" data-ng-options="option.Nombre for option in offices">
+                                <option value="">Seleccione</option>
+                            </select>
+                            <code class="has-error" ng-show="frmLogin.moralCustomer.$error.required && frmLogin.$dirty">Requerido!</code>
+                            <code class="has-error" ng-show="frmLogin.physicalCustomer.$error.required && frmLogin.$dirty">Requerido!</code>
+                            <code class="has-error" ng-show="frmLogin.officeCustomer.$error.required && frmLogin.$dirty">Requerido!</code>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Proyecto</b></label>
+                        </div>
+                        <br />                        
+                        <div class="col-md-6">
+                            <input type="text" name="project" ng-model="project" value="" maxlength="300" style="width: 300px;" data-ng-init="project = '@Model.Proyecto'" uppercase />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Despacho</b></label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" ng-model="checkedOffices">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" name="office" ng-show="checkedOffices" data-ng-model="office" data-ng-options="option.Nombre for option in offices">
+                                <option value="">Seleccione</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Vendedor</b></label>
+                        </div>
+                        <div class="col-md-6" data-ng-init="LoadUsers()">
+                            <select class="form-control" name="sellerOne" data-ng-model="sellerOne" required data-ng-options="option.NombreCompleto for option in usersOne" data-ng-change="LoadUsersButNot()">
+                                <option value="">Seleccione</option>
+                            </select>
+                            <br />
+                            <select class="form-control" name="sellerTwo" data-ng-model="sellerTwo" data-ng-options="option.NombreCompleto for option in usersTwo">
+                                <option value="">Seleccione</option>
+                            </select>
+                            <code class="has-error" ng-show="frmLogin.sellerOne.$error.required && frmLogin.$dirty">Requerido!</code>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Subtotal</b></label>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <span data-ng-init="subTotal = '@Model.Subtotal'"><i>{{subTotal | currency}}</i></span>
+                            <span class="hidden" data-ng-init="totalNotasCredito = '@Model.TotalNotasCredito'"><i>{{totalNotasCredito}}</i></span>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="@Model.Estatus != 3">
+                        <div class="col-md-6 text-right">
+                            <label><b>Descuento</b></label>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <input type="checkbox" ng-model="checkedDiscount" data-ng-init="checkedDiscount = (@Model.Descuento > 0)? true:false" ng-checked="@Model.Descuento > 0" ng-change="CalculateTotalCost();">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label></label>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <span><input type="text" maxlength="3" min="0" max="100" ng-model="discount" data-ng-init="discount = '@Math.Truncate((decimal)Model.Descuento)'" ng-change="CalculateTotalCost()" numbers-only="numbers-only" style="width:50px;" /></span>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="@Model.Estatus != 3">
+                        <div class="col-md-6 text-right">
+                            <label><b>IVA</b></label>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <input type="checkbox" ng-model="checkedIVA" ng-checked="@Model.IVA > 0" ng-change="CalculateTotalCost();">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label></label>
+                        </div>
+                        <div class="col-sm-6 text-left" ng-init="CalculateTotalForDetail(subTotal, discount, totalNotasCredito);">
+                            <span>{{IVA | currency}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <label><b>Total</b></label>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                            <span data-ng-init="total = ((@Model.Total < 0)? 0 : @Model.Total)"><b>{{total | currency}}</b></span>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="col-md-12 center" ng-show="@Model.Estatus != 3">
+                    <button type="button" id="saveEditSale" class="btn btn-primary button-search" data-loading-text="Guardando..." data-ng-click="SaveEditSale(@Model.idVenta)">Guardar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <h3 class="panel-title">Productos</h3>
+        <br />
+        <div class="row" data-ng-init="Init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.oDetail))">
+            <div class="col-md-2 text-center">
+                <span class="color-red">Código</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Descripción</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Precio</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Uni.</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Subtotal</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Desc.%</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Total</span>
+            </div>
+        </div>
+        <div class="row" ng-repeat="item in items">
+            <div class="col-md-2 text-center">{{item.Codigo}}</div>
+            <div class="col-md-2 text-center">{{item.Descripcion}}</div>
+            <div class="col-md-2 text-center">{{item.Precio | currency}}</div>
+            <div class="col-md-1 text-center">{{item.Cantidad}}</div>
+            <div class="col-md-2 text-center">{{item.prec * item.cantidad | currency}}</div>
+            <div class="col-md-1 text-center"><input type="text" maxlength="3" min="0" max="100" ng-model="item.Descuento" ng-change="CalculateTotalCost()" ng-readonly="item.idCredito > 0" numbers-only="numbers-only" style="width:50px;" /></div>
+            <div class="col-md-2 text-center"><label>{{ (item.Cantidad * item.Precio) - ((item.Cantidad * item.Precio) * (item.Descuento/100)) | currency}}</label></div>
+        </div>
+    </div>
+</div>
+
+
+

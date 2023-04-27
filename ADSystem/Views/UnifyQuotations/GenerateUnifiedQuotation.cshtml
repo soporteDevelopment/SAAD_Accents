@@ -1,0 +1,339 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.UnifiedQuotationViewModel
+
+@{
+    ViewBag.Title = "Cotizaciones";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/UnifiedQuotation/EditQuotation")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Customers")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Offices")"></script>
+<script type="text/javascript" src="http://beneposto.pl/jqueryrotate/js/jQueryRotateCompressed.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script type="text/javascript">
+    function rotate() {
+        var value = 0
+        $("#imgName").rotate({
+            bind:
+            {
+                click: function () {
+                    value += 90;
+                    $(this).rotate({ animateTo: value })
+                }
+            }
+        });
+
+        $("#edithImgName").rotate({
+            bind:
+            {
+                click: function () {
+                    value += 90;
+                    $(this).rotate({ animateTo: value })
+                }
+            }
+        });
+    }
+</script>
+<style>
+    #holder, #editHolder {
+        width: 100%;
+        height: 350px;
+        border: 5px dashed gray;
+        border-radius: 8px;
+        background: rgb(230,230,230);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        vertical-align: central;
+    }
+</style>
+<br />
+<div class="panel panel-default" data-ng-controller="QuotationsController" style="width:950px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Cotización</h3>
+    </div>
+    <div class="panel-body" data-ng-init="LoadQuotation(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+        <div class="row">
+            <div class="col-md-4 text-left">
+                <label class="control-label"></label>
+                <h4></h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Fecha y hora</label>
+                <h4 data-ng-init="dateTime = '@DateTime.Now.ToString("MM/dd/yyyy HH:mm")'">{{dateTime}}</h4>
+            </div>
+            <div class="col-md-4 text-left">
+                <label class="control-label">Sucursal</label>
+                <h4>{{branch}}</h4>
+            </div>
+        </div>
+        <br />
+        <br />
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#costumer" aria-controls="costumer" role="tab" data-toggle="tab">Cliente</a></li>
+            <li role="presentation"><a href="#products" aria-controls="products" role="tab" data-toggle="tab">Productos</a></li>
+            <li role="presentation"><a href="#summary" aria-controls="summary" role="tab" data-toggle="tab">Resumen</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="costumer">
+                <br />
+                <br />
+                <div class="row" data-ng-init="LoadCustomers()">
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Cliente</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="radio" ng-model="customer.type" value="moral"/>Moral
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <input type="radio" ng-model="customer.type" value="physical"/>Físico
+                            </div>
+                            <div class="col-md-3 text-left">
+                                <input type="radio" ng-model="customer.type" value="office"/>Despacho
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 text-left">
+                        <label class="control-label">Proyecto</label>
+                    </div>
+                    <div class="col-md-5 text-left">
+                        <input type="text" ng-model="project" value="" maxlength="300" style="width: 300px;" uppercase />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+                        <select class="form-control" name="moralCustomer" ng-show="customer.type == 'moral'" data-ng-model="moralCustomer" data-ng-options="option.Nombre for option in moralCustomers">
+                            <option value="">Seleccione</option>
+                        </select>
+                        <select class="form-control" name="physicalCustomer" ng-show="customer.type == 'physical'" data-ng-model="physicalCustomer" data-ng-options="option.Nombre for option in physicalCustomers">
+                            <option value="">Seleccione</option>
+                        </select>
+                        <select class="form-control" name="officeCustomer" ng-show="customer.type == 'office'" data-ng-model="officeCustomer" data-ng-options="option.Nombre for option in offices" data-ng-init="LoadOffices()">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-2 text-left">
+                        <label class="control-label">Despacho</label>
+                    </div>
+                    <div class="col-md-4 text-left">
+                        <input type="checkbox" ng-model="checkedOffices">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control" name="office" ng-show="checkedOffices" data-ng-model="office" data-ng-options="option.Nombre for option in offices">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="control-label">Vendedor(es)</label>
+                    </div>
+                    <div class="col-md-4" data-ng-init="LoadUsers()">
+                        <select class="form-control" data-ng-model="sellerOne" data-ng-options="option.NombreCompleto for option in usersOne" data-ng-change="LoadUsersButNot()">
+                            <option value="">Seleccione</option>
+                        </select>
+                        <br />
+                        <select class="form-control" data-ng-model="sellerTwo" data-ng-options="option.NombreCompleto for option in usersTwo">
+                            <option value="">Seleccione</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="products">
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Subtotal</label>
+                            </div>
+                            <div class="col-md-8">
+                                <span>{{subTotal|currency}}</span>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Descuento %</label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <input type="checkbox" ng-model="checkedDiscount" ng-change="CalculateTotalCostWithoutDiscount();">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label"></label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <input type="number" ng-readonly="!checkedDiscount" ng-model="discount" ng-change="CalculateTotalCostWithoutDiscount();" min="0" max="100" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div <div ng-if="Dolar == false">>
+                            <div class="row">
+                                <div class="col-md-4 text-right">
+                                    <label class="control-label">IVA</label>
+                                </div>
+                                <div class="col-md-4" style="text-align:left;">
+                                    <input type="checkbox" ng-model="checkedIVA" ng-change="CalculateTotalCost();">
+                                </div>
+                                <div class="col-md-4" style="text-align:left;">
+                                    <span ng-show="checkedIVA">{{IVA |currency}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-right">
+                                <label class="control-label">Total</label>
+                            </div>
+                            <div class="col-md-8" style="text-align:left;">
+                                <h3>{{total|currency}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="panel-title"></h3>
+                <br />
+                <br />
+                <br />
+                <br />
+                <h3 class="panel-title text-center">Productos</h3>
+                <br />
+                <div class="row">
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Imagen</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Código</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Descripción</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Precio</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Unidades</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Subtotal</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red">Descuento %</span>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <span class="color-red">Total</span>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <span class="color-red"></span>
+                    </div>
+                </div>
+                <br />
+                <div class="row" ng-repeat="quotation in quotations">
+                    <div class="col-md-12">
+                        <div class="col-md-3 text-left"><b> Cotización: {{quotation.Numero}}</b> </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row" ng-repeat="detail in quotation.oDetail">
+                            <div class="col-md-2 text-center"><img class="img-product-list" src="{{detail.imagen}}" /></div>
+                            <div class="col-md-1 text-center">{{detail.codigo}}</div>
+                            <div class="col-md-1 text-center txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{detail.desc}}">{{detail.desc}}</p></div>
+                            <div class="col-md-2 text-center">{{detail.prec | currency}}</div>
+                            <div class="col-md-1 text-center"><input type="text" maxlength="5" ng-model="detail.cantidad" ng-change="ValidateStock(detail.idProducto, detail.idSucursal, detail.idCotizacion);" style="width:50px;" /></div>
+                            <div class="col-md-1 text-center">{{detail.prec * detail.cantidad | currency}}</div>
+                            <div class="col-md-1 text-center"><input type="text" maxlength="3" min="0" max="100" ng-model="detail.descuento" ng-change="CalculateTotalCostWithoutDiscount()" style="width:50px;" /></div>
+                            <div class="col-md-2 text-center"><label ng-model="detail.costo">{{ (detail.cantidad * detail.prec) - ((detail.cantidad * detail.prec) * (detail.descuento/100)) | currency}}</label></div>
+                            <div class="col-md-1 text-center">
+                                <i class="fa fa-trash color-red" ng-click="DeleteProduct(detail.idProducto, detail.idSucursal, detail.idCotizacion)"></i>
+                            </div>
+                        </div><br>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="summary">
+                <br />
+                <br />
+                <div class="panel panel-success" style="width:100%;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">ARTÍCULO</div>
+                            <div class="col-md-3">CANT.</div>
+                            <div class="col-md-2">PRE.UNIT</div>
+                            <div class="col-md-2">DESCUENTO %</div>
+                            <div class="col-md-2">TOTAL</div>
+                        </div>
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-3">{{item.codigo}}</div>
+                            <div class="col-md-3">{{item.cantidad}}</div>
+                            <div class="col-md-2">{{item.prec | currency }}</div>
+                            <div class="col-md-2">{{item.descuento}}</div>
+                            <div class="col-md-2 ">{{ (item.cantidad * item.prec) - ((item.cantidad * item.prec) * (item.descuento/100)) | currency}}</div>
+                        </div>
+                        <br>
+                        <b>Venta Subtotal</b>&nbsp;<span>{{ subTotal | currency}}</span>
+                        <br />
+                        <b ng-show="checkedDiscount">Descuento %</b>&nbsp;<span ng-show="checkedDiscount">{{ discount }}</span>
+                        <br />
+                        <b ng-show="checkedIVA">IVA {{IVATasa}}%</b>&nbsp;<span ng-show="checkedIVA">{{IVA |currency}}</span>
+                        <br />
+                        <b>Venta Total</b>&nbsp;<span>{{ total | currency }}</span>
+                        <br />
+                        <b ng-show="customer.type == 'moral'">Cliente {{moralCustomer.Nombre}}</b>
+                        <b ng-show="customer.type == 'physical'">Cliente {{physicalCustomer.Nombre}}</b>
+                        <b ng-show="customer.type == 'office'">Cliente {{officeCustomer.Nombre}}</b>
+                        <br />
+                        <b>Le atendío {{sellerOne.Nombre}} --- {{sellerTwo.Nombre}}</b>
+                        <br />
+                        <br />
+                        <br />
+                        <b>Fecha:</b>&nbsp;<span>{{ dateTime }}</span>
+                        <br />
+                        <b>Sucursal:</b>&nbsp;<span>{{ branch }}</span>
+                        <b></b>
+                        <br />
+                        <div class="col-md-3"><b>Comentarios:</b></div>
+                        <div class="col-md-3">
+                            <textarea cols="50" rows="5" ng-model="comments"></textarea>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-primary" data-ng-click="PrintUnifiedQuotation()">IMPRIMIR</button>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <br />
+    </div>
+</div>
+

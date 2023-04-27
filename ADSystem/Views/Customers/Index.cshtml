@@ -1,0 +1,175 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Customers")"></script>
+<script type="text/javascript" src="@Url.Js("Class/PhysicalCustomer")"></script>
+<script type="text/javascript" src="@Url.Js("Class/MoralCustomer")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="CustomersController">
+    <div class="panel-heading">
+        <h3 class="panel-title">Clientes</h3>
+    </div>
+    <div class="panel-body" style="width:1000px;">
+        <label>
+            <input type="radio" ng-model="customer" value="physical">
+            Físico
+        </label>
+        <label>
+            <input type="radio" ng-model="customer" value="moral">
+            Moral
+        </label>
+        <br />
+        <br />
+
+        <div id="physical-content" class="table-responsive physical" data-ng-controller="PhysicalController">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Cliente</label>
+                    <div class="col-sm-10">
+                        <input data-ng-model="searchPhysicalCostumer" maxlength="250" style = "width: 335px;" />&nbsp;&nbsp;&nbsp;
+                        <button type="button" id="searchPhysicalCostumer" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listPhysicalCustomers()" style="width:100px ">Buscar</button>
+                    </div>
+                </div>
+                
+            </form>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="5">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabledPhysical()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPagePhysical()">« Prev</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Next »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Celular</th>
+                        <th>Correo</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="pc in PCustomers">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{pc.NombreCompleto}}</td>
+                        <td>{{pc.TelefonoCelular}}</td>
+                        <td>{{pc.Correo}}</td>
+                        <td class="pull-left"><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Customers","UpdatePhysicalCustomer") == 1" data-ng-click="UpdatePhysicalCustomer(pc.idCliente)"><i class="fa fa-pencil color-red"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Customers", "DeletePhysicalCustomer") == 1" ng-click="DeletePhysicalCustomer(pc.idCliente)"> <i class="fa fa-trash color-red"></i></a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Prev</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Next »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div id="moral-content" class="table-responsive moral" data-ng-controller="MoralController">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Cliente</label>
+                    <div class="col-sm-10">
+                        <input data-ng-model="searchMoralCostumer" maxlength="250" style = "width: 335px;" />&nbsp;&nbsp;&nbsp;
+                        <button type="button" id="searchMoralCostumer" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listMoralCustomers()" style="width:100px">Buscar</button>
+                    </div>
+                </div>
+                
+            </form>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="5">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Telefono</th>
+                        <th>Correo</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="c in Customers">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{c.Nombre}}</td>
+                        <td>{{c.Telefono}}</td>
+                        <td>{{c.Correo}}</td>
+                        <td class="pull-left"><a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Customers","UpdateMoralCustomer") == 1" data-ng-click="UpdateMoralCustomer(c.idCliente)"><i class="fa fa-pencil color-red"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Customers", "DeleteMoralCustomer") == 1" ng-click="DeleteMoralCustomer(c.idCliente)"> <i class="fa fa-trash color-red"></i></a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>

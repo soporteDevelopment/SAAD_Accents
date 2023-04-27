@@ -1,0 +1,338 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model List<ADEntities.ViewModels.CreditHistoryViewModel>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8 center">
+                <form class="form-horizontal">
+                    <div class="form-group" data-ng-init="newPayment.paymentLeft = @ViewBag.leftover">
+                        <label for="paymentAmount">Restante</label>
+                        <input type="text" class="form-control" id="paymentLeft" value="{{newPayment.paymentLeft | currency}}" placeholder="Restante" readonly>
+                    </div>
+                    <div class="form-group" data-ng-init="newPayment.idSalePayment = @ViewBag.idSale">
+                        <label for="paymentAmount">Cantidad</label>
+                        <input type="text" class="form-control" id="paymentAmount" data-ng-model="newPayment.paymentAmount" ng-readonly="newPayment.typesPayment == 8" ng-currency placeholder="Cantidad">
+                    </div>
+                    <div class="form-group">
+                        <label>Forma de Pago</label>
+                        <select class="form-control" data-ng-model="newPayment.typesPayment" data-ng-change="GetNoIFE()">
+                            <option value="1">Cheque</option>
+                            <option value="3">Deposito</option>
+                            <option value="4">Efectivo</option>
+                            <option value="5">Tarjeta de Crédito</option>
+                            <option value="6">Tarjeta de Débito</option>
+                            <option value="7">Transferencia</option>
+                            <option value="8">Nota de Crédito</option>
+                            <option value="9">Intercambio</option>
+                            <option value="10">Mercado Pago</option>
+                        </select>
+                    </div>
+                    <br />
+                    <div class="form-group" ng-show="newPayment.typesPayment == 8">
+                        <label>
+                            Nota de Crédito
+                        </label>
+                        <input type="text" class="form-control" ng-model="newPayment.creditnote" placeholder="Nota de Crédito" uppercase>
+                        <br />
+                        <button type="button" id="getCreditNote" name="getCreditNote" class="btn btn-primary" data-ng-click="GetCreditNoteAddPayment();" data-loading-text="Cargando...">Buscar</button>
+                    </div>
+                    <div class="form-group" ng-show="newPayment.typesPayment == 5">
+                        <label>Tipo de Tarjeta</label>
+                        <select class="form-control" data-ng-model="newPayment.typesCard">
+                            <option value="1">American Express</option>
+                            <option value="2">Master Card</option>
+                            <option value="3">Visa</option>
+                        </select>
+                    </div>
+                    <div class="form-group"ng-show="newPayment.typesPayment == 5 || newPayment.typesPayment == 6 ">
+                        <label>Terminales </label>
+                            <select class="form-control" ng-show="newPayment.typesPayment == 5 || newPayment.typesPayment == 6" name="idCatalogTerminalType" data-ng-model="item.idCatalogTerminalType" data-ng-options="option.idCatalogTerminalType as option.Name for option in terminalTypeStatus">
+                                <option>Seleccione</option>
+                            </select>  
+                      </div>
+                    <div class="form-group" ng-show="newPayment.typesPayment == 7">
+                        <label>Banco Destino </label>
+                        <select style="width:115px" ng-show="newPayment.typesPayment == 7" class="form-control" name="idCatalogBankAccount" data-ng-model="item.idCatalogBankAccount" data-ng-options="option.idCatalogBankAccount as option.Name for option in bankAccountStatus">
+                        <option>Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="form-group" ng-show="newPayment.typesPayment == 1">
+                        <label>Títular</label>
+                        <input type="text" class="form-control" ng-model="newPayment.holder" placeholder="Nombre del Titular" uppercase>
+                    </div>
+                    <div class="form-group" ng-show="newPayment.typesPayment == 1">
+                        <label>Banco</label>
+                        <input type="text" class="form-control" id="bank" ng-model="newPayment.bank" placeholder="Nombre del Banco" uppercase>
+                    </div>
+                    <div class="form-group" ng-show="newPayment.typesPayment == 1">
+                        <label>No. de Cheque</label>
+                        <input type="text" class="form-control" id="numCheck" maxlength="9" ng-model="newPayment.numCheck" placeholder="Número de Cheque" uppercase>
+                    </div>
+                    <div class="form-group" ng-show="newPayment.typesPayment == 5 || newPayment.typesPayment == 6">
+                        <label>No. de IFE</label>
+                        <input type="text" class="form-control" id="numIFE" ng-model="newPayment.numIFE" placeholder="Número de IFE" uppercase>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentComment">Comentario</label>
+                        <input type="text" class="form-control" id="paymentComment" data-ng-model="newPayment.paymentComment" placeholder="Comentario" uppercase>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateSince">Fecha</label>
+                        <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="newPayment.paymentDate" is-open="$parent.openedPaymentDate" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openPaymentDate($event)" show-button-bar="false" placeholder="Seleccione una fecha" data-ng-init="newPayment.paymentDate = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                    </div>
+                    <button type="button" id="btnAbonar" class="btn btn-primary" data-loading-text='Guardando...' ng-click="SaveInsertPayment()" ng-disabled="@ViewBag.leftover <= 0">Abonar</button>
+                </form>
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-group">
+                    <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+                </ul>
+            </div>
+        </div>
+        <br />
+        <h3 class="panel-title">Historial</h3>
+        <br />
+        <div class="row" data-ng-init="initPayment(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+            <div class="col-md-2">
+                <span class="color-red">Cantidad</span>
+            </div>
+            <div class="col-md-2">
+                <span class="color-red">Forma/Pago</span>
+            </div>
+            <div class="col-md-5">
+                <span class="color-red">Comentario</span>
+            </div>
+            <div class="col-md-2">
+                <span class="color-red">Fecha</span>
+            </div>
+            <div class="col-md-1">
+                <span class="color-red">Nota</span>
+            </div>
+            <br />
+            <br />
+            <div class="col-md-12">
+                <div class="row" ng-repeat="item in history" ng-show="item.Estatus != 3">
+                    <div class="col-md-2">{{item.Cantidad | currency}}</div>
+                    <div class="col-md-2">{{item.FormaPago}}</div>
+                    <div class="col-md-5 txt-describe"><p data-toggle="tooltip" data-placement="top" title="{{item.Comentario}}">{{item.Comentario}}</p></div>
+                    <div class="col-md-2">{{item.Fecha | date:"MM/dd/yyyy"}}</div>
+                    <div class="col-md-1">
+                        <i class="fa fa-print color-red" ng-click="PrintDepositOnList(item.Cantidad)"></i>
+                    </div>
+                </div><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------MODAL BILL---------------------------->
+<div class="modal" tabindex="-1" role="dialog" id="modalBill" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Factura</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-success" style="width:100%;" data-ng-init="getStates()">
+                    <div class="panel-body">
+                        <div class="row" data-ng-init="idSale = @ViewBag.idSale">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">RFC</label>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="rfcBill" ng-model="rfcBill" placeholder="Escriba el RFC" uppercase="">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <i class="fa fa-search color-red" data-ng-click="GetDataBill();"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Nombre</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="nameBill" ng-model="nameBill" placeholder="Escriba el nombre o razón social" uppercase>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Teléfono</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="phoneBill" ng-model="phoneBill" placeholder="Escriba el núm. de teléfono" uppercase>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Correo</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="mailBill" ng-model="mailBill" placeholder="Escriba el correo" uppercase>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Calle</label>
+                            <div class="col-sm-10">
+                                <input type="text" maxlength="100" class="form-control" id="streetBill" data-ng-model="streetBill" placeholder="Escriba la calle" uppercase />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Num Exterior</label>
+                            <div class="col-sm-10">
+                                <input type="text" maxlength="6" class="form-control" id="outNumberBill" data-ng-model="outNumberBill" placeholder="Escriba el número exterior" uppercase />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Num Interior</label>
+                            <div class="col-sm-10">
+                                <input type="text" maxlength="6" class="form-control" id="intNumberBill" data-ng-model="intNumberBill" placeholder="Escriba el número interior" uppercase />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Colonia</label>
+                            <div class="col-sm-10">
+                                <input type="text" maxlength="300" class="form-control" id="suburbBill" data-ng-model="suburbBill" placeholder="Escriba la colonia" uppercase />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Municipio</label>
+                            <div class="col-sm-10">
+                                <input type="text" maxlength="300" class="form-control" name="townBill" id="townBill" data-ng-model="townBill" uppercase />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Estado</label>
+                            <div class="col-sm-10">
+                                <input type="text" maxlength="300" class="form-control" name="stateBill" id="stateBill" data-ng-model="stateBill" uppercase />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">CP</label>
+                            <div class="col-sm-10">
+                                <input type="text" maxlength="5" class="form-control" id="cpBill" data-ng-model="cpBill" placeholder="Escriba el código postal" numbers-only="numbers-only">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" name="sendBill" class="btn btn-primary" data-ng-click="SendBill();">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalDeposit" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Recibo de Abono</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-success" style="width:100%;">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3"><b><span>Cant. Abonada</span></b></div>
+                            <div class="col-md-3">{{deposit | currency}}</div>
+                            <div class="col-md-3"><b><span>Restante</span></b></div>
+                            <div class="col-md-3">{{remaining | currency}}</div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12"><h4>Detalle de la Venta</h4></div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12"><span>Remisión:</span><b>{{remision}}</b></div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-3">ARTÍCULO</div>
+                            <div class="col-md-3">CANT.</div>
+                            <div class="col-md-3">PRE.UNIT</div>
+                            <div class="col-md-3">TOTAL</div>
+                        </div>
+                        <div class="row" ng-repeat="item in items">
+                            <div class="col-md-3">{{item.Codigo}}</div>
+                            <div class="col-md-3">{{item.Cantidad}}</div>
+                            <div class="col-md-3">{{item.Precio | currency }}</div>
+                            <div class="col-md-3">{{ item.Cantidad * item.Precio | currency}}</div>
+                        </div>
+                        <br>
+                        <b>Venta Subtotal</b>&nbsp;<span>{{ subTotal | currency}}</span>
+                        <br />
+                        <b>Venta Total</b>&nbsp;<span>{{ total | currency }}</span>
+                        <br />
+                        <br />
+                        <b>Le atendío {{seller}}</b>
+                        <br />
+                        <b>Fecha:</b>&nbsp;<span>@DateTime.Now.ToString("MM/dd/yyyy HH:mm")</span>
+                        <br />
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button type="button" name="printSale" class="btn btn-primary" data-ng-click="PrintDeposit();">Imprimir</button>
+                            </div>
+                            <div class="col-md-4">
+
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" name="billSale" class="btn btn-primary" data-ng-click="BillDeposit();">Facturar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,154 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.CatalogViewViewModel
+
+<style>
+    .center {
+        text-align: center;
+    }
+
+        .center form {
+            display: inline-block;
+        }
+</style>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12 center">
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label><b>Número</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span><b>@Model.Numero</b></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Sucursal</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span>@Model.Sucursal</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Fecha</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span>@Model.Fecha.Value.ToString("dd/MM/yyyy")</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Cliente</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span>@Model.NombreCliente</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Vendedor</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span>@Model.Usuario</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Total de Productos</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span><i>@Model.CantidadProductos</i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Subtotal</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="subTotal = '@Model.Subtotal'"><i>{{subTotal | currency}}</i></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-right">
+                        <label class="col-sm-"><b>Total</b></label>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <span data-ng-init="total = '@Model.Total'"><b>{{total | currency}}</b></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <h3 class="panel-title">Productos</h3>
+        <br />
+        <div class="row" data-ng-init="InitDetail(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.Detalle))">
+            <div class="col-md-2 text-center">
+                <span class="color-red">Imagen</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Código</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Precio</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Salida</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Pendiente</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Devolución</span>
+            </div>
+            <div class="col-md-1 text-center">
+            </div>
+            <br />
+            <br />
+            <div class="col-md-12" data-ng-init="LoadUsers()">
+                <div class="row" ng-repeat-start="item in $parent.items">
+                    <div class="col-md-2 text-center"><img class="img-product-list" src="{{item.Catalogo.Imagen}}" /></div>
+                    <div class="col-md-2 text-center">{{item.Catalogo.Codigo}}</div>
+                    <div class="col-md-2 text-center">{{item.Precio | currency}}</div>
+                    <div class="col-md-1 text-center">{{item.Cantidad}}</div>
+                    <div class="col-md-2 text-center">{{item.Pendiente}}</div>
+                    <div class="col-md-2 text-center"><input type="number" id="dev{{item.idDetalleVista}}" style="width:60px;" ng-model="item.CantidadDevolucion" name="devProduct" value="0" ng-hide="item.Estatus != 2" min="0" max="{{item.Pendiente}}" ng-readonly="(item.Pendiente - item.Devolucion) == 0" /><span ng-show="item.Estatus == 1">{{item.Devolucion}}</span></div>
+                    <div class="col-md-1 text-center">
+                        <a role="button" data-toggle="collapse" href="#{{item.idDetalleVista}}" aria-expanded="false" aria-controls="{{item.idDetalleVista}}">
+                            <i class="fa fa-eye" style="left: 0px; color:#009289;"></i>
+                        </a>
+                    </div>
+                </div><br>
+                <div class="panel panel-default collapse" id="{{item.idDetalleVista}}" style="background-color:#f7f5f5; margin-bottom:10px;" ng-repeat-end>
+                    <div class="panel-body text-center">
+                        <h4 class="panel-title" style="font-size: 18px;">Detalle de producto</h4>
+                        <div class="row">
+                            <div class="col-md-2 text-center color-red">Devolución</div>
+                            <div class="col-md-2 text-center color-red">Fecha</div>
+                            <div class="col-md-3 text-center color-red">Verificador</div>
+                        </div>
+                        <div class="row" ng-repeat="hist in item.Detalle">
+                            <div class="col-md-2 text-center">{{hist.Devolucion}}</div>
+                            <div class="col-md-2 text-center">{{hist.Fecha | date:'dd-MM-yyyy'}}</div>
+                            <div class="col-md-3 text-center">{{hist.Verificador}}</div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-12 center">
+                <button type="button" id="btnSave" class="btn btn-primary button-search" data-loading-text='Guardando...' ng-disabled="@Model.Estatus != 2" data-ng-click="SaveReturn(@Model.idVista)">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

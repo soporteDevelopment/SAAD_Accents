@@ -1,0 +1,212 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@using ADSystem.Common;
+
+@{
+    ViewBag.Title = "Reparaciones";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/bootstrap-datetimepicker.min")" />
+
+<script type="text/javascript" src="@Url.Js("Class/Repairs/List")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Repairs/Detail")"></script>
+<script type="text/javascript" src="@Url.Js("Class/Repairs/Update")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $(".datepickerSales").datetimepicker({
+            format: 'MM-DD-YYYY'
+        });
+    });
+
+</script>
+
+<style>
+    .clsDatePicker {
+        z-index: 100000;
+    }
+</style>
+
+<br />
+<div class="panel panel-default" style="width:1210px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Reparaciones</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="RepairsController" data-ng-enter="GetRepairs()">
+        <form class="form-horizontal" style="margin-left:300px;width:500px;" ng-init="InitList()">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Desde</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" placeholder="Seleccione la fecha inicial de consulta" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Hasta</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateUntil" datepicker-popup="{{format}}" data-ng-model="dateUntil" is-open="openedUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntil($event)" show-button-bar="false" placeholder="Seleccione la fecha final de consulta" data-ng-init="dateUntil = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Número</label>
+                <div class="col-sm-10">
+                    <input type="text" data-ng-model="number" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Responsable</label>
+                <div class="col-sm-10">
+                    <select class="form-control" data-ng-model="seller" data-ng-options="option.NombreCompleto for option in sellers">
+                        <option value="">Seleccione</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Producto</label>
+                <div class="col-sm-10">
+                    <input type="text" data-ng-model="code" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Estatus</label>
+                <div class="col-sm-10">
+                    <select class="form-control" data-ng-model="status" data-ng-init="status=2">
+                        <option value="1">Completada</option>
+                        <option value="2">Pendiente</option>
+                        <option value="3">Cancelada</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="search" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="GetRepairs()">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive" style="width:1200px;">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width:150px;">Recepción</th>
+                        <th>Fecha Salida</th>
+                        <th style="width:180px;">Usuario</th>
+                        <th>Destino</th>
+                        <th>Fecha Regreso</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="r in Repairs">
+                        <td style="width:150px;">{{r.Numero}}</td>
+                        <td>{{r.FechaSalida | jsDate | date:'shortDate'}}</td>
+                        <td style="width:180px;"><div class="txt-describe">{{r.Usuario}}</div></td>
+                        <td>{{r.Destino}}</td>
+                        <td>{{r.FechaRegreso | jsDate | date:'shortDate'}}</td>
+                        <td>
+                            <a href="javascript:void(0);" data-ng-click="DetailRepair(r.idReparacion)" title="Detalle de la reparación"><i class="fa fa-eye color-red" style="left: 0px;"></i></a>
+                            <a href="javascript:void(0);" data-ng-click="UpdateRepair(r.idReparacion)" title="Editar reparación" ng-show="r.Estatus == 2"><i class="fa fa-pencil color-red" style="left: 0px;"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalDetailRepair" aria-labelledby="modalDetailRepair" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Detalle de Recepción</h4>
+                    </div>
+                    <div class="modal-body" id="msgModalDetail">
+                        <div ng-include="includeURLDetail"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal" tabindex="-1" role="dialog" id="modalUpdateRepair" aria-labelledby="modalUpdateRepair" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Detalle de Recepción</h4>
+                    </div>
+                    <div class="modal-body" id="msgModalDetail">
+                        <div ng-include="includeURLRepair"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="openModalStatus" aria-labelledby="openModalStatus" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Estatus de la Reparación</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="descService">Estatus</label>
+                            <select class="form-control" data-ng-model="status">
+                                <option value="1">Finalizada</option>
+                                <option value="2">Pendiente</option>
+                                <option value="3">Cancelada</option>
+                            </select>
+                        </div>
+                        <div class="form-group" ng-show="status == 3">
+                            <label for="descService">Comentarios</label>
+                            <textarea cols="31" rows="5" ng-model="comments" ng-maxlength="290"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" ng-click="UpdateStatus()">Aceptar</button>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

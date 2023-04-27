@@ -1,0 +1,92 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@using ADSystem.Common;
+@using ADEntities.Queries.TypesGeneric;
+
+@{
+    ViewBag.Title = "Reporte-Ventas";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+<style>
+    .table {
+        width: 3500px;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .img-responsive {
+        width: 44px;
+        height: 44px;
+        display: inline;
+        cursor: pointer;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/bootstrap-datetimepicker")" />
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $(".datepickerSales").datetimepicker({
+            format: 'MM-DD-YYYY'
+        });
+    });
+
+</script>
+
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<br />
+<div class="panel panel-default" style="width:1200px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Reporte Ventas</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal" style="margin-left:300px;width:500px;">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Desde</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateSince" min-date="'1900-01-01'" max-date="'2200-01-01'" placeholder="Seleccione la fecha inicial de consulta" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Hasta</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" placeholder="Seleccione la fecha final de consulta" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Vendedor</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="seller" id="seller" >
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Cliente</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="remission" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Sucursal</label>
+                <div class="col-sm-10">
+                    <input type="checkbox" id="sBranchAma" />Amazonas
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" id="sBranchGua" />Guadalquivir
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" id="sBranchTex" />Textura
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchReport" class="btn btn-primary button-search" data-loading-text='Buscando...'>Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

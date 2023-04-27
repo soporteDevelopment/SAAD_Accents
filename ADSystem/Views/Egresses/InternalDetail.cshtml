@@ -1,0 +1,42 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.EgressViewModel
+
+<div class="panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Egreso</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label>Recibida Por</label>
+            <select class="form-control" data-ng-model="egress.ReceivedBy" data-ng-init="egress.ReceivedBy='@Model.RecibidaPor'" data-ng-options="option.idUsuario as option.NombreCompleto for option in sellers">
+                <option value="">Seleccione</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Otro</label>
+            <input type="text" maxlength="250" class="form-control" data-ng-model="egress.ReceivedAnotherBy" data-ng-init="egress.ReceivedAnotherBy='@Model.RecibidaOtro'" placeholder="Recibida por otro" uppercase />
+        </div>
+        <div class="form-group">
+            <input type="radio" ng-model="egress.Type" value="1" />Remisión
+            <input type="radio" ng-model="egress.Type" value="2" />Directo
+        </div>
+        <div class="form-group">
+            <label>Cantidad</label>
+            <input type="text" maxlength="200" class="form-control" data-ng-model="egress.Amount" data-ng-init="egress.Amount='@Model.Cantidad'" placeholder="Cantidad" />
+        </div>
+        <div class="form-group">
+            <label>Comentarios</label>
+            <textarea rows="4" cols="50" class="form-control" data-ng-model="egress.Comments" data-ng-init="egress.Comments='@Model.Comentarios'" placeholder="Escriba comentarios" uppercase />
+        </div>
+        <div class="form-group text-center">
+            <button type="button" class="btn btn-primary button-search" data-ng-click="saveInternalEgressAdd()">Agregar</button>
+        </div>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+    </ul>
+</div>
+
+

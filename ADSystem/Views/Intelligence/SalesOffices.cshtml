@@ -1,0 +1,361 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@using ADSystem.Common;
+@using ADEntities.Queries.TypesGeneric;
+
+@{
+    ViewBag.Title = "Reportes - Ventas";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+<style>
+    .table {
+        width: 3500px;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .img-responsive {
+        width: 44px;
+        height: 44px;
+        display: inline;
+        cursor: pointer;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/bootstrap-datetimepicker")" />
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $(".datepickerSales").datetimepicker({
+            format: 'MM-DD-YYYY'
+        });
+    });
+</script>
+
+<script type="text/javascript" src="@Url.Js("Class/ReportsOffices")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="ReportsController" style="width:1200px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Reporte Ventas</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal" style="margin-left:300px;width:500px;">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Desde</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateSince" datepicker-popup="{{format}}" data-ng-model="dateSince" is-open="openedSince" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openSince($event)" show-button-bar="false" placeholder="Seleccione la fecha inicial de consulta" data-ng-init="dateSince = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Hasta</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="dateUntil" datepicker-popup="{{format}}" data-ng-model="dateUntil" is-open="openedUntil" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openUntil($event)" show-button-bar="false" placeholder="Seleccione la fecha final de consulta" data-ng-init="dateUntil = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Despacho</label>
+                <div class="col-sm-6" data-ng-init="LoadOffices()">
+                    <select class="form-control" name="seller" id="office" data-ng-model="office" data-ng-options="option.Nombre for option in offices">
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Cliente</label>
+                <div class="col-sm-10">
+                    <input type="text" data-ng-model="sCustomer" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Remisión</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="remission" data-ng-model="remission" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Sucursal</label>
+                <div class="col-sm-10">
+                    <input type="checkbox" ng-model="sBranchAma" id="sBranchAma" ng-true-value="2" />Amazonas
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" ng-model="sBranchGua" id="sBranchGua" ng-true-value="3" />Guadalquivir
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" ng-model="sBranchTex" id="sBranchTex" ng-true-value="4" />Textura
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchReport" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="GenerarReporteVentas(0,10)">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive" style="width:100%;height:100%;padding-bottom: 100px;">
+            <div class="row">
+                <div class="col-md-1">Estatus</div>
+                <div class="col-md-2">Fecha</div>
+                <div class="col-md-2">Remision</div>
+                <div class="col-md-1">Despacho</div>
+                <div class="col-md-2">Cliente</div>
+                <div class="col-md-1">Subtotal</div>
+                <div class="col-md-1">Descuento</div>
+                <div class="col-md-1">Total</div>
+                <div class="col-md-1">Opciones</div>
+            </div>
+            <div class="row" data-ng-repeat="sale in Sales" ng-hide="sale.Omitir">
+                <div class="col-md-1 text-center">
+                    <a href="JavaScript:void(0);"><i class="fa fa-circle color-{{sale.sEstatus}}" style="left: 0px;" ng-show="(sale.Estatus == 2 && sale.Pagado == false) || (sale.Pagado == true && sale.Estatus == 1)"></i></a>
+                    <input type="checkbox" ng-model="sale.Pagar" ng-show="sale.Pagado == false && sale.Estatus == 1" ng-change="CalculatePayment()">
+                </div>
+                <div class="col-md-2">{{sale.Fecha | jsDate |date:'MM-dd-yyyy'}}</div>
+                <div class="col-md-2">{{sale.Remision}}</div>
+                <div class="col-md-1"><div class="txt-describe" data-toggle="tooltip" data-placement="top" title="{{sale.Despacho1}}">{{sale.Despacho1}}</div></div>
+                <div class="col-md-2">{{sale.Cliente}}</div>
+                <div class="col-md-1">{{sale.ImporteVenta | currency}}</div>
+                <div class="col-md-1">{{sale.IntDescuento}} %</div>
+                <div class="col-md-1">{{(sale.ImportePagadoCliente - sale.comAmericanExpress) | currency}}</div>
+                <div class="col-md-1">
+                    <a href="javascript:void(0);" data-ng-click="DetailSaleReport(sale.Remision)"><i class="fa fa-eye color-red" style="left: 0px;"></i></a>
+                    &nbsp;&nbsp;
+                    <a href="javascript:void(0);" ng-show="sale.Pagado == false && sale.Estatus == 1" ng-really-message="Esta seguro que desea omitir la venta?" ng-really-click="SetOmit(sale.idVenta, sale.Omitir)"><i class="fa2 fa-trash color-red"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info">
+        <div class="row">
+            <div class="col-md-6">
+                <b>Concepto</b>
+            </div>
+            <div class="col-md-6">
+                <b>Cantidad</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <span>Total del monto vendido (bruto)</span>
+            </div>
+            <div class="col-md-6">
+                {{comisiones.TotalVentasBruto | currency}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <span>Total del monto vendido (neto)</span>
+            </div>
+            <div class="col-md-6">
+                {{comisiones.TotalVentasNeto | currency}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <span>Total saldado (neto)</span>
+            </div>
+            <div class="col-md-6">
+                {{comisiones.TotalSaldado | currency}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <span>Comisión pagada al despacho</span>
+            </div>
+            <div class="col-md-6">
+                {{comisiones.ComisionPagada | currency}}
+            </div>
+        </div>
+        <br />
+        <hr />
+        <div class="row">
+            <div class="col-md-2 text-center">
+                <span class="color-red">Concepto</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Cantidad</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Concepto</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Cantidad</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red"></span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Total</span>
+            </div>
+            <br />
+        </div>
+        <div class="row">
+            <div class="col-md-2 text-center">
+                Productos:
+            </div>
+            <div class="col-md-2 text-center">
+                <span>{{amountPaymentProducts | currency}}</span>
+            </div>
+            <div class="col-md-2 text-center">
+                Arterios:
+            </div>
+            <div class="col-md-2 text-center">
+                <span>{{amountPaymentArteriors | currency}}</span>
+            </div>
+            <div class="col-md-2 text-center">
+                Total:
+            </div>
+            <div class="col-md-2 text-center">
+                <span>{{amountPayment | currency}}</span>
+            </div>
+            <br />
+        </div>
+        <div class="row">
+            <div class="col-md-2 text-center">
+                <span class="color-red">Forma Pago</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Fecha Pago</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Concepto</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red">Total</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Despacho</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="color-red">Comentarios</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="color-red"></span>
+            </div>
+            <br />
+        </div>
+        <div class="row">
+            <div class="col-md-2 text-center">
+                <select class="form-control" data-ng-model="typePayment">
+                    <option value="1">Cheque</option>
+                    <option value="3">Deposito</option>
+                    <option value="4">Efectivo</option>
+                    <option value="5">Tarjeta de Crédito</option>
+                    <option value="6">Tarjeta de Débito</option>
+                    <option value="7">Transferencia</option>
+                    <option value="9">Intercambio</option>
+                    <option value="10">Mercado Pago</option>
+                </select>
+            </div>
+            <div class="col-md-2 text-center">
+                <input type="text" class="form-control" id="datePayment" datepicker-popup="{{format}}" data-ng-model="datePayment" is-open="openedDatePayment" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openDatePayment($event)" show-button-bar="false" placeholder="Seleccione la fecha inicial de consulta" data-ng-init="datePayment = '@DateTime.Now.ToString("MM/dd/yyyy")'" readonly />
+            </div>
+            <div class="col-md-2 text-center">
+                <select class="form-control" data-ng-model="concept">
+                    <option value="1">Comisión</option>
+                </select>
+            </div>
+            <div class="col-md-1 text-center">
+                <span>{{ amountPayment | currency}} </span>
+            </div>
+            <div class="col-md-2 text-center">
+                <select class="form-control" name="officepayment" id="officepayment" data-ng-model="officepayment" data-ng-options="option.Nombre for option in offices">
+                    <option value="">Seleccione...</option>
+                </select>
+            </div>
+            <div class="col-md-2 text-center">
+                <input type="text" data-ng-model="detail" maxlength="300" />
+            </div>
+            <div class="col-md-1 text-left">
+                <i class="fa fa-floppy-o fa-2 color-red" ng-click="AddCommission();" style="left:3%;"></i>
+            </div>
+            <br />
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <b>Comisiones</b>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2 text-center">
+                Forma de Pago
+            </div>
+            <div class="col-md-2 text-center">
+                Total en Ventas
+            </div>
+            <div class="col-md-2 text-center">
+                Fecha Pago
+            </div>
+            <div class="col-md-1 text-left">
+                Concepto
+            </div>
+            <div class="col-md-1 text-center">
+                Pagado
+            </div>
+            <div class="col-md-3 text-left">
+                Comentario
+            </div>
+            <div class="col-md-1">
+
+            </div>
+        </div>
+        <div class="row" ng-repeat="item in CommissionsPayment">
+            <div class="col-md-2 text-center">
+                <span>{{item.sFormaPago}}</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span>{{item.Cantidad | currency}}</span>
+            </div>
+            <div class="col-md-2 text-center">
+                <span>{{item.FechaPago | jsDate | date:'shortDate'}}</span>
+            </div>
+            <div class="col-md-1 text-left">
+                <span>{{item.sConcepto}}</span>
+            </div>
+            <div class="col-md-1 text-center">
+                <span>{{item.Total | currency}}</span>
+            </div>
+            <div class="col-md-3 text-left">
+                <span>{{item.Detalle}}</span>
+            </div>
+            <div class="col-md-1 text-left">
+                <img src="@Url.Img("icon_excel.png")" alt="exportar" class="img-responsive" style="width:25px;height:25px;" data-ng-click="exportCommision(item.idVentasComisiones)" />
+            </div>
+            <br />
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalDetailSaleReport" aria-labelledby="modalReloadPage" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Detalle de Venta</h4>
+                </div>
+                <div class="modal-body" id="msgModalDetailSaleReport">
+                    <div ng-include="includeURL"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!----------------------------MODAL VALIDATION---------------------------->
+    <div class="modal" tabindex="-1" role="dialog" id="modalValidation" aria-labelledby="openModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="txtValidation">
+
+                </div>
+                <div class="container-btn-modal">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,138 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.MoralCustomerViewModel
+
+@{
+    ViewBag.Title = "Modificar Cliente Moral";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Customers")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modificar Cliente Moral</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CustomersController" data-ng-init="getStates('M')">
+        <code ng-show="!addMoralCustomerForm.$valid">Revise la información</code><br>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#step1" aria-controls="home" role="tab" data-toggle="tab">Datos Generales</a></li>
+            <li role="presentation"><a href="#step2" aria-controls="profile" role="tab" data-toggle="tab">Dirección</a></li>
+            <li role="presentation"><a href="#step3" aria-controls="messages" role="tab" data-toggle="tab">Contacto</a></li>
+        </ul>
+        <form id="addMoralCustomerForm" name="addMoralCustomerForm">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="step1">
+                    <section class="container-tab">
+
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" maxlength="100" class="form-control" id="Name" name="Name" data-ng-model="newMoralCustomer.Name" data-ng-init="newMoralCustomer.Name='@Model.Nombre'" placeholder="Escriba el nombre del cliente" uppercase required />
+                            <code class="has-error" ng-show="addMoralCustomerForm.Name.$error.required">Requerido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label>RFC</label>
+                            <input type="text" maxlength="16" class="form-control" id="RFC" data-ng-model="newMoralCustomer.RFC" data-ng-init="newMoralCustomer.RFC='@Model.RFC'" placeholder="Escriba el RFC" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono Celular</label>
+                            <input type="text" maxlength="12" class="form-control" id="CelPhone" data-ng-model="newMoralCustomer.CelPhone" data-ng-init="newMoralCustomer.CelPhone='@Model.TelefonoCelular'" placeholder="Escriba el teléfono celular" numbers-only="numbers-only">
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" maxlength="12" class="form-control" id="Phone" name="Phone" data-ng-model="newMoralCustomer.Phone" data-ng-init="newMoralCustomer.Phone='@Model.Telefono'" placeholder="Escriba el teléfono" numbers-only="numbers-only" required />
+                            <code class="has-error" ng-show="addMoralCustomerForm.Phone.$error.required">Requerido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label>Correo</label>
+                            <input type="text" maxlength="200" class="form-control" id="Mail" name="Mail" data-ng-model="newMoralCustomer.Mail" data-ng-init="newMoralCustomer.Mail='@Model.Correo'" placeholder="Escriba el correo del cliente" uppercase required />
+                            <code class="has-error" ng-show="addMoralCustomerForm.Mail.$error.required">Requerido!</code>
+                            <code class="has-error" ng-show="addMoralCustomerForm.Mail.$error.email">Email invalido!</code>
+                        </div>
+                        <div class="form-group">
+                            <label>Sitio Web</label>
+                            <input type="text" maxlength="300" class="form-control" id="WebSite" data-ng-model="newMoralCustomer.WebSite" data-ng-init="newMoralCustomer.WebSite='@Model.SitioWeb'" placeholder="Escriba el sitio web del cliente" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Nacionalidad</label>
+                            <select class="form-control" name="Nationality" id="Nationality" data-ng-model="newMoralCustomer.Nationality" data-ng-init="SelectedNationality='@Model.Nacionalidad'" data-ng-options="option.name for option in NationalitiesData"></select>
+                        </div>
+                    </section>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="step2">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label>Calle</label>
+                            <input type="text" maxlength="100" class="form-control" id="Street" data-ng-model="newMoralCustomer.Street" data-ng-init="newMoralCustomer.Street='@Model.Correo'" placeholder="Escriba la calle" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Num Exterior</label>
+                            <input type="text" maxlength="6" class="form-control" id="OutNumber" data-ng-model="newMoralCustomer.OutNumber" data-ng-init="newMoralCustomer.OutNumber='@Model.NumExt'" placeholder="Escriba el número exterior" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Num Interior</label>
+                            <input type="text" maxlength="6" class="form-control" id="IntNumber" data-ng-model="newMoralCustomer.IntNumber" data-ng-init="newMoralCustomer.IntNumber='@Model.NumInt'" placeholder="Escriba el número interior" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Colonia</label>
+                            <input type="text" maxlength="300" class="form-control" id="Suburb" data-ng-model="newMoralCustomer.Suburb" data-ng-init="newMoralCustomer.Suburb='@Model.Colonia'" placeholder="Escriba la colonia" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Estado</label>
+                            <select class="form-control" name="state" id="state" data-ng-model="state" data-ng-init="selectedState='@Model.idEstado'" data-ng-options="option.Estado for option in States" data-ng-change="getTowns('M')"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Municipio</label>
+                            <select class="form-control" name="Town" id="Town" data-ng-model="newMoralCustomer.Town" data-ng-init="selectedTown='@Model.idMunicipio'" data-ng-options="option.Municipio for option in Towns"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>CP</label>
+                            <input type="text" maxlength="5" class="form-control" id="PC" data-ng-model="newMoralCustomer.PC" data-ng-init="newMoralCustomer.PC='@Model.CP'" placeholder="Escriba el código postal" numbers-only="numbers-only">
+                        </div>
+                    </section>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="step3">
+                    <section class="container-tab">
+                        <div class="form-group">
+                            <label>Nombre Contacto</label>
+                            <input type="text" maxlength="250" class="form-control" id="ContactName" data-ng-model="newMoralCustomer.ContactName" data-ng-init="newMoralCustomer.ContactName='@Model.NombreContacto'" placeholder="Escriba el nombre del contacto" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Teléfono Contacto</label>
+                            <input type="text" maxlength="12" class="form-control" id="ContactPhone" data-ng-model="newMoralCustomer.ContactPhone" data-ng-init="newMoralCustomer.ContactPhone='@Model.TelefonoContacto'" placeholder="Escriba el teléfono del contacto" numbers-only="numbers-only" />
+                        </div>
+                        <div class="form-group">
+                            <label>Correo Contacto</label>
+                            <input type="text" maxlength="200" class="form-control" id="ContactMail" data-ng-model="newMoralCustomer.ContactMail" data-ng-init="newMoralCustomer.ContactMail='@Model.CorreoContacto'" placeholder="Escriba el correo del contacto" uppercase />
+                        </div>
+                        <div class="form-group">
+                            <label>Crédito</label>
+                            <input type="checkbox" id="Credit" data-ng-model="newMoralCustomer.Credit" data-ng-init="newMoralCustomer.Credit = @Model.Credito" ng-true-value="1" ng-false-value="0" data-ng-checked="1 == @Model.Credito" />
+                        </div>
+                        <div class="form-group">
+                            <label>Plazo</label>
+                            <select class="form-control" name="state" id="TimeOfCredit" data-ng-model="newMoralCustomer.TimeOfCredit" data-ng-options="option as option for option in months" data-ng-init="selectedTimeOfCreditMoral(@Model.Plazo)"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Límite Crédito</label>
+                            <input type="text" maxlength="9" class="form-control" id="CreditLimit" data-ng-model="newMoralCustomer.CreditLimit" data-ng-init="newMoralCustomer.CreditLimit = '@Model.LimiteCredito'" ng-currency placeholder="Escriba el límite de crédito" numbers-only="numbers-only">
+                        </div>
+                        <div class="form-group" data-ng-init="getOriginCustomer()">
+                            <label>Origen</label>
+                            <select class="form-control" id="idOrigin" name="idOrigin" data-ng-model="newMoralCustomer.idOrigin" data-ng-init="newMoralCustomer.idOrigin = @Model.idOrigen" data-ng-options="option.idOrigen as option.Origen for option in origins" required>
+                                <option value="">Seleccione</option>
+                            </select>
+                            <code class="has-error" ng-show="addMoralCustomerForm.idOrigin.$error.required">Requerido!</code>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </form>
+        @Html.Raw(HtmlHelperExtension.Button("Customers", "UpdateMoralCustomer", "UpdateMoralCustomer", "UpdateMoralCustomer", "Guardar", "", "", "SaveUpdateMoral(" + Model.idCliente + ")", "btn btn-primary", "Guardando..."))
+    </div>
+</div>

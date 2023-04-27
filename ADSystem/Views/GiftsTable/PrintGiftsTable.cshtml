@@ -1,0 +1,211 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using System.Globalization;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.GiftsTableViewModel
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Impresión</title>
+    <link href="~/Content/Print/css/styles.css" rel="stylesheet" />
+    <link href="~/Content/Print/css/fonts.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700|Open+Sans+Condensed:300,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Open+Sans+Condensed:300,700" rel="stylesheet" />
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angucomplete")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/GiftsTablePrint")"></script>
+    <script type="text/javascript" src="@Url.Js("ngProgress")"></script>
+    <script type="text/javascript" src="@Url.Js("acute.select")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-animate.min")"></script>
+    <script type="text/javascript" src="@Url.Js("toaster")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-currency")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-filter")"></script>
+
+</head>
+<body data-ng-app="General" data-ng-controller="GeneralController">
+
+    <header>
+        <div class="logo-container">
+            <img src="@Url.Img("print/logotipo.png")" />
+        </div>
+    </header>
+
+    <section class="header-data-container" ng-init="showDesc = @ViewBag.Descuento">
+
+        <div class="data-ofice-nv-cot">
+            Sucursal: <strong>@Model.Sucursal</strong>
+        </div>
+        <div class="data-ofice-nv-cot">
+            Vendedor: <strong>@Model.Vendedor1</strong><br /><strong>@Model.Vendedor2</strong>
+        </div>
+        <div class="data-ofice-nv" ng-init="despachoReferencia = '@Model.DespachoReferencia'" ng-show="despachoReferencia != ''">
+            Despacho: <strong>@Model.DespachoReferencia</strong>
+        </div>
+        <div class="data-ofice-nv-cot">
+            Fecha: <strong>@Model.Fecha</strong>
+        </div>
+    </section>
+
+    <section class="container-data-client">
+        <div class="container-laterals">
+            <table class="container-laterals-data">
+                <tr>
+                    <th class="th-right"><img src="@Url.Img("print/icon-user.png")" /></th>
+                    <th class="tr-left">Novio: @Model.Novio</th>
+                </tr>
+                <tr>
+                    <th class="th-right"><img src="@Url.Img("print/icon-user.png")" /></th>
+                    <th class="tr-left">Novia: @Model.Novia</th>
+                </tr>
+                <tr>
+                    <th class="th-right"><img src="@Url.Img("print/icon-mail.png")" /></th>
+                    <th class="tr-left">Email:</th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="container-data-client-icon">
+            <img src="@Url.Img("print/icon.png")" />
+        </div>
+
+        <div class="container-laterals">
+            <table class="container-laterals-data">
+                <tr>
+                    <th class="th-right"><img src="@Url.Img("print/icon-mobil.png")" /></th>
+                    <th class="tr-left">Móvil:</th>
+                </tr>
+                <tr>
+                    <th class="th-right"><img src="@Url.Img("print/icon-mail.png")" /></th>
+                    <th class="tr-left">Dirección: @Model.LugarBoda</th>
+                </tr>
+                <tr>
+                    <th class="th-right"></th>
+                    <th class="tr-left"></th>
+                </tr>
+            </table>
+        </div>
+    </section>
+    <section class="name-document">
+        MESA DE REGALOS
+    </section>
+
+    <section class="container-tab-fp" style="border-bottom: none;" data-ng-controller="GiftsTablePrint">
+        <table class="data-fpay" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.lDetail))">
+            <tr>
+                <th><strong>IMAGEN</strong></th>
+                <th><strong>CÓDIGO</strong></th>
+                <th><strong>DESCRIPCIÓN</strong></th>
+                <th><strong>CANT</strong></th>
+                <th><strong>PRECIO UNITARIO</strong></th>
+                <th><strong>SUBTOTAL</strong></th>
+                <th ng-show="showDesc == 1"><strong>DESCUENTO</strong></th>
+                <th><strong>TOTAL</strong></th>
+            </tr>
+            <tr style="border-bottom: 1px solid #f7f7f7;" ng-repeat-start="item in items">
+                <td>
+                    <img class="img-product-list" src="{{item.Producto.urlImagen}}" />
+                </td>
+                <td>{{item.Producto.Codigo}}</td>
+                <td><div class="txt-describe" style="width:200px;">{{item.Producto.Descripcion}}</div></td>
+                <td>{{item.Cantidad}}</td>
+                <td>{{item.Precio | currency }}</td>
+                <td>{{item.Cantidad * item.Precio | currency}}</td>
+                <td ng-show="showDesc == 1">{{item.Descuento}}%</td>
+                <td style="font-weight: bold; color: #000">{{ (item.Cantidad * item.Precio) - ((item.Cantidad * item.Precio) * (item.Descuento/100)) | currency}}</td>
+            </tr>
+            <tr ng-repeat-end ng-show="item.Comentarios.length > 0">
+                <td>
+                    <strong>COMENTARIOS:</strong>
+                </td>
+                <td colspan="7">
+                    <p class="text-left">{{item.Comentarios}}</p>
+                </td>
+            </tr>
+            @*<tr>
+                <td colspan="5" class="text-right">
+                    <strong>SUMA:</strong>
+                </td>
+                <td ng-init="sumaSubTotal = @Model.SumSubtotal">
+                    <p class="text-right">{{sumaSubTotal | currency}}</p>
+                </td>
+            </tr>*@
+        </table>
+        <table class="data-fpay-total">
+            <tr style="border-bottom: 1px solid #f7f7f7; padding: 10px 0;">
+                <td style="color: #464646; text-align: right; font-size: 15px;"></td>
+                <td style="color: #747474;"></td>
+                <td style="color: #464646; text-align: right; padding-right: 3%;">Cantidad de productos: <strong>@Model.CantidadProductos</strong></td>
+            </tr>
+            <tr>
+                <td style="color: #464646; text-align: right; font-size: 15px;"></td>
+                <td style="color: #747474;"></td>
+                <td style="color: #464646; text-align: right; padding-right: 3%;">Subtotal: <strong>@Model.Subtotal.Value.ToString("C", CultureInfo.CurrentCulture)</strong></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                @{
+                    if (Model.Descuento > 0)
+                    {
+                        <td style="color: #464646; text-align: right; padding-right: 3%;">Descuento: <strong>@Math.Truncate((decimal)Model.Descuento)%</strong></td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                }
+
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                @{
+                    if (Model.IVA > 0)
+                    {
+                        decimal? subtotal = (Model.Subtotal - (Model.Subtotal * (Model.Descuento / 100)));
+                        decimal? IVA = 0.16m;
+
+                        var result = subtotal * IVA;
+
+                        <td style="color: #464646; text-align: right; padding-right: 3%;">16% IVA: <strong>@result.Value.ToString("C", CultureInfo.CurrentCulture)</strong></td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                }
+
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="color: #464646; text-align: right; padding-right: 3%;">Total: <strong style="font-weight: bold; color: #000;">@Model.Total.Value.ToString("C", CultureInfo.CurrentCulture)</strong></td>
+            </tr>
+        </table>
+    </section>
+    <div class="line-black"></div>
+    <footer>
+        <p>Río Amazonas 305 Ote. Col. del Valle San Pedro, Garza Garcia, N. L. CP: 66220, Tel. (81) 8356­ 9558 RFC: ADE050128252</p>
+    </footer>
+    <script type="text/javascript">
+
+        window.print();
+
+    </script>
+</body>
+</html>

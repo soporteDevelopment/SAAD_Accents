@@ -1,0 +1,69 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.OrderViewModel
+
+@{
+	ViewBag.Title = "Ordenes";
+	Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Orders")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-app="orders">
+    <div class="panel-heading">
+        <h3 class="panel-title">Actualizar Orden</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="OrdersController">
+        <div class="form-group">
+            <label>Número de Orden</label>
+            <input type="text" maxlength="30" class="form-control" id="order" data-ng-model="order" data-ng-init="order='@Model.Orden'" placeholder="Escriba el número de la orden" uppercase />
+        </div>
+        <br />
+        <div class="form-group">
+            <label>Número de Factura</label>
+            <input type="text" maxlength="30" class="form-control" id="factura" data-ng-model="factura" data-ng-init="factura='@Model.Factura'" placeholder="Escriba el número de la factura" uppercase />
+        </div>
+        <br />
+        <div class="form-group" data-ng-init="Enterprise = @ViewBag.Enterprise">
+            <label>Empresa</label>
+            <select type="text" class="form-control" id="provider" data-ng-model="newOrder.Provider" data-ng-options="option.Empresa for option in Enterprise" data-ng-init="setSelecProvider(@Model.idEmpresa)"></select>
+        </div>
+        <div class="form-group">
+            <label>Fecha de Compra</label>
+            <input type="text" class="form-control" id="datePurchase" datepicker-popup="{{format}}" data-ng-model="datePurchase" data-ng-init="datePurchase='@Model.FechaCompra.Value.ToString("MM/dd/yyyy")'" is-open="openedPurchase" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openPurchase($event)" show-button-bar="false" placeholder="Seleccione la fecha de compra" readonly />
+        </div>
+        <div class="form-group">
+            <label>Fecha de Entrega</label>
+            <input type="text" class="form-control" id="dateDeliver" datepicker-popup="{{format}}" data-ng-model="dateDeliver" data-ng-init="dateDeliver='@Model.FechaEntrega.ToString("MM/dd/yyyy")'" is-open="openedDeliver" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openDeliver($event)" show-button-bar="false" placeholder="Seleccione la fecha de entrega" readonly />
+        </div>
+        <div class="form-group">
+            <label>Fecha de Captura</label>
+            <input type="text" class="form-control" id="dateCapture" datepicker-popup="{{format}}" data-ng-model="dateCapture" data-ng-init="dateCapture='@Model.FechaCaptura.ToString("MM/dd/yyyy")'" is-open="openedCapture" min-date="'1900-01-01'" max-date="'2200-01-01'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" data-ng-click="openCapture($event)" show-button-bar="false" placeholder="Seleccione la fecha de captura" readonly />
+        </div>
+        <br />
+        <div class="form-group" data-ng-init="LoadCoin('@Model.Moneda')">
+            <div class="row">
+                <label class="col-sm-2 control-label">Moneda</label>
+                <div class="col-md-5 text-left col-sm-5" data-ng-repeat="c in ListCoinType">
+                    <input type="radio" ng-model="$parent.currentCoin" name="group1" value="{{c.Id}}" />
+                    {{c.Descripcion}}
+                </div>
+            </div>
+        </div>
+        <br ng-show="currentCoin == 2" />
+        <div class="form-group" ng-show="currentCoin == 2">
+            <label>Precio Dolar</label>
+            <input disabled type="text" maxlength="30" class="form-control" id="dollar" value="@Model.Dolar" currency />
+        </div>
+        @Html.Raw(HtmlHelperExtension.Button("Orders", "SaveUpdateOrder", "SaveUpdateOrder", "SaveUpdateOrder", "Guardar", "", "", "SaveUpdateOrder(" + Model.idOrden + ")", "btn btn-primary", "Guardando..."))
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>
+
+
+

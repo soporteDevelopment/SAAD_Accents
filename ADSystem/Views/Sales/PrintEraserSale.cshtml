@@ -1,0 +1,287 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using System.Globalization;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.SaleViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>BORRADOR</title>
+    <link href="~/Content/Print/css/print.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700" rel="stylesheet">
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("lodash.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angucomplete")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/SalesPrint")"></script>
+    <script type="text/javascript" src="@Url.Js("ngProgress")"></script>
+    <script type="text/javascript" src="@Url.Js("acute.select")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-animate.min")"></script>
+    <script type="text/javascript" src="@Url.Js("toaster")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-currency")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-filter")"></script>
+
+</head>
+
+<body data-ng-app="General" data-ng-controller="GeneralController">
+    <div class="contenedor">
+        <table style="width: 100%; padding: 20px 0 5px 0;">
+            <tr>
+                <th style="width: 30%;"></th>
+                <th style="width: 30%;">
+                    <img style="width: 300px;" src="@Url.Img("print/logotipo.png")">
+                </th>
+                <th class="folio" style="width: 30%; padding-right: 20px;"><strong>PENDIENTE</strong></th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border-bottom: 1px solid #D4D4D4; padding: 20px; text-align: center;" ng-init="showDesc = @ViewBag.Descuento">
+            <tr>
+                <th class="txt-data" style="width: 30%; text-align: left;">Sucursal:<strong> @Model.Sucursal</strong></th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="width: 30%;">Vendedor:<strong>@Model.Usuario1</strong><br /><strong>@Model.Usuario2</strong></th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="width: 30%; text-align: right;">Fecha:<strong>@Model.Fecha</strong></th>
+            </tr>
+            @if (Model.idDespachoReferencia != null)
+            {
+                <tr>
+                    <td class="txt-data" style="width: 30%; text-align: left;"></td>
+                    <td class="txt-data">|</td>
+                    <td class="txt-data" style="width: 30%;">Despacho:<strong>@Model.DespachoReferencia</strong></td>
+                    <td class="txt-data">|</td>
+                    <td class="txt-data" style="width: 30%; text-align: right;"></td>
+                </tr>
+            }
+        </table>
+
+        <table style="width: 95%; padding: 20px; text-align: left; margin: 0 auto;">
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Cliente:<strong> @Model.ClienteFisico</strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Móvil:<strong> @Model.oAddress.TelCelular</strong></th>
+            </tr>
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Teléfono:<strong> @Model.oAddress.TelCasa</strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Direccción:<strong> @Model.oAddress.Direccion</strong></th>
+            </tr>
+            <tr>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Email:<strong> @Model.oAddress.Correo</strong></th>
+                <th></th>
+                <th class="txt-data" style="width: 46%; border-bottom: 1px solid #D4D4D4; padding: 5px 0 10px 20px;">Proyecto:<strong> @Model.Proyecto</strong></th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; padding: 10px; border-bottom: 2px solid #000;">
+            <tr>
+                <th style="width: 31%;">
+                    <div class="circulo-left"></div>
+                </th>
+                <th class="titulos" style="width: 30%; text-align: center;">NOTA DE VENTA</th>
+                <th style="width: 31%;">
+                    <div class="circulo-right"></div>
+                </th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; padding: 20px 0 3px 0">
+            <tr>
+                <th class="subtitulos">
+                    DETALLE DE LA VENTA
+                </th>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border: 1px solid #D4D4D4; border-radius: 5px; padding: 10px; text-align: center;">
+            <tr>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        IMAGEN
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        CÓDIGO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        DESCRIPCIÓN
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        CANT.
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        PRECIO UNITARIO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        SUBTOTAL
+                    </strong>
+                </th>
+                <th class="txt-data" ng-show="showDesc == 1">|</th>
+                <th class="txt-data" style="text-align: center;" ng-show="showDesc == 1">
+                    <strong>
+                        DESCUENTO
+                    </strong>
+                </th>
+                <th class="txt-data">|</th>
+                <th class="txt-data" style="text-align: center;">
+                    <strong>
+                        TOTAL
+                    </strong>
+                </th>
+            </tr>
+        </table>
+
+        <section class="tb-productos" data-ng-controller="SalesPrint" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.oDetail))">
+            <table style="width: 100%; text-align: left;">
+                <tr ng-repeat-start="item in items" ng-class="{'border-bottom': item.Comentarios == null}">
+                    <td class="imagen-producto" style="width: 12%;">
+                        <img src="{{item.Imagen}}">
+                    </td>
+                    <td class="txt-data" style="width: 12%;">
+                        {{item.Codigo}}
+                    </td>
+                    <td class="txt-data" style="width: 14.5%;">
+                        {{item.Descripcion}}
+                    </td>
+                    <td class="txt-data" style="width: 11%;">
+                        {{item.Cantidad}}
+                    </td>
+                    <td class="txt-data" style="width: 19%;">
+                        {{item.Precio | currency }}
+                    </td>
+                    <td class="txt-data" style="width: 13%;">
+                        {{item.Cantidad * item.Precio | currency}}
+                    </td>
+                    <td class="txt-data" style="width: 12%;" ng-show="showDesc == 1">
+                        {{item.Descuento}}%
+                    </td>
+                    <td class="txt-data" style="width: 6.5%;">
+                        {{ (item.Cantidad * item.Precio) - ((item.Cantidad * item.Precio) * (item.Descuento/100)) | currency}}
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="item.Comentarios.length > 0" ng-class="{'border-bottom-left': item.Comentarios.length > 0}">
+                    <td class="comentarios-producto" colspan="8" style="width: 100%;">
+                        <strong>COMENTARIOS:</strong> {{item.Comentarios}}
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <table style="width: 100%; margin-top: 15px; border-bottom: 2px solid #000; border-top: 2px solid #000; padding: 10px;">
+            <tr>
+                <td class="txt-data" style="text-align: left; width: 42%; padding: 0 0 15px 0;">
+                    Cantidad de productos: <strong>@Model.CantidadProductos</strong>
+                </td>
+                <td class="txt-data" style="text-align: left; width: 25%; padding: 0 0 15px 0;" ng-init="sumaSubTotal = @Model.SumSubtotal">
+                    @*Suma: <strong>{{sumaSubTotal | currency}}</strong>*@
+                </td>
+                <td class="txt-data" style="text-align: right; width: 25%; padding: 0 0  15px 0;">
+                    Sub total:<strong>@Model.Subtotal.Value.ToString("C", CultureInfo.CurrentCulture)</strong>
+                </td>
+            </tr>
+            <tr>
+                <td class="txt-data" style="text-align: left; width: 42%; padding: 0 0 15px 0;"></td>
+                <td class="txt-data" style="text-align: left; width: 25%; padding: 0 0 15px 0;"></td>
+                <td class="txt-data" style="text-align: right; width: 25%; padding: 0 0  15px 0;">
+                    @{
+                        if (Model.Descuento > 0)
+                        {
+                            <label>Descuento:</label><strong>@Math.Truncate((decimal)Model.Descuento)%</strong>
+                        }
+                    }
+
+                    @{
+                        if (Model.IVA > 0)
+                        {
+                            decimal? subtotal = (Model.Subtotal - (Model.Subtotal * (Model.Descuento / 100))) + (Model.TotalNotasCredito ?? 0);
+                            //decimal? IVA = 0.16m;
+
+                            //var result = subtotal * IVA;
+
+                            //if (result < 0)
+                            //{
+                            //    result = 0;
+                            //}
+
+                            <label>IVA:</label><strong> @Model.IVATotal.Value.ToString("C", CultureInfo.CurrentCulture)</strong>
+
+                        }
+                        var Total = (Model.Total > 0) ? Model.Total.Value.ToString("C", CultureInfo.CurrentCulture) : "$0.00";
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="txt-data" style="text-align: left; width: 42%">
+                    <textarea class="textarea" name="mensaje" placeholder="COMENTARIOS:">@Model.Comentarios</textarea>
+                </td>
+                <td class="txt-data" style="text-align: left; width: 25%;"></td>
+                <td class="txt-data" style="text-align: right; width: 25%;">
+                    Total:<strong> @Total</strong>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%; border-bottom: 2px solid #000;">
+            <tr>
+                <th class="txt-data-10 info">
+                    * Nuestra Política de Devolución  se encuentra impresa en la RECEPCIÓN de cada una de nuestras sucursales.
+                </th>
+            </tr>
+            <tr>
+                <th class="txt-data-10 info">
+                    * En promociones especiales no aplican descuentos adicionales.
+                </th>
+            </tr>
+            <tr>
+                <th class="txt-data-10 info">
+                    * Precios sujetos a cambio sin previo aviso, en productos importados o sobre pedido.
+                </th>
+            </tr>
+            <tr>
+                <th class="txt-data-10 info">
+                    * En pedidos de diseños especiales proporcionados por el cliente no nos hacemos responsables por fallas de cálculo o de ergonomía, los diseños que los clientes nos proveen son totalmente bajo su riesgo y responsabilidad y deberán ser pagados al 100% por el cliente antes de la entrega, cualquier cambio o modi cación al diseño ya aceptado se cobrará como extra. Las garantías de fabricación varían según el proveedor y serán estipuladas en una carta cuando el cliente lo solicite a la hora de la compra.
+                </th>
+            </tr>
+        </table>
+        <div class="footer">
+            <p>Río Amazonas 305 Ote. Col. del Valle San Pedro, Garza Garcia, N. L. CP: 66220, Tel. (81) 8356 9558, www.acentsdecoration.com, RFC: ADE050128252</p>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            window.print();
+
+        });
+    </script>
+
+</body>
+</html>

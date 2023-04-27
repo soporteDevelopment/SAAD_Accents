@@ -1,0 +1,175 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using System.Globalization;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+@model IEnumerable<ADEntities.ViewModels.OutProductsViewModel>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>SALIDA A VISTA</title>
+    <link href="~/Content/Print/css/styles.css" rel="stylesheet" />
+    <link href="~/Content/Print/css/fonts.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,700|Open+Sans+Condensed:300,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Open+Sans+Condensed:300,700" rel="stylesheet" />
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("lodash.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angucomplete")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/OutUnifyProductsPrint")"></script>
+    <script type="text/javascript" src="@Url.Js("ngProgress")"></script>
+    <script type="text/javascript" src="@Url.Js("acute.select")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-animate.min")"></script>
+    <script type="text/javascript" src="@Url.Js("toaster")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-currency")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-filter")"></script>
+
+</head>
+
+<body data-ng-app="General" data-ng-controller="OutUnifyProductsPrint" data-ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+  <div data-ng-repeat="view in views | limitTo : 1 ">
+        <header>
+            <div class="logo-container">
+                <img src="@Url.Img("print/logotipo.png")" />
+            </div>
+        </header>
+        <section class="header-data-container">
+            <div class="data-ofice-nv">
+                Vendedor: <strong>{{view.Vendedor}}</strong><br /><strong>{{view.Vendedor2}}</strong>
+            </div>
+            <div class="data-ofice-nv" ng-init="despachoReferencia = 'view.DespachoReferencia'" ng-show="despachoReferencia != ''">
+                Despacho: <strong>{{view.DespachoReferencia}}</strong>
+            </div>
+        </section>
+        <section class="container-data-client">
+            <div class="container-laterals">
+                <table class="container-laterals-data">
+                    <tr>
+                        <th class="th-right"><img src="@Url.Img("print/icon-user.png")" /></th>
+                        <th class="tr-left">Cliente: {{view.ClienteFisico}} &nbsp; {{view.ClienteMoral}} &nbsp; {{view.Despacho}}</th>
+                    </tr>
+                    <tr>
+                        <th class="th-right"><img src="@Url.Img("print/icon-phone.png")" /></th>
+                        <th class="tr-left">Teléfono: {{view.oAddress.TelCasa}}</th>
+                    </tr>
+                    <tr>
+                        <th class="th-right"><img src="@Url.Img("print/icon-mail.png")" /></th>
+                        <th class="tr-left">Email: {{view.oAddress.Correo}}</th>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="container-data-client-icon">
+                <img src="@Url.Img("print/icon.png")" />
+            </div>
+
+            <div class="container-laterals">
+                <table class="container-laterals-data">
+                    <tr>
+                        <th class="th-right"><img src="@Url.Img("print/icon-mobil.png")" /></th>
+                        <th class="tr-left">Móvil: {{view.oAddress.TelCelular}}</th>
+                    </tr>
+                    <tr>
+                        <th class="th-right"><img src="@Url.Img("print/icon-mail.png")" /></th>
+                        <th class="tr-left">Dirección: {{view.oAddress.Direccion}}</th>
+                    </tr>
+                    <tr>
+                        <th style="height: 20px;" class="th-right"></th>
+                        <th class="tr-left">Proyecto: {{view.Proyecto}}</th>
+                    </tr>
+                </table>
+            </div>
+        </section>
+    </div>
+    <section class="name-document">
+       DETALLE
+    </section>
+    <div ng-repeat="view in views">
+        <section class="container-tab-fp" style="overflow-x:auto; border-bottom: none;">
+            <table class="data-fpay" data-ng-init="initPending(view)">
+                <tr>
+                    <th><strong>IMAGEN</strong></th>
+                    <th><strong>CÓDIGO</strong></th>
+                    <th><strong>DESCRIPCIÓN</strong></th>
+                    <th><strong>CANT</strong></th>
+                    <th><strong>PRECIO UNITARIO</strong></th>
+                    <th><strong>SUBTOTAL</strong></th>
+                </tr>
+                <tr style="border-bottom: 1px solid #f7f7f7;" ng-repeat-start="item in view.oDetail" ng-hide="item.Cantidad == 0" ng-class-odd="'bggrey'">
+                    <td>
+                        <img class="img-product-list" src="{{item.urlImagen}}" />
+                    </td>
+                    <td>{{item.Codigo}}</td>
+                    <td><div class="txt-describe" style="width:200px;">{{item.Descripcion}}</div></td>
+                    <td>{{item.Cantidad}}</td>
+                    <td>{{item.Precio | currency }}</td>
+                    <td>{{ (item.Cantidad * item.Precio) | currency}}</td>
+                </tr>
+                <tr ng-repeat-end  ng-show="item.Comentarios != null" ng-hide="item.Comentarios == null || item.Cantidad == 0" ng-class-odd="'bggrey'">
+                    <td>
+                        <strong>COMENTARIOS:</strong>
+                    </td>
+                    <td colspan="5">
+                        <p class="text-left">{{item.Comentarios}}</p>
+                    </td>
+                </tr>
+            </table>
+            <table class="data-fpay-total" style="font-weight: bold; color: #000">
+                <tr>
+                    <td style="color: #464646; text-align: right; font-size: 15px;">Cantidad de productos</td>
+                    <td style="color: #747474;">{{view.CantidadProductos}}</td>
+                    <td style="color: #464646; text-align: right; padding-right: 3%;">Total: {{view.Restante | currency}} </td>
+                </tr>                
+            </table>
+        </section>
+    </div>
+    <table>
+        <tr>
+            <td></td>
+            <td></td>
+            <td style="color: #464646; text-align: right; padding-right: 3%;">Cantidad total de Productos: <strong style="font-weight: bold; color: #000;">{{CantidadTotalProductos}}</strong></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>            
+            <td style="color: #464646; text-align: right; padding-right: 3%;">Total: <strong style="font-weight: bold; color: #000;">{{Total | currency}}</strong></td>
+        </tr>
+    </table>
+    <div class="line-black"></div>
+    <div class="pagare-container">
+        <p>Debo y pagaré incondicionalmente por este pagaré a la orden de Accents Decoration S. de R.L. de C.V. el valor de la mercancía antes descrita, entregada a mi entera satisfacción. Al no pagarse a su vencimiento, desde ese momento hasta el día de la liquidación, causará intereses moratorios al tipo de 10% mensual, pagadero en esta ciudad justamente con el principal.</p>
+        <p>
+            *Una vez salida la mercancia no se aceptarán cambios ni devoluciones.
+            <strong>
+                Fecha de pago:
+                <textarea class="textarea-container-fecha"></textarea>
+                /
+                <textarea class="textarea-container-fecha"></textarea>
+                /
+                <textarea class="textarea-container-fecha"></textarea>
+                Firma del cliente: ___________________
+            </strong>
+        </p>
+    </div>
+    <footer>
+        <p>Río Amazonas 305 Ote. Col. del Valle San Pedro, Garza Garcia, N. L. CP: 66220, Tel. (81) 8356­ 9558 RFC: ADE050128252</p>
+    </footer>
+    <script type="text/javascript">
+
+        window.print();
+
+    </script>
+</body>
+</html>

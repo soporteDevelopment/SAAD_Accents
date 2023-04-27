@@ -1,0 +1,177 @@
+﻿@using System.Web.MVC;
+@using ADSystem.Helpers;
+
+
+@{
+    ViewBag.Title = "Manejo de Efectivo";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+
+<script type="text/javascript" src="@Url.Js("Class/Entries/Index")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<style>
+    .clsDatePicker {
+        z-index: 100000;
+    }
+</style>
+
+<br />
+<div class="panel panel-default" style="width:1200px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Manejo de Efectivo</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="EntriesController" ng-init="loadInit()">
+        <br />
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <h3><b>En caja</b></h3>
+                </div>
+                <div class="col-md-6">
+                    <h3><b>Pagos</b></h3>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <button type="button" class="btn btn-info" ng-click="modalAddEntry()">Ingreso</button>
+                </div>
+                <div class="col-md-6 text-center">
+                    <button type="button" class="btn btn-warning" ng-click="modalAddEgress()">Egreso</button>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <input type="text" ng-model="remissionEntry" ng-change="listEntries()" maxlength="12"  placeholder="Remisión" />
+                </div>
+                <div class="col-md-6 text-center">
+                    <input type="text" ng-model="remissionEgress" ng-change="listEgresses()" maxlength="12" placeholder="Remisión" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    Total Ingresos:&nbsp;<b class="color-red">{{totalEntries | currency}}</b>
+                </div>
+                <div class="col-md-6">
+                    Total Egresos:&nbsp;<b class="color-red">{{totalEgresses | currency}}</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="list-group" data-ng-repeat="entry in entries">
+                        <a href="JavaScript:void(0);" class="list-group-item">
+                            <span class="badge" style="background-color: #ffffff;"><i class="fa fa-trash color-red" style="left: 0px;" data-ng-click="removeEntry(entry.idEntrada)" title="Eliminar"></i></span>
+                            <span class="badge" style="background-color: #ffffff;"><i class="fa fa-minus-circle color-red" style="left: 0px;" data-ng-click="setInternalEgress(entry.idEntrada, entry.idVenta)" title="Egreso"></i></span>
+                            <span class="badge" style="background-color: #ffffff;"><input type="checkbox" data-ng-click="selectEntry($event, entry.idEntrada, entry.Cantidad)" /></span>
+                            <h4 class="list-group-item-heading">{{entry.Fecha | jsDate | date:'shortDate'}}</h4>
+                            <p class="list-group-item-text">
+                                Se recibío la cantidad de <b>{{entry.Cantidad | currency}}</b> por <b>{{entry.Entregada}}{{entry.EntregadaOtro}}</b>
+                                <br />
+                                Remisión: <b>{{entry.Remision}}</b>
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="list-group" data-ng-repeat="egress in egresses">
+                        <a href="JavaScript:void(0);" class="list-group-item" ng-show="egress.Remision == null">
+                            <span class="badge" style="background-color: #ffffff;"><i class="fa fa-trash color-red" style="left: 0px;" data-ng-click="removeEgress(egress.idSalida)" title="Eliminar"></i></span>
+                            <span class="badge" style="background-color: #ffffff;"><input type="checkbox" data-ng-click="selectEgress($event, egress.idSalida, egress.Cantidad, null)" /></span>
+                            <h4 class="list-group-item-heading">{{egress.Fecha | jsDate | date:'shortDate'}}</h4>
+                            <p class="list-group-item-text">
+                                Se entregó la cantidad de <b>{{egress.Cantidad | currency}}</b> a <b>{{egress.Recibida}}{{egress.RecibidaOtro}}</b>
+                            </p>
+                        </a>
+                        <a href="JavaScript:void(0);" class="list-group-item" ng-show="egress.Remision != null">
+                            Remisión: <b>{{egress.Remision}}</b>
+                            <span class="badge" style="background-color: #ffffff;"><i class="fa fa-trash color-red" style="left: 0px;" data-ng-click="removeEgress(egress.idSalida)" title="Eliminar"></i></span>
+                            <span class="badge" style="background-color: #ffffff;"><input type="checkbox" data-ng-click="selectEgress($event, egress.idSalida, egress.Cantidad, egress.InternalEgresses)"/></span>
+                            <h4 class="list-group-item-heading">{{egress.Fecha | jsDate | date:'shortDate'}}</h4>
+                            <p class="list-group-item-text">
+                                Se entregó la cantidad de <b>{{egress.Cantidad | currency}}</b> a <b>{{egress.Recibida}}{{egress.RecibidaOtro}}</b>
+                                <br/>
+                            </p>
+                            <p class="list-group-item-text" data-ng-repeat="internalegress in egress.InternalEgresses">
+                                Se entregó la cantidad de <b>{{internalegress.Cantidad | currency}}</b> a <b>{{internalegress.Recibida}}{{internalegress.RecibidaOtro}}</b>
+                                <br />
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    Total a Entregar:&nbsp;<b class="color-red">{{totalEntries - totalEgresses | currency}}</b>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button type="button" class="btn btn-success" ng-click="modalAddReport()">Corte</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalEntry" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Ingreso</h4>
+                    </div>
+                    <div class="modal-body" id="modalEntryOnLine">
+                        <div ng-include="includeEntryOnLine"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalEgress" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Egreso</h4>
+                    </div>
+                    <div class="modal-body" id="modalEgressOnLine">
+                        <div ng-include="includeEgressOnLine"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal" tabindex="-1" role="dialog" id="modalInternalEgress" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Egreso</h4>
+                    </div>
+                    <div class="modal-body" id="modalInternalEgressOnLine">
+                        <div ng-include="includeInternalEgressOnLine"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="modalReport" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Reporte</h4>
+                    </div>
+                    <div class="modal-body" id="modalReportOnLine">
+                        <div ng-include="includeReportOnLine"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

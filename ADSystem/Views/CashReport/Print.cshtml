@@ -1,0 +1,126 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using System.Globalization;
+@using ADEntities.ViewModels;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.ReportEntriesViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>REPORTE</title>
+    <link href="~/Content/Print/css/print.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700" rel="stylesheet">
+
+    <script type="text/javascript" src="@Url.Js("jquery-1.11.2.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular")"></script>
+    <script type="text/javascript" src="@Url.Js("lodash.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-fluent-validation.min")"></script>
+    <script type="text/javascript" src="@Url.Js("bootstrap.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ui-bootstrap-tpls-0.13.0.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-file-upload.min")"></script>
+    <script type="text/javascript" src="@Url.Js("angucomplete")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/General")"></script>
+    <script type="text/javascript" src="@Url.Js("Class/CashReport/Print")"></script>
+    <script type="text/javascript" src="@Url.Js("ngProgress")"></script>
+    <script type="text/javascript" src="@Url.Js("acute.select")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-animate.min")"></script>
+    <script type="text/javascript" src="@Url.Js("toaster")"></script>
+    <script type="text/javascript" src="@Url.Js("ng-currency")"></script>
+    <script type="text/javascript" src="@Url.Js("angular-filter")"></script>
+
+</head>
+
+<body data-ng-app="General" data-ng-controller="GeneralController">
+    <div class="contenedor">        
+        <table style="width: 100%; padding: 20px 0 5px 0;">
+            <tr>
+                <th style="width: 30%;"></th>
+                <th style="width: 30%;">
+                    <img style="width: 300px;" src="@Url.Img("print/logotipo.png")">
+                </th>
+                <th class="folio" style="width: 30%; padding-right: 20px;"><strong>Reporte de Efectivo</strong></th>
+            </tr>
+        </table>
+        <div class="panel-body" data-ng-controller="PrintController" ng-init="loadInit(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))">
+            <table style="width: 100%; padding: 20px 0 3px 0">
+                <tr>
+                    <td class="txt-data" style="width: 25%; text-align: left;"><strong>Fecha:</strong></td>
+                    <td class="txt-data" style="width: 25%; text-align: left;"><strong>Ingreso</strong></td>
+                    <td class="txt-data" style="width: 25%; text-align: left;"><strong>Egreso:</strong></td>
+                    <td class="txt-data" style="width: 25%; text-align: left;"><strong>Entregado:</strong></td>
+                </tr>
+                <tr>
+                    <td class="txt-data" style="width: 25%; text-align: left;">{{report.Fecha | date:'shortDate'}}</td>
+                    <td class="txt-data" style="width: 25%; text-align: left;">{{report.CantidadIngreso | currency}}</td>
+                    <td class="txt-data" style="width: 25%; text-align: left;">{{report.CantidadEgreso | currency}}</td>
+                    <td class="txt-data" style="width: 25%; text-align: left;">{{(report.CantidadIngreso - report.CantidadEgreso) | currency}}</td>
+                </tr>
+                <tr>
+                    <td class="txt-data" colspan="3" style="width: 33%; text-align: left;"><strong>Comentarios:</strong>{{report.Comentarios}}</td>
+                </tr>
+            </table>     
+            <div class="container-fluid">   
+                <table style="width: 100%; padding: 20px 0 3px 0">
+                    <tr>
+                        <th class="subtitulos">
+                            DETALLE DEL REPORTE
+                        </th>
+                    </tr>
+                </table>
+                <br />
+                <table style="width: 100%;">
+                    <tr>
+                        <th style="width: 50%; text-align: center;">
+                            <strong>
+                                INGRESOS
+                            </strong>
+                        </th>
+                        <th style="width: 50%; text-align: center;">
+                            <strong>
+                                EGRESOS
+                            </strong>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="width: 100%; padding: 20px 0 3px 0">
+                                <tr data-ng-repeat="entry in report.Ingresos">
+                                    <td>
+                                        <h4 class="txt-data">{{entry.Fecha | date:'shortDate'}}</h4>
+                                        <p class="txt-data">
+                                            Se recibío la cantidad de <b>{{entry.Cantidad | currency}}</b> por <b>{{entry.Entregada}}{{entry.EntregadaOtro}}</b>
+                                            <br />
+                                            Remisión: <b>{{entry.Remision}}</b>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>                            
+                        </td>
+                        <td>
+                            <table style="width: 100%; padding: 20px 0 3px 0">
+                                <tr data-ng-repeat="egress in report.Egresos">
+                                    <td>
+										<h4 class="txt-data">{{egress.Fecha | date:'shortDate'}}</h4>
+                                        <p class="txt-data">
+                                            Se entregó la cantidad de <b>{{egress.Cantidad | currency}}</b> a <b>{{egress.Recibida}}{{egress.RecibidaOtro}}</b>
+                                            <br />
+                                            Remisión: <b>{{entry.Remision}}</b>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

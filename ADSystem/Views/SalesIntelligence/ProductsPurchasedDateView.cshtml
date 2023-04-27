@@ -1,0 +1,84 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@using ADSystem.Common;
+@using ADEntities.Queries.TypesGeneric;
+
+@{
+    ViewBag.Title = "Reportes - Productos fecha de compra";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+<style>
+    .table {
+        width: 3500px;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .img-responsive {
+        width: 44px;
+        height: 44px;
+        display: inline;
+        cursor: pointer;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/angucomplete")" />
+<link rel="stylesheet" type="text/css" href="@Url.Css("Content/CSS/bootstrap-datetimepicker")" />
+
+<script>
+    $(document).on("click", ".modal-body", function () {
+        $(".datepickerSales").datetimepicker({
+            format: 'MM-DD-YYYY'
+        });
+    });
+
+</script>
+
+<script type="text/javascript" src="@Url.Js("Class/SalesIntelligence/ProductsPurchasedDate")"></script>
+<script type="text/javascript" src="@Url.Js("moment.min")"></script>
+<script type="text/javascript" src="@Url.Js("bootstrap-datetimepicker.min")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-controller="ProductsPurchasedDateController" style="width:900px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Reporte Fecha compra de productos</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal" style="margin-left:180px; width:500px;">
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchReport" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="LoadSales(0,10)">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+
+        <div class="table-responsive" style="width:110%;height:100%;padding-bottom: 100px;">
+            <div class="row">
+                <div class="col-md-12 text-left">
+                    <img src="@Url.Img("icon_excel.png")" alt="exportar" style="width:25px;height:25px;" data-ng-click="DownloadSales();" />
+                </div>
+            </div>
+            <table class="table table-hover">
+                <tr>
+                    <td>Codigo</td>
+                    <td>Descripcion</td>
+                    <td>Fecha compra</td>
+                    <td>Precio compra</td>
+                    <td>Precio venta</td>
+                    <td>Inventario</td>
+                </tr>
+                <tr data-ng-repeat="v in views">
+                    <td>{{v.Codigo}}</td>                    
+                    <td>{{v.Descripcion}}</td>
+                    <td>{{v.FechaCompra | jsDate | date:'shortDate'}}</td>
+                    <td>{{v.PrecioCompra | currency}}</td>
+                    <td>{{v.PrecioVenta | currency}}</td>                    
+                    <td>{{v.Inventario}}</td>                    
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,72 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Agregar Despacho</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="OfficesController" data-ng-init="getStates()">
+        <code ng-show="!addOfficeCustomerForm.$valid">Revise la información</code><br>
+        <form id="addOfficeCustomerForm" name="addOfficeCustomerForm">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" maxlength="100" class="form-control" id="Name" name="Name" data-ng-model="newOffice.Name" placeholder="Escriba el nombre" uppercase required />
+                <code class="has-error" ng-show="addOfficeCustomerForm.Name.$error.required">Requerido!</code>
+            </div>
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input type="text" maxlength="100" class="form-control" id="Phone" name="Phone" data-ng-model="newOffice.Phone" placeholder="Escriba el número telefonico" uppercase required />
+                <code class="has-error" ng-show="addOfficeCustomerForm.Phone.$error.required">Requerido!</code>
+            </div>
+            <div class="form-group">
+                <label>Correo</label>
+                <input type="text" maxlength="100" class="form-control" id="Email" name="Email" data-ng-model="newOffice.Email" placeholder="Escriba el correo electrónico" uppercase required />
+                <code class="has-error" ng-show="addOfficeCustomerForm.Email.$error.required">Requerido!</code>
+                <code class="has-error" ng-show="addOfficeCustomerForm.Email.$error.email">Email invalido!</code>
+            </div>
+            <div class="form-group">
+                <label>Calle</label>
+                <input type="text" maxlength="100" class="form-control" id="street" data-ng-model="newOffice.Street" placeholder="Escriba el nombre de la calle" uppercase />
+            </div>
+            <div class="form-group">
+                <label>Número exterior</label>
+                <input type="text" maxlength="100" class="form-control" id="extNum" data-ng-model="newOffice.ExtNum" placeholder="Escriba el número exterior" uppercase />
+            </div>
+            <div class="form-group">
+                <label>Número interior</label>
+                <input type="text" maxlength="100" class="form-control" id="intNum" data-ng-model="newOffice.IntNum" placeholder="Escriba el número interior" uppercase />
+            </div>
+            <div class="form-group">
+                <label>Colonia</label>
+                <input type="text" maxlength="100" class="form-control" id="neighborhood" data-ng-model="newOffice.Neighborhood" placeholder="Escriba el nombre de la colonia" uppercase />
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select class="form-control" name="state" id="state" data-ng-model="state" data-ng-options="option.Estado for option in States" data-ng-change="getTowns()"></select>
+            </div>
+            <div class="form-group">
+                <label>Municipio</label>
+                <select class="form-control" name="town" id="town" data-ng-model="newOffice.idTown" data-ng-options="option.Municipio for option in Towns"></select>
+            </div>
+            <div class="form-group">
+                <label>CP</label>
+                <input type="text" maxlength="5" class="form-control" id="CP" data-ng-model="newOffice.CP" placeholder="Escriba el código postal" numbers-only="numbers-only" />
+            </div>
+            <div class="form-group">
+                <label>Comisión(%)</label>
+                <input type="text" maxlength="3" class="form-control" id="percentage" data-ng-model="newOffice.Percentage" placeholder="Escriba el porcentaje de la comisión" numbers-only="numbers-only" />
+            </div>
+            <div class="form-group" data-ng-init="getOriginCustomer()">
+                <label>Origen</label>
+                <select class="form-control" data-ng-model="idOrigin" id="idOrigin" name="idOrigin" data-ng-options="option.idOrigen as option.Origen for option in origins" required>
+                    <option value="">Seleccione</option>
+                </select>
+                <code class="has-error" ng-show="addOfficeCustomerForm.idOrigin.$error.required">Requerido!</code>
+            </div>
+        </form>
+        @Html.Raw(HtmlHelperExtension.Button("Offices", "SaveAddOffice", "SaveAddOffice", "SaveAddOffice", "Guardar", "", "", "SaveAddOfficeDialog()", "btn btn-primary", "Guardando..."))
+    </div>
+</div>
+
+

@@ -1,0 +1,93 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Proveedores";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Providers")"></script>
+
+<br />
+<div class="panel panel-default" data-ng-app="providers">
+    <div class="panel-heading">
+        <h3 class="panel-title">Proveedores</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="ProvidersController">
+        <br />
+        <br />
+        <form class="form-horizontal" data-ng-init="listProviders()">
+            <div class=" form-group">
+                <label class="col-sm-2 control-label">Empresa</label>
+                <div class="col-sm-10">
+                    <input data-ng-model="Empresa" uppercase/>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    <button type="button" id="searchProvider" class="btn btn-primary button-search" data-loading-text='Buscando...' data-ng-click="listProviders()">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Empresa</th>
+                        <th>Contacto</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="animate-repeat" data-ng-repeat="p in Providers">
+                        <td>{{($index + (itemsPerPage * currentPage)) + 1}}</td>
+                        <td>{{p.Empresa}}</td>
+                        <td>{{p.Nombre}}</td>
+                        <td class="pull-left"><a href="javascript:void(0);" data-ng-click="UpdateProvider(p.idProveedor)"><i class="fa fa-pencil color-red"></i></a>&nbsp;&nbsp;<a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("Products", "UpdateStatusProducto") == 1" data-ng-click="" ng-really-message="Esta seguro que desea eliminar el proveedor?" ng-really-click="UpdateStatusProvider(p.idProveedor, p.Estatus)"> <i class="fa fa-trash color-red"></i></a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">
+                            <div class="">
+                                <ul class="pagination">
+                                    <li data-ng-class="prevPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="prevPage()">« Ant</a>
+                                    </li>
+                                    <li data-ng-repeat="n in range()" data-ng-class="{activePage: (n) == currentPage}" data-ng-click="setPage(n)">
+                                        <a href="javascript:void(0);">{{n + 1}}</a>
+                                    </li>
+                                    <li data-ng-class="nextPageDisabled()">
+                                        <a href="javascript:void(0);" data-ng-click="nextPage()">Sig »</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,48 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Sistema";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/System")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Controles</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="SystemController">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+
+                        foreach (var a in ViewData["SystemVar"] as List<KeyValuePair<string, string>>)
+                        {
+                            <tr class="animate-repeat">
+                                <td>@a.Key</td>
+                                <td><input type="text" maxlength="150" class="form-control" id="ComercialName" data-ng-model="@a.Key" data-ng-init="@a.Key ='@a.Value'" /></td>
+                            </tr>
+                        }
+
+                    }
+
+                </tbody>
+            </table>
+            <div class="text-center">
+                @Html.Raw(HtmlHelperExtension.Button("System", "SaveChange", "SaveChange", "SaveChange", "Guardar", "", "", "SaveChange()", "btn btn-primary button-search", "Guardando..."))
+            </div>                 
+        </div>
+    </div>
+</div>
+
+

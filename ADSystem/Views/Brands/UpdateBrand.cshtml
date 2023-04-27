@@ -1,0 +1,35 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.BrandViewModel
+
+@{
+    ViewBag.Title = "Marcas";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Brands")"></script>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Actualizar Marca</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="BrandsController">
+        <div class="form-group">
+            <label>Marca</label>
+            <input type="text" class="form-control" id="name" data-ng-model="newBrand.name" data-ng-init="newBrand.name='@Model.Nombre'" placeholder="Escriba el nombre de la marca" uppercase maxlength="60" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" class="form-control" id="description" data-ng-model="newBrand.description" data-ng-init="newBrand.description='@Model.Descripcion'" placeholder="Escriba la descripción" uppercase maxlength="150" />
+        </div>  
+        @Html.Raw(HtmlHelperExtension.Button("Brands", "SaveUpdateBrand", "SaveUpdateBrand", "", "Guardar", "", "", "SaveUpdateBrand(" + Model.idMarca + ")", "btn btn-primary"))       
+        <br />
+        <ul class="list-group">
+            <li class="list-group-item errorGeneral" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+        </ul>
+    </div>
+</div>
+
+

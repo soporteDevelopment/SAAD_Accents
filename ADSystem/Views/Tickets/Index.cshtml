@@ -1,0 +1,246 @@
+﻿@using ADSystem.Helpers;
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Tickets/Tickets")"></script>
+
+<br />
+<div class="panel panel-default" style="width:100%;">
+    <div class="panel-heading">
+        <h3 class="panel-title">Tickets</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="TicketsController">
+        <form class="form-horizontal" style="margin-left:450px;width:690px;">
+            <div class="form-group" data-ng-init="loadUsers()">
+                <label class="col-sm-2 control-label">Creado por</label>
+                <div class="col-sm-10">
+                    <select style="width:190px" class="form-control" id="user" name="user" data-ng-model="createdBy" data-ng-options="option.idUsuario as option.NombreCompleto for option in users" data-ng-change="getPendingStatusTickets(); getActiveStatusTickets(); getClosedStatusTickets();" required>
+                        <option value="">TODOS</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" data-ng-init="loadAssigned()">
+                <label class="col-sm-2 control-label">Asignado a</label>
+                <div class="col-sm-10">
+                    <select style="width:190px" class="form-control" id="assigned" name="assigned" data-ng-model="assignedBy" data-ng-options="option.idUsuario as option.NombreCompleto for option in assignedUsers" data-ng-change="getPendingStatusTickets(); getActiveStatusTickets(); getClosedStatusTickets();" required>
+                        <option value="">TODOS</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <div data-ng-init="getPendingStatusTickets()">
+            <button type="button" class="btn btn-info" data-ng-click="openModalTicket()">Nuevo</button>
+        </div>
+
+        <div class="container" style="width:100%;">
+            <div class="row">
+                <div class="col-md-4 col-md-4 bgTicketColorWhite">
+                    <h4>Pendiente</h4>
+                    <div class="thumbnail" data-ng-repeat="p in pendingStatusTickets">
+                        <div class="caption bgTicketColorYellow ">
+                            <label class="col" for="code">#</label>
+                            <span class="none">{{p.Code}}</span>
+                            <br>
+                            <label class="col" for="title">Titulo</label>
+                            <span class="col">{{p.Title}}</span>
+                            <br>
+                            <label for="user">Usuario:</label>
+                            <span class="none">{{p.CreatorName}}</span>
+                            <br />
+                            <label for="user">Descripcion:</label>
+                            <span class="none">{{p.Description}}</span>
+                            <br />
+                            <label for="user">Fecha:</label>
+                            <span class="none">{{p.Created | jsDate | date:'shortDate'}}</span>
+                            <a><i class=" fa fa-eye color-red fa-xs" style="left:260px;" data-ng-click="getTicket(p.idTicket)"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4" data-ng-init="getActiveStatusTickets()">
+                    <h4>Activo</h4>
+                    <div class="thumbnail none" data-ng-repeat="p in activeStatusTickets">
+                        <div class="caption bgTicketColorGreen">
+                            <label class="none" for="code">#</label>
+                            <span class="none">{{p.Code}}</span>
+                            <br>
+                            <label class="col" for="title">Titulo</label>
+                            <span class="none">{{p.Title}}</span>
+                            <br>
+                            <label for="user">Usuario:</label>
+                            <span class="none">{{p.CreatorName}}</span>
+                            <br />
+                            <label for="user">Descripcion:</label>
+                            <span class="none">{{p.Description}}</span>
+                            <br />
+                            <label for="user">Fecha:</label>
+                            <span class="none">{{p.Created | jsDate | date:'shortDate'}}</span>
+                            <a><i class="fa fa-eye color-red" style="left: 260px;" data-ng-click="getTicket(p.idTicket)"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4" data-ng-init="getClosedStatusTickets()">
+                    <h4>Cerrado</h4>
+                    <div class="thumbnail none " data-ng-repeat="p in closedStatusTickets">
+                        <div class="caption bgTicketColorGray">
+                            <label class="none" for="code">#</label>
+                            <span class="none">{{p.Code}}</span>
+                            <br>
+                            <label class="col" for="title">Titulo</label>
+                            <span class="none">{{p.Title}}</span>
+                            <br>
+                            <label for="user">Usuario:</label>
+                            <span class="none">{{p.CreatorName}}</span>
+                            <br />
+                            <label for="user">Descripcion:</label>
+                            <span class="none">{{p.Description}}</span>
+                            <br />
+                            <label for="user">Fecha:</label>
+                            <span class="none">{{p.Created | jsDate | date:'shortDate'}}</span>
+                            <a><i class="fa fa-eye color-red" style=" left: 240px;" data-ng-click="getTicket(p.idTicket)"></i></a>
+                            <a id="deactive" name=" deactive" data-ng-click="deactiveTicket(p.idTicket)"><i class="fa fa-trash color-red" style=" left: 240px;"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="ticket" rode="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Tickets</h4>
+                    </div>
+                    <div class="modal-body" data-ng-init="loadUsers()">
+                        <code ng-show="!frmTicket.$valid && frmTicket.$dirty">Revise la información</code>
+                        <form id="frmTicket" name="frmTicket" autocomplete="off">
+                            <div class="form-group" data-ng-init="idUser = @ViewBag.idUser">
+                                <label for="idUser">Usuario:</label>
+                                <select class="form-control" id="idUser" name="idUser" data-ng-model="idUser" data-ng-options="option.idUsuario as option.NombreCompleto for option in users" required>
+                                    <option value="">Seleccione</option>
+                                </select>
+                                <code class="has-error" ng-show="frmTicket.user.$error.required && frmTicket.$invalid">Requerido!</code>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Título</label>
+                                <input type="text" class="form-control" id="title" name="title" data-ng-model="title" placeholder="Título" uppercase maxlength="150" required>
+                                <code class="has-error" ng-show="frmTicket.title.$error.required && frmTicket.$invalid">Requerido!</code>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4" data-ng-init="getTypeTicket()">
+                                    <label for="idTypeTicket">Tipo:</label>
+                                    <select style="width:182px" class="form-control" id="idTypeTicket" name="idTypeTicket" data-ng-model="idTypeTicket" data-ng-options="option.idTypeTicket as option.Name for option in types" required>
+                                        <option>Seleccione</option>
+                                    </select>
+                                    <code class="has-error" ng-show="frmTicket.idTypeTicket.$error.required && frmTicket.$invalid">Requerido!</code>
+                                </div>
+                                <div class="form-group col-md-4 col-md-offset-4" data-ng-init="getPriorityTicket()">
+                                    <label for="idPriorityTicket">Prioridad:</label>
+                                    <select style="width:100px" class="form-control" id="idPriorityTicket" name="idPriorityTicket" data-ng-model="idPriorityTicket" data-ng-options="option.idPriorityTicket as option.Name for option in priorities" required>
+                                        <option>Seleccione</option>
+                                    </select>
+                                    <code class="has-error" ng-show="frmTicket.idPriorityTicket.$error.required && frmTicket.$invalid">Requerido!</code>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Descripción:</label>
+                                <textarea class="form-control" rows="10" cols="70" id="description" name="description" data-ng-model="description" placeholder="Descripción" uppercase maxlength="800" required></textarea>
+                                <code class="has-error" ng-show="frmTicket.description.$error.required && frmTicket.$invalid">Requerido!</code>
+                            </div>
+                            <div class="form-group">
+                                <label for="myFile">Imagen</label>
+                                <input type="file" id="myFile" name="myFile" data-ng-model="myFile" placeholder="Imagen">
+                            </div>
+                            <div class="form-group" data-ng-init="loadAssigned()">
+                                <div class="form-group">
+                                    <label for="user">Asignado a:</label>
+                                    <select class="form-control" id="assigned" name="assigned" data-ng-model="assigned" data-ng-options="option.idUsuario as option.NombreCompleto for option in assignedUsers" required>
+                                        <option value="">Seleccione</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnSave" ng-show="frmTicket.$valid" class="btn btn-primary button-search" data-loading-text='Guardando...' data-ng-click="SaveAdd()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="ticketDetail" rode="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Ticket  #{{ticket.Code}}</h4>
+                    </div>
+                    <div class="modal-body" data-ng-init="getStatusTicket()">
+                        <form id="frmTicketEdit" name="frmTicketEdit" autocomplete="off">
+                            <div class="form-group">
+                                <label for="title">Título:</label><span>{{ticket.Title}}</span>
+                            </div>
+                            <label class="fecha" for="user">Fecha:</label><span>{{ticket.Created | jsDate | date:'shortDate'}}</span>
+                            <div class="form-group">
+                                <label for="user">Usuario:</label><span>{{ticket.CreatorName}}</span>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-4" data-ng-init="getTypeTicket()">
+                                    <label for="idTypeTicket">Tipo:</label>
+                                    <select disabled style="width:182px" class="form-control" id="idTypeTicket" name="idTypeTicket" data-ng-model="ticket.idTypeTicket" data-ng-options="option.idTypeTicket as option.Name for option in types" required>
+                                        <option>Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4" data-ng-init="getPriorityTicket()">
+                                    <label for="idPriorityTicket">Prioridad:</label>
+                                    <select disabled style="width:100px" class="form-control" id="idPriorityTicket" name="idPriorityTicket" data-ng-model="ticket.idPriorityTicket" data-ng-options="option.idPriorityTicket as option.Name for option in priorities" required>
+                                        <option>Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4" data-ng-init="getPriorityTicket()">
+                                    <label for="Authorized">Autorizado</label>
+                                    <input type="checkbox" id="Authorized" name="Authorized" value="Authorized" data-ng-model="ticket.Authorized" disabled="disabled" checked="checked">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Descripción:</label>
+                                <br />
+                                <textarea readonly rows="10" cols="70">{{ticket.Description}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="idStatusTicket">Estatus:</label>
+                                <select style="width:115px" class="form-control" id="idStatusTicket" name="idStatusTicket" data-ng-model="ticket.idStatusTicket" data-ng-options="option.idStatusTicket as option.Name for option in status" required>
+                                    <option>Seleccione</option>
+                                </select>
+                            </div>
+                            <a data-ng-show="ticket.Image.length > 0" alt="Imagen" data-ng-href="../../../Content/Tickets/{{ticket.Image}}" download>
+                                Descargar imagen
+                            </a>
+                            <div class="row">
+                                <div class="form-group col-md-4" data-ng-init="loadAssigned()">
+                                    <label for="assigned">Asignado a:</label>
+                                    <select disabled style="width:180px" class="form-control" id="assigned" name="assigned" data-ng-model="ticket.idAssignedUser" data-ng-options="option.idUsuario as option.NombreCompleto for option in assignedUsers" required>
+                                        <option value="">Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="estimated">Estimado:</label>
+                                    <input type="text" id="estimated" name="estimated" data-ng-model="ticket.Estimated" value="0" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="filled">Completado:</label>
+                                    <input type="text" id="filled" name="filled" data-ng-model="ticket.Filled" value="0" required>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnvalidateStatus" ng-show="frmTicketEdit.$valid" class="btn btn-primary button-search" data-ng-click="validateStatus();">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

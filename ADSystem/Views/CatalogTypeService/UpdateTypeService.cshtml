@@ -1,0 +1,41 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+@model ADEntities.ViewModels.TypeServiceViewModel
+
+@{
+    ViewBag.Title = "Actualizar Tipo de Oficio";
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+}
+<script type="text/javascript" src="@Url.Js("Class/CatalogTypeService/Update")"></script>
+
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Actualizar Tipo de Oficio</h3>
+    </div>
+    <div class="panel-body" data-ng-controller="CatalogTypeServiceController">
+        <div class="form-horizontal">
+            <input type="hidden" class="form-control" id="id" data-ng-model="id" data-ng-init="id='@Model.idTipoServicio'">
+
+            <div class="form-group">
+                <label>Tipo de Oficio</label>
+                <input type="text" maxlength="100" class="form-control" id="descripcion" data-ng-model="description" data-ng-init="description='@Model.Descripcion'" />
+            </div>
+            <br />
+            <div class="form-group">
+                <label>Factor  Utilidad</label>
+                <input  class="form-control" id="factorUtilidad" data-ng-model="factorUtilidad" data-ng-init="factorUtilidad='@Model.FactorUtilidad'" />
+            </div>
+
+            <div class="form-group text-center">
+                <div class="col-sm-12">
+                    @Html.Raw(HtmlHelperExtension.Button("CatalogTypeService", "SaveUpdateTypeService", "SaveUpdateTypeService", "SaveUpdateTypeService", "Guardar", "", "", "SaveUpdate()", "btn btn-primary", "Guardando..."))
+
+                    &nbsp;&nbsp;&nbsp;
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

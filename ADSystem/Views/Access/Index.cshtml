@@ -1,0 +1,52 @@
+﻿@using System.Web.MVC;
+@using System.Web.Helpers;
+@using ADSystem.Helpers;
+
+@{
+    ViewBag.Title = "Acceso";
+    Layout = "~/Views/Shared/_LayoutAccess.cshtml";
+}
+
+<script type="text/javascript" src="@Url.Js("Class/Modules")"></script>
+
+<br />
+<section class="footer-container-input">
+    <code ng-show="!frmLogin.$valid && frmLogin.$dirty">Revise la información</code><br>
+    <form id="frmLogin" name="frmLogin" autocomplete="off">
+        <div class="form-group has-success has-feedback">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <img src="@Url.Img("icon_user.png")">
+                </span>
+                <input type="email" class="form-control" id="user" name="user" data-ng-model="newLogin.User" placeholder="Usuario" maxlength="200" required />                
+            </div>
+            <code class="has-error" ng-show="frmLogin.user.$error.required && frmLogin.$dirty">Requerido!</code>
+            <code class="has-error" ng-show="frmLogin.user.$error.email && frmLogin.$dirty">Email invalido!</code>
+        </div>
+        <div class="form-group has-success has-feedback">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <img src="@Url.Img("icon_password.png")">
+                </span>
+                <input type="password" class="form-control" id="password" name="password" data-ng-model="newLogin.Password" placeholder="Contraseña" maxlength="50" required />                
+            </div>
+            <code class="has-error" ng-show="frmLogin.password.$error.required && frmLogin.$dirty">Requerido!</code>
+        </div>
+    </form>
+    <button type="button" id="btnAccess" class="btn btn-default-login" data-ng-click="save()" data-loading-text="Cargando...">
+        ENTRAR
+    </button>
+
+    <a href="javascript:void(0);" data-ng-click="openModalRecoveredPassword()">
+        <p class="footer-container-input-txt">¿Olvidaste tu contraseña?</p>
+    </a>
+
+    <br />
+    <ul>
+        <li class="error control-label" data-ng-repeat="err in valResult.errors">{{ err.propertyName }}: {{ err.errorMessage }}</li>
+    </ul>
+
+</section>
+
+
+
