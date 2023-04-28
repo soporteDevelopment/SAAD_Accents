@@ -1,4 +1,4 @@
-﻿angular.module("General").controller('ProviderPreQuotationController', function (models, $scope, $http, GUID, notify, $rootScope, $timeout) {
+angular.module("General").controller('ProviderPreQuotationController', function (models, $scope, $http, GUID, notify, $rootScope, $timeout) {
 
     $scope.isVisibleButtonFabrics = false;
     $scope.isVisibleButtonMeasuress = false;
@@ -145,65 +145,41 @@
                     notify("Ocurrío un error.", $rootScope.error);
                 });
         } else if (typeFile === $scope.typePdfGenerateOrder) {
+            $("#btnGenerateOrder").button("loading");
+
             $http({
                 method: 'POST',
                 url: '../../../PreQuotations/GenerateOrder',
                 params: { idPreQuotationDetail: $scope.preQuotationDetailId, idPreQuotation: $scope.preQuotationId },
+                responseType: 'arraybuffer'
             }).
                 success(function (data, status, headers, config) {
-                    if (data.success == 1) {
-                        notify(data.oData.Message, $rootScope.success, { timeOut: 5000 });
 
-                        setTimeout(function () {
-                            window.location = "../../../PreQuotations/ListPreQuotations";
-                        }, 2000);
+                    var today = new Date();
+                    let time = today.getHours() + "_" + today.getMinutes();
 
-                    } else if (data.failure == 1) {
-                        notify(data.oData.Error, $rootScope.error);
-                    } else if (data.noLogin == 1) {
-                        window.location = "../../../Access/Close";
-                    }
+                    const blobFile = new Blob([data], { type: 'application/zip' });
+                    const url = URL.createObjectURL(blobFile);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "Ordenes_proveedores_" + time + ".zip";
+                    //a.download = `Precotización-Folio ${preQuotationNumber}.pdf`;;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    notify("Correcto", $rootScope.success, { timeOut: 5000 });
+
+                    $("#btnGenerateOrder").button("reset");
+
+                    setTimeout(function () {
+                        window.location = "../../../PreQuotations/ListPreQuotations";
+                    }, 2000);
                 }).
                 error(function (data, status, headers, config) {
+                    $("#btnGenerateOrder").button("reset");
                     notify("Ocurrío un error.", $rootScope.error);
                 });
-            //$http({
-            //    method: 'POST',
-            //    url: '../../../PreQuotations/GenerateOrder',
-            //    params: { idPreQuotationDetail: $scope.preQuotationDetailId, idPreQuotation: $scope.preQuotationId },
-            //    responseType: 'arraybuffer'
-            //}).
-            //    success(function (data, status, headers, config) {
-
-            //        //const blobFile = new Blob([data], { type: 'application/pdf' });
-            //        //const url = URL.createObjectURL(blobFile);
-            //        //const a = document.createElement('a');
-            //        //a.href = url;
-            //        //a.download = `Orden.pdf`;
-            //        ////a.download = `Precotización-Folio ${preQuotationNumber}.pdf`;;
-            //        //document.body.appendChild(a);
-            //        //a.click();
-            //        //document.body.removeChild(a);
-            //        //URL.revokeObjectURL(url);
-
-            //        //var a = document.createElement("a");
-            //        //a.href = response.file;
-            //        //a.download = "orderPDF.zip";
-            //        //document.body.appendChild(a);
-            //        //a.click();
-            //        //a.remove();
-
-            //        //notify("Se descargo correctamente", $rootScope.success, { timeOut: 5000 });
-            //        notify(data.oData.Message, $rootScope.success, { timeOut: 5000 });
-
-            //        setTimeout(function () {
-            //            window.location = "../../../PreQuotations/ListPreQuotations";
-            //        }, 2000);
-
-            //    }).
-            //    error(function (data, status, headers, config) {
-            //        notify("Ocurrío un error.", $rootScope.error);
-            //    });
         }
     }
 

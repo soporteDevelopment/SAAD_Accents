@@ -567,7 +567,6 @@ namespace ADEntities.Queries
                     var pOrdenada = context.tEstatusPrecotizacions.Where(o => o.Nombre == "ORDENADA").FirstOrDefault().idEstatus;
                     var sOrdenado = context.tEstatusServicios.Where(o => o.Nombre == "ORDENADO").FirstOrDefault().idEstatusServicio;
                     int sPendienteOrdenar = context.tEstatusServicios.Where(o => o.Nombre == "PENDIENTE DE ORDENAR").FirstOrDefault().idEstatusServicio;
-                    int OriginPreQuotation = 2; //2: cancela un evento obteniendo el id de la tabla de precotizacion
 
                     var Detail = context.tPreCotizacionDetalles.Find(idPreQuotationDetail);
                     var PreQuotation = context.tPreCotizacions.Find(Detail.idPreCotizacion);
@@ -611,7 +610,7 @@ namespace ADEntities.Queries
 
 
                     //retornar lista de proveedores asignados
-                    var Providers = context.tPreCotDetalleProveedores.Where(o => o.idPreCotizacionDetalle == idPreQuotationDetail && o.Asignado == 1).ToList();
+                    var Providers = context.tPreCotDetalleProveedores.Where(o => o.idPreCotizacionDetalle == idPreQuotationDetail && o.Asignado == 1).ToList().OrderByDescending(o => o.idPreCotDetalleProveedores);
                     List<PreCotDetalleProveedoresViewModel> DetailProviders = new List<PreCotDetalleProveedoresViewModel>();
 
                     foreach(var item in Providers)
@@ -651,13 +650,20 @@ namespace ADEntities.Queries
 
                     tPreCotizacionDetalle oDetallePreCotizacion = new tPreCotizacionDetalle();
 
+                    if (!String.IsNullOrEmpty(oDetallePreCotizacion.Imagen))
+                    {
+                        char delimiter = '/';
+                        var imagen = detail.Imagen.Split(delimiter);
+                        oDetallePreCotizacion.Imagen = imagen[3];
+                    }
+
                     oDetallePreCotizacion.idEstatusServicio = detail.idEstatus;
                     oDetallePreCotizacion.idPreCotizacion = detail.idPreCotizacion;
                     oDetallePreCotizacion.idServicio = detail.idServicio;
                     oDetallePreCotizacion.Descripcion = detail.Descripcion;
                     oDetallePreCotizacion.Comentarios = detail.Comentarios;
                     oDetallePreCotizacion.Cantidad = detail.Cantidad;
-                    oDetallePreCotizacion.Imagen = detail.Imagen;
+                    //oDetallePreCotizacion.Imagen = detail.Imagen;
                     oDetallePreCotizacion.PDF = detail.PDF;
 
                     context.tPreCotizacionDetalles.Add(oDetallePreCotizacion);
@@ -808,6 +814,55 @@ namespace ADEntities.Queries
                     }).FirstOrDefault();
 
                     return preQuotation;
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    var newException = new ADEntities.Common.FormattedDbEntityValidationException(ex);
+                    throw newException;
+                }
+        }
+
+        public PreQuotationsDetailsViewModel GetPreQuotationDetailById(int idDetail)
+        {
+            using (var context = new admDB_SAADDBEntities())
+                try
+                {
+                    var oDeatil = context.tPreCotizacionDetalles.Where(p => p.idPreCotizacionDetalle == idDetail).Select(p => new PreQuotationsDetailsViewModel()
+                    {
+                        idPreCotizacionDetalle = p.idPreCotizacionDetalle,
+                        idPreCotizacion = p.idPreCotizacionDetalle,
+                        idServicio = p.idPreCotizacionDetalle,
+                        idEstatus = p.idPreCotizacionDetalle,
+                        NombreEstatus = "",
+                        DescripcionEstatus = "",
+                        NombreTipoServicio = context.tTipoServicio.Where(o => o.idTipoServicio == p.idServicio).FirstOrDefault().Descripcion,
+                        Descripcion = p.Descripcion,
+                        Comentarios = p.Comentarios,
+                        Cantidad = p.Cantidad,
+                        Imagen = p.Imagen,
+                        measures = p.tPreCotDetalleMedidas.Where(z => z.idPreCotizacionDetalle == p.idPreCotizacionDetalle).Select(z => new PreCotDetalleMedidasViewModel()
+                        {
+                            idPreCotDetalleMedidas = z.idPreCotDetalleMedidas,
+                            idPreCotizacionDetalle = z.idPreCotizacionDetalle,
+                            idServicio = z.idServicio,
+                            idTipoMedida = z.idTipoMedida,
+                            NombreTipoMedida = context.tTipoMedida.Where(w => w.idTipoMedida == z.idTipoMedida).FirstOrDefault().NombreMedida,
+                            Valor = z.Valor
+                        }).ToList(),
+                        fabrics = p.tPreCotDetalleTipoTelas.Where(a => a.idPreCotizacionDetalle == p.idPreCotizacionDetalle).Select(a => new PreCotDetalleTipoTelaViewModel()
+                        {
+                            idPreCotDetalleTipoTela = a.idPreCotDetalleTipoTela,
+                            idPreCotizacionDetalle = a.idPreCotizacionDetalle,
+                            idServicio = a.idServicio,
+                            idTextiles = a.idTextiles,
+                            NombreTextiles = context.tTextiles.Where(t => t.idTextiles == a.idTextiles).FirstOrDefault().NombreTela,
+                            CostoPorMts = a.CostoPorMts,
+                            ValorMts = a.ValorMts,
+                            CostoTotal = a.CostoTotal
+                        }).ToList()
+                    }).FirstOrDefault();
+
+                    return oDeatil;
                 }
                 catch (DbEntityValidationException ex)
                 {
@@ -1307,6 +1362,35 @@ namespace ADEntities.Queries
                     //        break;
                     //}
 
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    var newException = new ADEntities.Common.FormattedDbEntityValidationException(ex);
+                    throw newException;
+                }
+        }
+
+        public decimal? GetUnitCost(int idPreCotDetalleProveedores)
+        {
+            using (var context = new admDB_SAADDBEntities())
+                try
+                {
+                    var CostoFabricacion = context.tPreCotDetalleProveedores.Find(idPreCotDetalleProveedores).CostoFabricacion;
+                    var FabricsProvider = context.tPreCotProveedoresTelas.Where(f => f.idPreCotDetalleProveedores == idPreCotDetalleProveedores).ToList();
+
+                    decimal? total = 0;
+                    if(FabricsProvider != null && FabricsProvider.Count > 0)
+                    {
+                        foreach(var item in FabricsProvider)
+                        {
+                            var CostoXMts = context.tTextiles.Find(item.idTextiles).Precio;
+                            if(CostoXMts != null && CostoXMts > 0)
+                            {
+                                total += item.ValorMts * CostoXMts;
+                            }
+                        }
+                    }
+                    return total + CostoFabricacion;
                 }
                 catch (DbEntityValidationException ex)
                 {

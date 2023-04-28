@@ -312,36 +312,35 @@ namespace ADSystem.Controllers
             {
                 var idUser = ((UserViewModel)Session["_User"]).idUsuario;
 
-                //// Crear un MemoryStream que contendrá el archivo ZIP
-                //var archivoZipStream = new MemoryStream();
+                // Crear un MemoryStream que contendrá el archivo ZIP
+                var archivoZipStream = new MemoryStream();
 
                 //cambiar estatus
                 var proveedores = tPreQuotations.OrderedPreQuotation(idPreQuotationDetail, idUser);
                 //obtener los proveedores asignados
 
-                //// Crear un objeto ZipArchive
-                //using (var archivoZip = new ZipArchive(archivoZipStream, ZipArchiveMode.Create, true))
-                //{
-                //    foreach(var item in proveedores)
-                //    {
-                //        // Generar el archivo PDF
+                // Crear un objeto ZipArchive
+                using (var archivoZip = new ZipArchive(archivoZipStream, ZipArchiveMode.Create, true))
+                {
+                    var i = 1;
+                    foreach (var item in proveedores)
+                    {
+                        // Agregar el archivo PDF al archivo ZIP
+                        var entry = archivoZip.CreateEntry(item.Proveedor + ".pdf");
+                        using (var entryStream = entry.Open())
+                        {
 
-                //        // Agregar el archivo PDF al archivo ZIP
-                //        var entry = archivoZip.CreateEntry(item.Proveedor + ".pdf");
-                //        using (var entryStream = entry.Open())
-                //        {
-                //            _PDFGenerator.GeneratePreQuotation(idPreQuotation).CopyTo(entryStream);
-                //        }
-                //    }
-                //}
+                            var archivo = _PDFGenerator.GenerateOrder(idPreQuotation, item.Proveedor, idPreQuotationDetail, i, item.idPreCotDetalleProveedores).ToArray();
+                            entryStream.Write(archivo, 0, archivo.Length);
+                        }
+                        i++;
+                    }
+                }
 
-                //// Devolver el archivo ZIP como un archivo descargable
-                //archivoZipStream.Position = 0;
-                //return File(archivoZipStream, "application/zip", "archivosPDF.zip");
+                // Devolver el archivo ZIP como un archivo descargable
+                archivoZipStream.Position = 0;
+                return File(archivoZipStream, "application/zip", "archivosPDF.zip");
 
-                jmResult.success = 1;
-                jmResult.failure = 0;
-                jmResult.oData = new { Message = String.Format(Message.msgAdd = "Se genero la orden con exito") };
             }
             catch (Exception ex)
             {

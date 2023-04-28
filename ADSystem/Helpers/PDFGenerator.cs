@@ -2279,19 +2279,19 @@ namespace ADSystem.Helpers
                 {
                     string image_URL = System.Web.HttpContext.Current.Server.MapPath("~") + "content\\images\\not_found.png";
 
-                    string fullPath = item.Imagen;
-                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullPath);
-                    string fileExtension = Path.GetExtension(fullPath);
-                    string fileNameWithExtension = fileNameWithoutExtension + fileExtension;
+                    //string fullPath = item.Imagen;
+                    //string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullPath);
+                    //string fileExtension = Path.GetExtension(fullPath);
+                    //string fileNameWithExtension = fileNameWithoutExtension + fileExtension;
 
 
                     if (!String.IsNullOrEmpty(item.Imagen))
                     {
                         if (item.Imagen.ToUpper() != ISNULL)
                         {
-                            if (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + fileNameWithExtension))
+                            if (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + item.Imagen))
                             {
-                                image_URL = System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + fileNameWithExtension;
+                                image_URL = System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + item.Imagen;
                             }
                         }
                     }
@@ -2401,6 +2401,297 @@ namespace ADSystem.Helpers
                 });
 
                 tableTerms.AddCell(new PdfPCell(new Phrase("En pedidos de diseños especiales proporcionados por el cliente no nos hacemos responsables por fallas de cálculo o de ergonomía, los diseños que los clientes nos proveen son totalmente bajo su riesgo y responsabilidad y deberán ser pagados al 100% por el cliente antes de la entrega, cualquier cambio o modificación al diseño ya aceptado se cobrará como extra. Las garantías de fabricación varían según el proveedor y serán estipuladas en una carta cuando el cliente lo solicite a la hora de la compra.", hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_JUSTIFIED,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Border = Rectangle.NO_BORDER
+                });
+
+                pdfDoc.Add(tableTerms);
+
+                pdfDoc.Add(new Phrase(Environment.NewLine));
+
+                PdfPTable tableFooter = new PdfPTable(1)
+                {
+                    WidthPercentage = ValueHundred
+                };
+
+                tableFooter.AddCell(new PdfPCell(new Phrase("AMAZONAS #305 OTE. COLONIA DEL VALLE, SAN PEDRO GARZA GARCÍA, NL.66220 MÉXICO. T: (81) 8356-9558 / (81) 8335-0321", hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Border = Rectangle.NO_BORDER
+                });
+
+                tableFooter.AddCell(new PdfPCell(new Phrase("RIO GUADALQUIVIR #13. ESQ. CALZADA SAN PEDRO COLONIA DEL VALLE, SAN PEDRO GARZA GARCÍA, NL. 66220 MÉXICO. T: (81) 8335-5591", hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Border = Rectangle.NO_BORDER
+                });
+
+                tableFooter.AddCell(new PdfPCell(new Phrase("AMAZONAS #320 PLAZA AMAZONAS COLONIA DEL VALLE, SAN PEDRO GARZA GARCÍA, NL. 66220 MÉXICO. T: (81) 8335-0042", hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Border = Rectangle.NO_BORDER
+                });
+
+                tableFooter.AddCell(new PdfPCell(new Phrase("WWW.ACCENTSDECORATION.COM", hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Border = Rectangle.NO_BORDER
+                });
+
+                pdfDoc.Add(tableFooter);
+
+                pdfDoc.Close();
+                writer.Flush();
+
+                return memoryStream;
+            }
+        }
+
+        public MemoryStream GenerateOrder(int id, string provider, int idDetail, int Consecutivo, int idPreCotDetalleProveedores)
+        {
+            PreQuotations _preQuotation = new PreQuotations();
+            var quotation = _preQuotation.GetPreQuotationsId(id);
+            var item = _preQuotation.GetPreQuotationDetailById(idDetail);
+            var unitCost = Math.Round((double)_preQuotation.GetUnitCost(idPreCotDetalleProveedores), 2);
+
+            var oc = quotation.Numero.Replace("PCOT", "-"+ Consecutivo);
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                var hp = new HelperTextSharp();
+
+                Document pdfDoc = new Document(PageSize.LETTER, 50f, 50f, 10f, 0f);
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+
+                pdfDoc.Open();
+
+                string imageURL = System.Web.HttpContext.Current.Server.MapPath("~") + "content\\images\\logo_des.png";
+
+                iTextSharp.text.Image logo_accents = iTextSharp.text.Image.GetInstance(imageURL);
+                logo_accents.ScaleToFit(100f, 50f);
+
+                PdfPTable tableLogo = new PdfPTable(3) { WidthPercentage = ValueHundred, SpacingAfter = 20 };
+
+                //LOGO START
+                tableLogo.AddCell(new PdfPCell(new Phrase("", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                    Border = Rectangle.NO_BORDER,
+                    Colspan = 1
+                });
+
+                tableLogo.AddCell(new PdfPCell(logo_accents)
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    Border = Rectangle.NO_BORDER,
+                    Colspan = 1
+                });
+
+                tableLogo.AddCell(new PdfPCell(new Phrase("Precotización:" + quotation.Numero, hp.fontRedCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                    Border = Rectangle.NO_BORDER,
+                    Colspan = 1
+                });
+
+                pdfDoc.Add(tableLogo);
+
+                PdfPTable tableHeader = new PdfPTable(3) { WidthPercentage = ValueHundred };
+
+                //SELLER
+                tableHeader.AddCell(new PdfPCell(new Phrase("Facturar a: ACCENTS DECORATION, S DE RL DE CV RIO AMAZONAS 305 OTE, COL DEL VALLE SAN PEDRO GARZA GARCÍA", hp.fontNormalHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_LEFT,
+                    Border = Rectangle.NO_BORDER,
+                    Colspan = 1
+                });
+
+                tableHeader.AddCell(new PdfPCell(new Phrase("Datos del proveedor:" + provider, hp.fontNormalHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    Border = Rectangle.NO_BORDER,
+                    Colspan = 1
+                });
+
+                tableHeader.AddCell(new PdfPCell(new Phrase("Fecha:" + quotation.Fecha.Value.ToString("dd/MM/yyyy") + "\n \n #OC " + oc, hp.fontNormalHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                    Border = Rectangle.NO_BORDER,
+                    Colspan = 1
+                });
+
+                pdfDoc.Add(tableHeader);
+
+                float[] columnDetail = { 25, 8, 15, 8, 22, 22 };
+                PdfPTable tableSaleDetail = new PdfPTable(columnDetail)
+                {
+                    WidthPercentage = ValueHundred
+                };
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase("DETALLE DE LA PRECOTIZACIÓN", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Colspan = 7
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase("Imagen", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase("ID", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase("Servicio", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase("Cantidad", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase("Valor Unitario", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase("Total", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+
+                string image_URL = System.Web.HttpContext.Current.Server.MapPath("~") + "content\\images\\not_found.png";
+
+                //string fullPath = item.Imagen;
+                //string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fullPath);
+                //string fileExtension = Path.GetExtension(fullPath);
+                //string fileNameWithExtension = fileNameWithoutExtension + fileExtension;
+
+
+                if (!String.IsNullOrEmpty(item.Imagen))
+                {
+                    if (item.Imagen.ToUpper() != ISNULL)
+                    {
+                        if (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + item.Imagen))
+                        {
+                            image_URL = System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + item.Imagen;
+                        }
+                    }
+                }
+
+                iTextSharp.text.Image imagen_item = iTextSharp.text.Image.GetInstance(image_URL);
+                imagen_item.ScaleToFit(70f, 70f);
+                imagen_item.SpacingBefore = 2f;
+                imagen_item.SpacingAfter = 2f;
+                imagen_item.Alignment = Element.ALIGN_CENTER;
+
+                tableSaleDetail.AddCell(new PdfPCell(imagen_item)
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_CENTER,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase((item.idServicio).ToString(), hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase(item.Descripcion, hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_LEFT,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase((item.Cantidad ?? 0).ToString(), hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase(unitCost.ToString("C"), hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                var total = Math.Round((double)(unitCost * item.Cantidad), 2).ToString("C");
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase(total, hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White)
+                });
+
+                if (!String.IsNullOrEmpty(item.Comentarios))
+                {
+                    tableSaleDetail.AddCell(new PdfPCell(new Phrase(new Phrase("COMENTARIOS E INSTRUCCIONES ESPECIALES:" + item.Comentarios, hp.fontCell)))
+                    {
+                        HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                        BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                        Colspan = 7
+                    });
+                }
+                
+
+                pdfDoc.Add(tableSaleDetail);
+
+                PdfPTable tableTotal = new PdfPTable(6)
+                {
+                    WidthPercentage = ValueHundred
+                };
+
+                tableTotal.AddCell(new PdfPCell(new Phrase("Cantidad de Servicios", hp.fontHeader))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_RIGHT,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Border = Rectangle.NO_BORDER,
+                    Colspan = 2
+                });
+
+                tableTotal.AddCell(new PdfPCell(new Phrase("1", hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_LEFT,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Border = Rectangle.NO_BORDER,
+                    Colspan = 1
+                });
+
+                pdfDoc.Add(tableTotal);
+
+                pdfDoc.Add(new Phrase(Environment.NewLine));
+
+                PdfPTable tableTerms = new PdfPTable(1)
+                {
+                    WidthPercentage = ValueHundred
+                };
+
+                tableTerms.AddCell(new PdfPCell(new Phrase("Si usted tiene alguna pregunta sobre esta orden de compra, por favor, póngase en contacto con:", hp.fontCell))
+                {
+                    HorizontalAlignment = iTextSharp.text.Element.ALIGN_LEFT,
+                    BackgroundColor = new BaseColor(System.Drawing.Color.White),
+                    Border = Rectangle.NO_BORDER
+                });
+
+                tableTerms.AddCell(new PdfPCell(new Phrase("Arq. Sergio Martínez Cel. 813395 6748 - sergio@accentsdecoration.com,\n Mayra Chávez Cel. 8180106713 - mayra@accentsdecoration.com,\n Gabriela González Cel. 81 1782 6769 gaby@accentsdecoration.com", hp.fontCell))
                 {
                     HorizontalAlignment = iTextSharp.text.Element.ALIGN_JUSTIFIED,
                     BackgroundColor = new BaseColor(System.Drawing.Color.White),
