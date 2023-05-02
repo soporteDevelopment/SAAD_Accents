@@ -2289,9 +2289,9 @@ namespace ADSystem.Helpers
                     {
                         if (item.Imagen.ToUpper() != ISNULL)
                         {
-                            if (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + item.Imagen))
+                            if (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("~") + item.Imagen))
                             {
-                                image_URL = System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + item.Imagen;
+                                image_URL = System.Web.HttpContext.Current.Server.MapPath("~")  + item.Imagen;
                             }
                         }
                     }
@@ -2590,15 +2590,15 @@ namespace ADSystem.Helpers
                 {
                     if (item.Imagen.ToUpper() != ISNULL)
                     {
-                        if (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + item.Imagen))
+                        if (System.IO.File.Exists(System.Web.HttpContext.Current.Server.MapPath("~")  + item.Imagen))
                         {
-                            image_URL = System.Web.HttpContext.Current.Server.MapPath("~") + "content\\services\\" + item.Imagen;
+                            image_URL = System.Web.HttpContext.Current.Server.MapPath("~") + item.Imagen;
                         }
                     }
                 }
 
                 iTextSharp.text.Image imagen_item = iTextSharp.text.Image.GetInstance(image_URL);
-                imagen_item.ScaleToFit(70f, 70f);
+                imagen_item.ScaleToFit(65f, 65f);
                 imagen_item.SpacingBefore = 2f;
                 imagen_item.SpacingAfter = 2f;
                 imagen_item.Alignment = Element.ALIGN_CENTER;
@@ -2691,7 +2691,7 @@ namespace ADSystem.Helpers
                     Border = Rectangle.NO_BORDER
                 });
 
-                tableTerms.AddCell(new PdfPCell(new Phrase("Arq. Sergio Martínez Cel. 813395 6748 - sergio@accentsdecoration.com,\n Mayra Chávez Cel. 8180106713 - mayra@accentsdecoration.com,\n Gabriela González Cel. 81 1782 6769 gaby@accentsdecoration.com", hp.fontCell))
+                tableTerms.AddCell(new PdfPCell(new Phrase(" Arq. Sergio Martínez Cel. 813395 6748 - sergio@accentsdecoration.com,\n Mayra Chávez Cel. 8180106713 - mayra@accentsdecoration.com,\n Gabriela González Cel. 81 1782 6769 gaby@accentsdecoration.com", hp.fontCell))
                 {
                     HorizontalAlignment = iTextSharp.text.Element.ALIGN_JUSTIFIED,
                     BackgroundColor = new BaseColor(System.Drawing.Color.White),

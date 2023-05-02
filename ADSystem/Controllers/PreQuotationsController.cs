@@ -315,9 +315,8 @@ namespace ADSystem.Controllers
                 // Crear un MemoryStream que contendrá el archivo ZIP
                 var archivoZipStream = new MemoryStream();
 
-                //cambiar estatus
+                //cambiar estatus y obtener los proveedores asignados
                 var proveedores = tPreQuotations.OrderedPreQuotation(idPreQuotationDetail, idUser);
-                //obtener los proveedores asignados
 
                 // Crear un objeto ZipArchive
                 using (var archivoZip = new ZipArchive(archivoZipStream, ZipArchiveMode.Create, true))
@@ -352,7 +351,6 @@ namespace ADSystem.Controllers
             return Json(jmResult);
 
         }
-
 
     }
 

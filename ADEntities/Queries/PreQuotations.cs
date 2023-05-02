@@ -105,7 +105,7 @@ namespace ADEntities.Queries
                         NombreTipoServicio = context.tTipoServicio.Where(o => o.idTipoServicio == x.idServicio).FirstOrDefault().Descripcion,
                         Descripcion = x.Descripcion,
                         Cantidad = x.Cantidad,
-                        Imagen = x.Imagen,
+                        Imagen = x.Imagen != null ? "/content/services/" + x.Imagen : null,
                         PDF = x.PDF,
                         Comentarios = x.Comentarios,
                         idEstatus = x.idEstatusServicio,
@@ -650,7 +650,7 @@ namespace ADEntities.Queries
 
                     tPreCotizacionDetalle oDetallePreCotizacion = new tPreCotizacionDetalle();
 
-                    if (!String.IsNullOrEmpty(oDetallePreCotizacion.Imagen))
+                    if (!String.IsNullOrEmpty(detail.Imagen))
                     {
                         char delimiter = '/';
                         var imagen = detail.Imagen.Split(delimiter);
@@ -785,7 +785,7 @@ namespace ADEntities.Queries
                             NombreTipoServicio = context.tTipoServicio.Where(o => o.idTipoServicio == x.idServicio).FirstOrDefault().Descripcion,
                             Descripcion = x.Descripcion,
                             Cantidad = x.Cantidad,
-                            Imagen = x.Imagen,
+                            Imagen = x.Imagen != null ? "/content/services/" + x.Imagen : null,
                             PDF = x.PDF,
                             Comentarios = x.Comentarios,
                             idEstatus = x.idEstatusServicio,
@@ -839,7 +839,7 @@ namespace ADEntities.Queries
                         Descripcion = p.Descripcion,
                         Comentarios = p.Comentarios,
                         Cantidad = p.Cantidad,
-                        Imagen = p.Imagen,
+                        Imagen = p.Imagen != null ? "/content/services/" + p.Imagen : null,
                         measures = p.tPreCotDetalleMedidas.Where(z => z.idPreCotizacionDetalle == p.idPreCotizacionDetalle).Select(z => new PreCotDetalleMedidasViewModel()
                         {
                             idPreCotDetalleMedidas = z.idPreCotDetalleMedidas,
