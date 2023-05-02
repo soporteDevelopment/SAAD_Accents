@@ -53,7 +53,35 @@ namespace ADSystem.Controllers
 
         public ViewResult GenerateOrderService(int id, int detailId)
         {
-            Dictionary<String, dynamic> response = ResponseOptionListPreQuotation(id, detailId);
+
+            Dictionary<String, dynamic> response = new Dictionary<string, dynamic>();
+            PreQuotationsViewModel prequotation = tPreQuotations.GetPreQuotationsId(id);
+            PreQuotationsDetailsViewModel oDetail = null;
+
+            foreach (var item in prequotation.oDetail)
+            {
+                if (item.idPreCotizacionDetalle == detailId)
+                {
+                    oDetail = item;
+                    break;
+                }
+            }
+
+            List<PreCotDetalleProveedoresViewModel> providers = tPreQuotations.GetProviderService(oDetail.idPreCotizacionDetalle);
+
+            //Filtrar proveedores que esten asignados.  
+            List<PreCotDetalleProveedoresViewModel> _filterProviders = new List<PreCotDetalleProveedoresViewModel>();
+            foreach (var item in providers)
+            {
+                if (item.Asignado == 1)
+                {
+                    _filterProviders.Add(item);
+                }
+            }
+            response.Add("number", prequotation.Numero);
+            response.Add("date", prequotation.Fecha);
+            response.Add("oDetail", oDetail);
+            response.Add("providers", _filterProviders);
 
             return View(response);
         }
