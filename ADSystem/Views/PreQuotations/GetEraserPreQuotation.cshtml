@@ -500,7 +500,7 @@
                         </div>
                         <div class="modal-body">
 
-                            <ul class="nav nav-tabs" role="tablist">
+                            <ul class="nav nav-tabs" id="navEdit" role="tablist">
                                 <li role="presentation" class="active"><a href="#serviceDetail" aria-controls="costumer" role="tab" data-toggle="tab">Servicio</a></li>
                                 <li role="presentation" ng-show="newService.descService.MedidasEstandar > 0 ? true : false"><a href="#serviceMeasure" aria-controls="service" role="tab" data-toggle="tab">Medidas</a></li>
                                 <li role="presentation"><a href="#serviceFabric" aria-controls="service" role="tab" data-toggle="tab">Telas</a></li>
@@ -562,7 +562,7 @@
                                                 <div class="col-md-12">
                                                     <div class="row col-md-12">
                                                         <div class="col-md-6" style="display: flex; justify-content: center; align-items:center;">
-                                                            <label for="comment">{{item.NombreMedida}}</label>
+                                                            <label>{{item.NombreMedida}}</label>
                                                         </div>
 
                                                         <div class="col-md-6" style="display: flex; justify-content: center; align-items:center;">

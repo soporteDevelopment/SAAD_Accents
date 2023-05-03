@@ -17,20 +17,24 @@
     };
 
     //Indica en que sucursal está logueado el usuario al momento de hacer la cotización
+
     $scope.SetBranch = function (ID) {
-        //console.log("ID", ID)
-        setTimeout(function () {
-            $("#openModal").modal("show");
-        }, 0);
-        //if (ID == 1) {
-        //    setTimeout(function () {
-        //        $("#openModal").modal("show");
-        //    }, 0);
-        //} else {
-        //    $scope.branchID = ID;
-        //}
+        if (ID == 1) {
+            setTimeout(function () {
+                $("#openModal").modal("show");
+            }, 0);
+        } else {
+            $scope.branchID = ID;
+        }
     };
 
+    //Cuando se da click desde el boton de cerrar del modal se genera número precotización y nombre sucursal
+    $('#btnCloseModal').on('click', function () {        
+        $scope.GetBranchInfo($scope.branchID);
+        $scope.GetNumberRem();
+
+    })
+    
     //Actualiza la informacion de la sucursal
     $scope.SetBranchName = function (branchName, IDBranch) {
         $scope.GetBranchInfo(IDBranch);
@@ -68,7 +72,7 @@
     };
 
     //Obtiene el numero de pre cotización
-    $scope.GetNumberRem = function () {
+    $scope.GetNumberRem = function () {       
         $http({
             method: 'POST',
             url: '../../../PreQuotations/GeneratePrevNumberRem',
@@ -1133,7 +1137,6 @@
     }
 
     $scope.summaryMeasures = (measures) => {
-        console.log("measures", measures);
         let measuresEdit = "";
         if (measures != null || measures != undefined) {
             if (measures) {

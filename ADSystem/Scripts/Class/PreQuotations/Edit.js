@@ -195,6 +195,7 @@
 
         const { oDetail } = prequotation;
 
+
         if (oDetail.length) {
 
             oDetail.forEach((item) => {
@@ -251,6 +252,7 @@
     //Actualiza el item de la lista de servicios
     $scope.SaveEditService = function () {
 
+
         //Valida si el valor de los input viene vacio.
         if ($scope.listMeasuresStandar.some(function (val) {
             return val.Valor * 1 === 0 || val.Valor == "";
@@ -258,6 +260,7 @@
             notify("Las medidas no pueden estar vacias", $rootScope.error);
             return false;
         }
+
 
         let validateValueEdit;
         $scope.listMeasuresStandar.forEach(function (list) {
@@ -275,6 +278,7 @@
             notify("El valor debe ser un número decimal válido", $rootScope.error);
             return false;
         }
+
 
         let updateObject = {
             idProduct: $scope.idCurrentProduct,
@@ -296,12 +300,13 @@
         }
 
         $scope.items.forEach(function (i, index) {
-            if (i.idProduct == $scope.idCurrentProduct) {
+            if (i.idProduct === $scope.idCurrentProduct) {
                 $scope.items[index] = updateObject;
             }
         });
 
         $scope.CleanData();
+
 
         $("#modalEditService").modal("hide");
     }
@@ -1039,6 +1044,7 @@
             document.getElementById('editHolder').style.backgroundImage = "url('" + item.image + "')";
         }
 
+        $('#navEdit a:first').tab('show');
         $("#modalEditService").modal("show");
 
     };
@@ -1159,18 +1165,16 @@
         return fabricEdit;
     }
 
-    $scope.summaryMeasures = (measures) => {
-        console.log("measures", measures);
+    $scope.summaryMeasures = (measures) => {        
         let measuresEdit = "";
         if (measures != null || measures != undefined) {
             if (measures) {
                 measures.forEach(function (m, index) {
                     let space = (index + 1 == measures.length) ? ". " : ", ";
-                    measuresEdit += m.NombreTipoMedida + ": " + m.Valor + space;
+                    measuresEdit += (m.NombreMedida ?? m.NombreTipoMedida) + ": " + m.Valor + space;
                 });
             }
         }
-
         return measuresEdit;
     }
 
