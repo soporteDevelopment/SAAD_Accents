@@ -6,7 +6,7 @@
     //Get list pre quotations
     $scope.listPreQuotations = function () {
 
-        $("#searchPreQuotations").button("loading");
+        $("#sending").button("loading");
 
         $http({
             method: 'POST',
@@ -36,7 +36,7 @@
 
                         $scope.PreQuotations = data.oData.PreQuotation;
                         $scope.total = data.oData.Count;
-                        console.log('PreQuotations', data.oData.PreQuotation);
+                        //console.log('PreQuotations', data.oData.PreQuotation);
 
                     } else {
 
@@ -142,7 +142,7 @@
     };
 
     $scope.openModalDetail = function (data) {
-        console.log("Data", data)
+        //console.log("Data", data)
         const { oDetail, Numero, idPreCotizacion } = data;
 
         if ($scope.folio != "") {
@@ -182,7 +182,7 @@
 
     //Envia la prectizacion a ser una cotizacion
     $scope.SendQuotation = (idPrequotation) => {
-        console.log("idPrequotation", idPrequotation);
+        //console.log("idPrequotation", idPrequotation);
         if (confirm("¿Desea enviar esta precotización a cotización?")) {
             $http({
                 method: 'POST',

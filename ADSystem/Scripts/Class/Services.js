@@ -477,6 +477,11 @@
                 // Limpiar el valor del input
                 $("#valueMeasure").val('')
             } else {
+
+                if (this.value == "" || this.value == ".") {
+                    $("#valueMeasure").val('')
+                    return false;
+                }
                 this.value = parseFloat(this.value).toFixed(2);
 
             }
@@ -491,6 +496,11 @@
                 // Limpiar el valor del input
                 $("#valueMeasureEdit").val('')
             } else {
+
+                if (this.value == "" || this.value == ".") {
+                    $("#valueMeasureEdit").val('')
+                    return false;
+                }
                 this.value = parseFloat(this.value).toFixed(2);
 
             }

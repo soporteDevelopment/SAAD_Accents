@@ -243,6 +243,9 @@
     $scope.SendDataProvider = (confirm) => {
 
         if (confirm) {
+
+            //$scope.sending = true;
+            $("#sending").button("loading");
             $http({
                 method: 'POST',
                 url: '../../../ProviderPreQuotation/AddProviderService',
@@ -257,10 +260,11 @@
 
                         setTimeout(function () {
                             window.location = "../../../PreQuotations/ListPreQuotations";
-                        }, 2000);
+                        }, 1000);
 
                     } else if (data.failure == 1) {
 
+                        $("#sending").button("reset");
                         notify(data.oData.Error, $rootScope.error);
 
                     } else if (data.noLogin == 1) {
@@ -271,7 +275,7 @@
                 error(function (data, status, headers, config) {
 
                     notify("Ocurrío un error.", $rootScope.error);
-
+                    $("#sending").button("reset");
                 });
         }
 

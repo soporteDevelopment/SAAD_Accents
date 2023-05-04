@@ -62,7 +62,7 @@ namespace ADEntities.Queries
             using (var context = new admDB_SAADDBEntities())
                 try
                 {
-                    var Providers = context.tProveedores.Where(p => (p.NombreEmpresa.Contains(provider) || String.IsNullOrEmpty(provider)) && p.Estatus == TypesProvider.EstatusActivo).Select(p => new ProviderViewModel()
+                    var Providers = context.tProveedores.Where(p => (p.NombreEmpresa == provider || String.IsNullOrEmpty(provider)) && p.Estatus == TypesProvider.EstatusActivo).Select(p => new ProviderViewModel()
                     {
 
                         idProveedor = p.idProveedor,

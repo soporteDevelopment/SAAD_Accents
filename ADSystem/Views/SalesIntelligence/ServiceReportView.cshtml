@@ -123,9 +123,9 @@
                             <tr>
                                 <th scope="col">Pre Cotización</th>
                                 <th scope="col">Servicio</th>
-                                <th scope="col">Cliente Físico</th>
+                                @*<th scope="col">Cliente Físico</th>
                                 <th scope="col">Cliente Moral</th>
-                                <th scope="col">Despacho</th>
+                                <th scope="col">Despacho</th>*@
                                 <th scope="col">Proveedor</th>                                
                                 <th scope="col">Nuevo</th>
                                 <th scope="col">Enviado a Proveedor</th>
@@ -140,9 +140,9 @@
                             <tr data-ng-repeat="q in preQuotationsServices">
                                 <td class="child">{{q.Numero}}</td>
                                 <td class="child">{{q.Servicio}}</td>
-                                <td class="child">{{q.ClienteF}}</td>
+                                @*<td class="child">{{q.ClienteF}}</td>
                                 <td class="child">{{q.ClienteM}}</td>
-                                <td class="child">{{q.Despacho}}</td>
+                                <td class="child">{{q.Despacho}}</td>*@
                                 <td class="child">{{q.Proveedor}}</td>                                
                                 <td class="child">{{q.Nuevo | jsDate | date:'shortDate'}}</td>
                                 <td class="child">{{q.EnviadoProveedor | jsDate | date:'shortDate'}}</td>
