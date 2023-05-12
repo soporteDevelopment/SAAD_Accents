@@ -61,18 +61,20 @@ namespace ADSystem.Controllers
 
                     }
 
-                    if (msgError != null || msgError != "")
-                    {
-                        jmResult.success = 0;
-                        jmResult.failure = 1;
-                        jmResult.oData = new { Error = msgError };
-                    }
-                    else
+                    if (msgError == null || msgError == "")
                     {
                         tTextiles.AddTextiles(textiles);
 
                         jmResult.success = 1;
                         jmResult.oData = new { Message = String.Format(Message.msgAdd = "Se cargo el archivo de Textiles correctamente") };
+                    }
+                    else
+                    {
+
+                        jmResult.success = 0;
+                        jmResult.failure = 1;
+                        jmResult.oData = new { Error = msgError };
+                       
                     }
 
                 }
