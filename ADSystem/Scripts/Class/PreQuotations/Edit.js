@@ -550,7 +550,9 @@
                 $scope.measuresStandar.forEach(me => {
 
                     if (list.idTipoMedida === me.idMeasure) {
-                        list.Valor = parseInt(me.value).toFixed(2);
+                        //list.Valor = parseInt(me.value).toFixed(2);
+                        list.Valor = (me.value * 1).toFixed(2);
+                        document.getElementById("measure" + list.idTipoMedida).value = list.Valor;
                         document.getElementById("measure" + list.idTipoMedida).value = list.Valor;
                         document.getElementById("measureedit" + list.idTipoMedida).value = list.Valor;
                     }
@@ -712,7 +714,6 @@
         $timeout(function () {
             $scope.listMeasuresStandar.forEach(function (item, index) {
                 let input = document.getElementById("measure" + item.idTipoMedida);
-                //console.log("item", item)
                 input.value = (item.Valor * 1).toFixed(2);
 
                 // Agregar un evento "onkeydown" al campo de entrada para permitir solo números y un punto decimal

@@ -418,7 +418,7 @@
             measureStandar: $scope.checkedStandarMeasures,
         });
 
-        console.log("ITEMS", $scope.items)
+        //console.log("ITEMS", $scope.items)
 
         $scope.descService = "";
         $scope.newService.imagen = "";
@@ -537,7 +537,7 @@
         $timeout(function () {
             $scope.listMeasuresStandar.forEach(function (item, index) {
                 let input = document.getElementById("measureedit" + item.idTipoMedida);
-                input.value = (item.Valor *1 ).toFixed(2);
+                input.value = (item.Valor * 1 ).toFixed(2);
 
                 // Agregar un evento "onkeydown" al campo de entrada para permitir solo números y un punto decimal
                 input.onkeydown = function (event) {
@@ -732,7 +732,7 @@
         $timeout(function () {
             $scope.listMeasuresStandar.forEach(function (item, index) {
                 let input = document.getElementById("measure" + item.idTipoMedida);
-                input.value = parseInt(item.Valor).toFixed(2);
+                input.value = (item.Valor * 1 ).toFixed(2);
                                
                 // Agregar un evento "onkeydown" al campo de entrada para permitir solo números y un punto decimal
                 input.onkeydown = function (event) {
@@ -841,7 +841,7 @@
                 $scope.measuresStandar.forEach(me => {
                     if (list.idTipoMedida === me.idMeasure) {
                         //list.Valor = me.value;
-                        list.Valor = parseInt(me.value).toFixed(2);
+                        list.Valor =(me.value * 1).toFixed(2);
                         document.getElementById("measure" + list.idTipoMedida).value = list.Valor;
                         document.getElementById("measureedit" + list.idTipoMedida).value = list.Valor;
                     }
