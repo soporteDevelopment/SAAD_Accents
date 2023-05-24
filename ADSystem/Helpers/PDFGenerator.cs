@@ -2615,7 +2615,13 @@ namespace ADSystem.Helpers
                     BackgroundColor = new BaseColor(System.Drawing.Color.White)
                 });
 
-                tableSaleDetail.AddCell(new PdfPCell(new Phrase(item.Descripcion, hp.fontCell))
+                var textTelas = "";
+                foreach (var t in item.fabrics)
+                {
+                    textTelas += t.NombreTextiles + " CostoXMts: " + t.CostoPorMts + " /";
+                }
+
+                tableSaleDetail.AddCell(new PdfPCell(new Phrase(item.Descripcion + "\n \n Telas: " + textTelas, hp.fontCell))
                 {
                     HorizontalAlignment = iTextSharp.text.Element.ALIGN_LEFT,
                     BackgroundColor = new BaseColor(System.Drawing.Color.White)
