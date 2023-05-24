@@ -96,16 +96,19 @@
                                     <div class="col-md-2 text-center">
                                         <span class="color-red">Tipo Proveedor</span>
                                     </div>
-                                    <div class="col-md-3 text-center">
+                                    <div class="col-md-2 text-center">
                                         <span class="color-red">Proveedor</span>
                                     </div>
                                     <div class="col-md-2 text-center">
                                         <span class="color-red">Costo</span>
                                     </div>
                                     <div class="col-md-2 text-center">
-                                        <span class="color-red">Dias habiles</span>
+                                        <span class="color-red">Costo público</span>
                                     </div>
                                     <div class="col-md-2 text-center">
+                                        <span class="color-red">Dias habiles</span>
+                                    </div>
+                                    <div class="col-md-1 text-center">
                                         <span class="color-red">Seleccionar</span>
                                     </div>
                                     <div class="col-md-1 text-center">
@@ -118,10 +121,11 @@
                                         <div class="row" ng-repeat="item in providers">
                                             <div style="margin-top: 14px"></div>
                                             <div class="col-md-2 text-center">{{item.TipoProveedor}}</div>
-                                            <div class="col-md-3 text-center">{{item.Proveedor}}</div>
+                                            <div class="col-md-2 text-center">{{item.Proveedor}}</div>
                                             <div class="col-md-2 text-center">{{item.CostoFabricacion ? (item.CostoFabricacion | currency) : "S/D"}}</div>
+                                            <div class="col-md-2 text-center">{{item.CostoPublico ? (item.CostoPublico | currency) : "S/D"}}</div>
                                             <div class="col-md-2 text-center">{{item.DiasFabricacion ? item.DiasFabricacion : "S/D"}}</div>
-                                            <div class="col-md-2 text-center">
+                                            <div class="col-md-1 text-center">
                                                 <input id="check{{item.idProveedor}}" title="Seleccionar proveedor" type="checkbox" name="select" style="cursor: pointer;"/>
                                             </div>
                                             <div class="col-md-1 text-center">
