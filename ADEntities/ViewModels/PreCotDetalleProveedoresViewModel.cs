@@ -14,6 +14,7 @@ namespace ADEntities.ViewModels
         public string TipoProveedor { get; set; }
         public string Proveedor { get; set; }
         public decimal? CostoFabricacion { get; set; }
+        public decimal? CostoPublico { get; set; }
         public int? DiasFabricacion { get; set; }
         public string ComentariosProveedor { get; set; }
         public string ComentariosComprador { get; set; }

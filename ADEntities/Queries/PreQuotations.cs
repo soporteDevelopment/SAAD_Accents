@@ -296,7 +296,6 @@ namespace ADEntities.Queries
                 {
                     int sCotizado = context.tEstatusServicios.Where(o => o.Nombre == "COTIZADO").FirstOrDefault().idEstatusServicio;
                     var ProveedorServicio = context.tPreCotDetalleProveedores.Find(data.idPreCotDetalleProveedores);
-                    int OriginService = 1; //1: cancela un evento obteniendo el id de la tabla de prequotationdetail
 
                     ProveedorServicio.CostoFabricacion = data.CostoFabricacion;
                     ProveedorServicio.DiasFabricacion = data.DiasFabricacion;
@@ -1102,6 +1101,28 @@ namespace ADEntities.Queries
                             ValorMts = o.ValorMts
                         }).ToList()
                     }).ToList();
+
+                    if(ProviderService != null && ProviderService.Count > 0)
+                    {
+                        foreach(var item in ProviderService)
+                        {
+                            var tipoServicio = context.tProveedores.Find(item.idProveedor).idTipoServicio;
+                            var factorUtilidad = context.tTipoServicio.Where(o => o.idTipoServicio == tipoServicio).FirstOrDefault().FactorUtilidad;
+                            var costoFabricacionPublico = item.CostoFabricacion * factorUtilidad;
+
+                            decimal? costoTotalTelas = 0;
+
+                            foreach(var telas in item.TelasProveedores)
+                            {
+                                var costoTela = context.tTextiles.Find(telas.idTextiles).Precio;
+                                var totalTela = telas.ValorMts * costoTela;
+                                costoTotalTelas += totalTela;
+                            }
+
+                            item.CostoPublico = costoTotalTelas + costoFabricacionPublico;
+                        }
+                    }
+
                     return ProviderService;
                 }
                 catch (DbEntityValidationException ex)
@@ -1350,17 +1371,6 @@ namespace ADEntities.Queries
                         Evento.Cancelado = true;
                         context.SaveChanges();
                     }
-                    //switch (Origin)
-                    //{
-                    //    case 1:
-                    //        var preQuotationDetail = context.tPreCotizacionDetalles.Where(o => o.idPreCotizacionDetalle == id).FirstOrDefault();
-                    //        Evento = context.tEventos.Where(o => o.idEvento == preQuotationDetail.idEvento).FirstOrDefault();
-                    //        break;
-                    //    case 2:
-                    //        var PreQuotation = context.tPreCotizacions.Where(o => o.idPreCotizacion == id).FirstOrDefault();
-                    //        Evento = context.tEventos.Where(o => o.idEvento == PreQuotation.idEvento).FirstOrDefault();
-                    //        break;
-                    //}
 
                 }
                 catch (DbEntityValidationException ex)
