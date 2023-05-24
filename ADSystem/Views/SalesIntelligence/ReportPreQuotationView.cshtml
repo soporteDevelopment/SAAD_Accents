@@ -141,11 +141,11 @@
                         <thead>
                             <tr>
                                 <th scope="col">Pre Cotización</th>
-                                <th scope="col">Cliente Físico</th>
-                                <th scope="col">Cliente Moral</th>
-                                <th scope="col">Despacho</th>
+                                @*<th scope="col">Cliente Físico</th>*@
+                                @*<th scope="col">Cliente Moral</th>
+                                <th scope="col">Despacho</th>*@
                                 <th scope="col">Vendedor</th>
-                                <th scope="col">Sucursal</th>
+                                @*<th scope="col">Sucursal</th>*@
                                 <th scope="col">Proyecto</th>
                                 <th scope="col">Nueva</th>
                                 <th scope="col">En Cotización</th>
@@ -158,11 +158,11 @@
                         <tbody>
                             <tr data-ng-repeat="q in preQuotations">
                                 <td class="child">{{q.Numero}}</td>
-                                <td class="child">{{q.ClienteF}}</td>
-                                <td class="child">{{q.ClienteM}}</td>
-                                <td class="child">{{q.Despacho}}</td>
+                                @*<td class="child">{{q.ClienteF}}</td>*@
+                                @*<td class="child">{{q.ClienteM}}</td>*@
+                                @*<td class="child">{{q.Despacho}}</td>*@
                                 <td class="child">{{q.Vendedor}}</td>
-                                <td class="child">{{q.Sucursal}}</td>
+                                @*<td class="child">{{q.Sucursal}}</td>*@
                                 <td class="child">{{q.Proyecto}}</td>
                                 <td class="child">{{q.Nueva | jsDate | date:'shortDate'}}</td>
                                 <td class="child">{{q.En_Cotizacion | jsDate | date:'shortDate'}}</td>

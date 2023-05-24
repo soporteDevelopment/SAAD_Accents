@@ -129,7 +129,7 @@
                                         <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "ClonePreQuotation") == 1" title="Duplicar" ng-click="Clone(s.idPreCotizacion)"><i class="fa fa fa-copy color-red" style="left: 0px;"></i></a>
                                         <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "GetPreQuotations") == 1" title="Detalle" data-ng-click="openModalDetail(s)"><i class="fa fa-info-circle color-red" style="left: 0px;"></i></a>
                                         <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "DownloadPDF") == 1" title="Descargar PDF" ng-click="DownloadPDF(s.idPreCotizacion,s.Numero)"><i class="fa fa-download color-red" style="left: 0px;"></i></a>
-                                        <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "DownloadPDF") == 1" title="Enviar a cotización" ng-click="SendQuotation(s.idPreCotizacion)"><i class="fa fa-send color-red" style="left: 0px;" ng-show="s.Estatus == 3"></i></a>
+                                        <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "SendCotizacion") == 1" title="Enviar a cotización" ng-click="SendQuotation(s.idPreCotizacion)"><i class="fa fa-send color-red" style="left: 0px;" ng-show="s.Estatus == 3"></i></a>
                                     </li>
                                 </ul>
                             </div>
@@ -170,7 +170,7 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-3 text-center">
-                                        <span class="color-red">Artículo</span>
+                                        <span class="color-red">Imagen</span>
                                     </div>
                                     <div class="col-md-3 text-center">
                                         <span class="color-red">Servicio</span>

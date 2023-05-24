@@ -18,7 +18,7 @@
         $scope.detailfabrics = detail.oDetail.fabrics;
         $scope.providers = detail.providers;
 
-        console.log("detail.providers", detail.providers);
+        //console.log("detail.providers", detail.providers);
 
         //$scope.providers.forEach(p => {
         //    p.Telas = $scope.detailfabrics;
@@ -36,6 +36,11 @@
 
     //Actualiza la informacion del proveedor.
     $scope.UpdateProviderData = () => {
+
+        if (!$scope.cost && !$scope.days) {
+            notify("Verifique que la información esté llenada correctamente.", $rootScope.error);
+            return false;
+        }
 
         $scope.providers.forEach((item) => {
             if (item.idPreCotDetalleProveedores == $scope.currentProviderId) {
@@ -114,7 +119,7 @@
 
         let data = generateData();
 
-        console.log("DATA", data);
+        //console.log("DATA", data);
 
         $http({
             method: 'POST',

@@ -418,7 +418,7 @@
             measureStandar: $scope.checkedStandarMeasures,
         });
 
-        console.log("ITEMS", $scope.items)
+        //console.log("ITEMS", $scope.items)
 
         $scope.descService = "";
         $scope.newService.imagen = "";
@@ -537,7 +537,7 @@
         $timeout(function () {
             $scope.listMeasuresStandar.forEach(function (item, index) {
                 let input = document.getElementById("measureedit" + item.idTipoMedida);
-                input.value = item.Valor;
+                input.value = (item.Valor * 1 ).toFixed(2);
 
                 // Agregar un evento "onkeydown" al campo de entrada para permitir solo números y un punto decimal
                 input.onkeydown = function (event) {
@@ -574,6 +574,19 @@
                         /* input.value = ""; // Borrar el contenido si no es un número decimal válido*/
                         //alert("El valor debe ser un número decimal válido"); // Mostrar un mensaje de error
                         return false;
+                    }
+                };
+
+                // Agregar un evento "onchange" al campo de entrada para formatearlo a 2 decimales
+                input.onchange = function (event) {
+
+                    var valor = input.value;
+
+                    if (valor !== "" && !/^[\d]+(\.[\d]+)?$/.test(valor)) {
+                        return false;
+                    } else {
+                        let val = event.target.value * 1
+                        input.value = val.toFixed(2)
                     }
                 };
 
@@ -719,8 +732,8 @@
         $timeout(function () {
             $scope.listMeasuresStandar.forEach(function (item, index) {
                 let input = document.getElementById("measure" + item.idTipoMedida);
-                input.value = item.Valor;
-
+                input.value = (item.Valor * 1 ).toFixed(2);
+                               
                 // Agregar un evento "onkeydown" al campo de entrada para permitir solo números y un punto decimal
                 input.onkeydown = function (event) {
 
@@ -749,10 +762,23 @@
                 };
 
                 // Agregar un evento "onblur" al campo de entrada para validar el contenido
-                input.onblur = function () {
-                    var valor = input.value;
+                input.onblur = function () {            
+                    let valor = input.value;
                     if (valor !== "" && !/^[\d]+(\.[\d]+)?$/.test(valor)) {
                         return false;
+                    } 
+                };
+
+                // Agregar un evento "onchange" al campo de entrada para formatearlo a 2 decimales
+                input.onchange = function (event) {
+                   
+                    var valor = input.value;
+
+                    if (valor !== "" && !/^[\d]+(\.[\d]+)?$/.test(valor)) {
+                        return false;
+                    } else {
+                        let val = event.target.value * 1
+                        input.value = val.toFixed(2)
                     }
                 };
 
@@ -762,12 +788,13 @@
             $scope.listMeasuresStandar.forEach(function (item) {
                 $("#measure" + item.idTipoMedida).trigger("keydown");
                 $("#measure" + item.idTipoMedida).trigger("blur");
-                $("#measure" + item.idTipoMedida).trigger('keyup');
+                $("#measure" + item.idTipoMedida).trigger('keyup');                
             });
 
             $scope.isEnabled = false;
         });
     });
+
 
 
 
@@ -813,8 +840,8 @@
             $scope.listMeasuresStandar.forEach(function (list, index) {
                 $scope.measuresStandar.forEach(me => {
                     if (list.idTipoMedida === me.idMeasure) {
-                        list.Valor = me.value;
-                        //list.Valor = parseInt(me.value);
+                        //list.Valor = me.value;
+                        list.Valor =(me.value * 1).toFixed(2);
                         document.getElementById("measure" + list.idTipoMedida).value = list.Valor;
                         document.getElementById("measureedit" + list.idTipoMedida).value = list.Valor;
                     }
@@ -822,9 +849,10 @@
             });
         } else {
             $scope.listMeasuresStandar.forEach(m => {
-                m.Valor = 0;
-                document.getElementById("measure" + m.idTipoMedida).value = m.Valor;
-                document.getElementById("measureedit" + m.idTipoMedida).value = m.Valor;
+                //m.Valor = 0;
+                //agregar 2 decimales
+                document.getElementById("measure" + m.idTipoMedida).value = (m.Valor * 1).toFixed(2);
+                document.getElementById("measureedit" + m.idTipoMedida).value = (m.Valor * 1).toFixed(2);
             });
         }
     }

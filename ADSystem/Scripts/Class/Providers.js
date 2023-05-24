@@ -429,11 +429,12 @@
 
 
     $scope.InitData = (data) => {
-        console.log(data);
+        
         const { idTipoServicio, ProveedorPedidosMedida } = data;
+
+        $scope.readOnly = ProveedorPedidosMedida ? true : false;
         $scope.boolPedidosMedida = ProveedorPedidosMedida;
-        $scope.idTipoServicio = idTipoServicio;
-        console.log($scope.boolPedidosMedida);
+        $scope.idTipoServicio = idTipoServicio;       
         if ($scope.boolPedidosMedida) {
             $scope.GetTypeService();
         }
