@@ -2697,7 +2697,7 @@ namespace ADSystem.Helpers
                     Border = Rectangle.NO_BORDER
                 });
 
-                tableTerms.AddCell(new PdfPCell(new Phrase(" Gabriela Gonzalez gaby@accentsdecoration.com,\n Danny Gallinar danny@accentsdecoration.com,\n Sergio Martinez sergio@accentsdecoration.com,\n Rocio Martinez rociomayela@accentsdecoration.com", hp.fontCell))
+                tableTerms.AddCell(new PdfPCell(new Phrase(" Gabriela Gonzalez - gaby@accentsdecoration.com,\n Danny Gallinar - danny@accentsdecoration.com,\n Sergio Martinez - sergio@accentsdecoration.com,\n Rocio Martinez - rociomayela@accentsdecoration.com", hp.fontCell))
                 {
                     HorizontalAlignment = iTextSharp.text.Element.ALIGN_JUSTIFIED,
                     BackgroundColor = new BaseColor(System.Drawing.Color.White),
