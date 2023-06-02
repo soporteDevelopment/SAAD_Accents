@@ -13,5 +13,6 @@ namespace ADEntities.ViewModels
         public int? idProveedor { get; set; }
         public int? idTextiles { get; set; }
         public decimal? ValorMts { get; set; }
+        public decimal? CostoPorMts { get; set; }
     }
 }

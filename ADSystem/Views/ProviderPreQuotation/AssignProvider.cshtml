@@ -99,14 +99,20 @@
                                     <div class="col-md-2 text-center">
                                         <span class="color-red">Proveedor</span>
                                     </div>
-                                    <div class="col-md-2 text-center">
-                                        <span class="color-red">Costo</span>
+                                    <div class="col-md-1 text-center">
+                                        <span class="color-red">MO</span>
+                                    </div>
+                                    <div class="col-md-1 text-center">
+                                        <span class="color-red">Días hábiles</span>
+                                    </div>
+                                    <div class="col-md-1 text-center">
+                                        <span class="color-red">PP/MT</span>
                                     </div>
                                     <div class="col-md-2 text-center">
-                                        <span class="color-red">Costo público</span>
+                                        <span class="color-red">PP total tela</span>
                                     </div>
-                                    <div class="col-md-2 text-center">
-                                        <span class="color-red">Dias habiles</span>
+                                    <div class="col-md-1 text-center">
+                                        <span class="color-red">Precio público</span>
                                     </div>
                                     <div class="col-md-1 text-center">
                                         <span class="color-red">Seleccionar</span>
@@ -122,14 +128,18 @@
                                             <div style="margin-top: 14px"></div>
                                             <div class="col-md-2 text-center">{{item.TipoProveedor}}</div>
                                             <div class="col-md-2 text-center">{{item.Proveedor}}</div>
-                                            <div class="col-md-2 text-center">{{item.CostoFabricacion ? (item.CostoFabricacion | currency) : "S/D"}}</div>
-                                            <div class="col-md-2 text-center">{{item.CostoPublico ? (item.CostoPublico | currency) : "S/D"}}</div>
-                                            <div class="col-md-2 text-center">{{item.DiasFabricacion ? item.DiasFabricacion : "S/D"}}</div>
+                                            <div class="col-md-1 text-center">{{item.CostoFabricacion ? (item.CostoFabricacion | currency) : "S/D"}}</div>
+                                            <div class="col-md-1 text-center">{{item.DiasFabricacion ? item.DiasFabricacion : "S/D"}}</div>
+                                            <div ng-repeat="row in item.TelasProveedores">
+                                                <div class="col-md-1 text-center">{{row.ValorMts != null ? (row.CostoPorMts | currency) : "S/D"}}</div>
+                                                <div class="col-md-2 text-center">{{row.ValorMts != null ?  ((row.CostoPorMts * row.ValorMts) | currency) : "S/D"}}</div>
+                                            </div>
+                                            <div class="col-md-1 text-center">{{item.CostoPublico ? (item.CostoPublico | currency) : "S/D"}}</div>
                                             <div class="col-md-1 text-center">
-                                                <input id="check{{item.idProveedor}}" title="Seleccionar proveedor" type="checkbox" name="select" style="cursor: pointer;"/>
+                                                <input id="check{{item.idProveedor}}" title="Seleccionar proveedor" type="checkbox" name="select" style="cursor: pointer;" />
                                             </div>
                                             <div class="col-md-1 text-center">
-                                                <i class="fa fa-eye color-red" style="cursor:pointer" title="Ver detalle de proveedor" ng-click="openModalUpdate(item)"></i>
+                                                <i class="fa fa-eye color-red" style="cursor:pointer" title="Ver detalle de proveedor" ng-click="openModalUpdate(item,1)"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -190,10 +200,10 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-6 text-center">
-                                        <span class="color-red">Nombre Textiles</span>
+                                        <span class="color-red">Telas</span>
                                     </div>
                                     <div class="col-md-6 text-center">
-                                        <span class="color-red">CostoPorMts</span>
+                                        <span class="color-red">PP/MT</span>
                                     </div>
                                 </div>
                                 <br />
@@ -252,10 +262,10 @@
                                         <label style="color: red">Metros</label>
                                     </div>
                                     <div class="col-md-3" style="display: flex; justify-content: center; align-items:center;">
-                                        <label style="color: red">Costo por Mts</label>
+                                        <label style="color: red">PP/MT</label>
                                     </div>
                                     <div class="col-md-3" style="display: flex; justify-content: center; align-items:center;">
-                                        <label style="color: red">Costo total</label>
+                                        <label style="color: red">PP total tela</label>
                                     </div>
                                     <br />
                                 </div>
@@ -265,13 +275,13 @@
                                     <div class="col-md-12">
                                         <div class="row col-md-12">
                                             <div class="col-md-3" style="display: flex; justify-content: center; align-items:center;">
-                                                <label>{{item.NombreTextiles}}</label>
+                                                <label id="label{{item.idTextiles}}">{{item.NombreTextiles}}</label>
                                             </div>
                                             <div class="col-md-3" style="display: flex; justify-content: center; align-items:center;">
                                                 <label id="fabric{{item.idTextiles}}" ></label>
                                             </div>
                                             <div class="col-md-3" style="display: flex; justify-content: center; align-items:center;">
-                                                <label>{{item.CostoPorMts | currency}}</label>
+                                                <label id="precio{{item.idTextiles}}">{{item.CostoPorMts | currency}}</label>
                                             </div>
                                             <div class="col-md-3" style="display: flex; justify-content: center; align-items:center;">
                                                 <label id="inputFabric{{item.idTextiles}}"></label>
