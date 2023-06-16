@@ -18,7 +18,7 @@ angular.module("General").controller('ProviderPreQuotationController', function 
         $scope.detailmeasures = detail.oDetail.measures;
         $scope.detailfabrics = detail.oDetail.fabrics;
         $scope.providers = detail.providers;
-
+       
         //Validacion para mostrar botones de telas y medidas.
         if ($scope.detailfabrics?.length) {
             $scope.isVisibleButtonFabrics = true;
@@ -58,28 +58,35 @@ angular.module("General").controller('ProviderPreQuotationController', function 
 
         let data = generateData();
 
-        $http({
-            method: 'POST',
-            url: '../../../ProviderPreQuotation/AssignProviderPreQuotation',
-            data: data
-        }).
-            success(function (data, status, headers, config) {
-                if (data.success == 1) {
-                    notify(data.oData.Message, $rootScope.success, { timeOut: 5000 });
-
-                    setTimeout(function () {
-                        window.location = "../../../PreQuotations/ListPreQuotations";
-                    }, 2000);
-
-                } else if (data.failure == 1) {
-                    notify(data.oData.Error, $rootScope.error);
-                } else if (data.noLogin == 1) {
-                    window.location = "../../../Access/Close";
-                }
+        if (data.length) {
+            $http({
+                method: 'POST',
+                url: '../../../ProviderPreQuotation/AssignProviderPreQuotation',
+                data: data
             }).
-            error(function (data, status, headers, config) {
-                notify("Ocurrío un error.", $rootScope.error);
-            });
+                success(function (data, status, headers, config) {
+                    if (data.success == 1) {
+                        notify(data.oData.Message, $rootScope.success, { timeOut: 5000 });
+
+                        setTimeout(function () {
+                            window.location = "../../../PreQuotations/ListPreQuotations";
+                        }, 2000);
+
+                    } else if (data.failure == 1) {
+                        notify(data.oData.Error, $rootScope.error);
+                    } else if (data.noLogin == 1) {
+                        window.location = "../../../Access/Close";
+                    }
+                }).
+                error(function (data, status, headers, config) {
+                    notify("Ocurrío un error.", $rootScope.error);
+                });
+        } else {
+            notify("Es necesario que seleccione al menos un proveedor", $rootScope.error);
+
+        }
+
+        
     }
 
     function generateData() {
@@ -87,7 +94,6 @@ angular.module("General").controller('ProviderPreQuotationController', function 
 
         $scope.providers.forEach(p => {
             let check = document.getElementById("check" + p.idProveedor).checked;
-            console.log("check", check);
 
             if (check) {
                 let array = {
@@ -104,7 +110,7 @@ angular.module("General").controller('ProviderPreQuotationController', function 
                 }
 
                 data.push(array);
-            }
+            } 
         });
 
         return data;
@@ -183,23 +189,50 @@ angular.module("General").controller('ProviderPreQuotationController', function 
         }
     }
 
-    $scope.openModalUpdate = (currentProvider) => {
+    $scope.openModalUpdate = (currentProvider, ident) => {
         $scope.currentProviderId = currentProvider.idPreCotDetalleProveedores;
         $scope.cost = currentProvider.CostoFabricacion;
         $scope.days = currentProvider.DiasFabricacion;
         $scope.commentProvider = currentProvider.ComentariosProveedor;
         $scope.commentSeller = currentProvider.ComentariosComprador
-        InitializeFabricData(currentProvider.TelasProveedores);
+        InitializeFabricData(currentProvider.TelasProveedores,ident );
 
         $('.disable').attr('disabled', true);
         $("#openModalUpdate").modal("show");
     }
 
-    function InitializeFabricData(telas) {
-        console.log("telas", telas);
+    function InitializeFabricData(telas, ident) {
         if (telas) {
-            telas.forEach(function (item, index) {
+            telas.forEach(function (item, index) {                
                 document.getElementById("fabric" + item.idTextiles).innerHTML = item.ValorMts;
+                let nameFabric;
+                let precioByMt;
+               
+                const dataFabric = $scope.detailfabrics.filter((ele) => ele.idTextiles === item.idTextiles);
+
+                if (dataFabric) {
+
+                    nameFabric = dataFabric[0].NombreTextiles
+                    precioByMt = dataFabric[0].CostoPorMts
+
+                }
+
+                if (ident == 1) {
+                    if (item.ValorMts != null || item.ValorMts != undefined) {
+
+
+                        document.getElementById("label" + item.idTextiles).innerHTML = nameFabric;
+                        document.getElementById("precio" + item.idTextiles).innerHTML = precioByMt;
+
+                    } else {
+                        document.getElementById("label" + item.idTextiles).innerHTML = "";
+                        document.getElementById("precio" + item.idTextiles).innerHTML = "";
+
+
+                    }
+                }
+                
+                
                 if (item.ValorMts != null || item.ValorMts != undefined) {
                     // Busca el item que coincida con el idTextiles y obtiene el costo, para realizar el calculo
                     let currentFabric = $scope.detailfabrics.filter(x => x.idTextiles == item.idTextiles);
@@ -217,9 +250,7 @@ angular.module("General").controller('ProviderPreQuotationController', function 
         }
     }
 
-    function setValueMtsTotal(id, total) {
-        console.log("id", id);
-        console.log("total", total);
+    function setValueMtsTotal(id, total) {        
         if (id != null) {
             if (total != null) {
                 document.getElementById("inputFabric" + id).innerHTML = total.toLocaleString('es-MX', {

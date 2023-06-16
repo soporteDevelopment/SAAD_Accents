@@ -1098,7 +1098,9 @@ namespace ADEntities.Queries
                             idServicio = o.idServicio,
                             idProveedor = o.idProveedor,
                             idTextiles = o.idTextiles,
-                            ValorMts = o.ValorMts
+                            ValorMts = o.ValorMts,
+                            CostoPorMts = context.tTextiles.Where(t => t.idTextiles == o.idTextiles).FirstOrDefault().Precio,
+
                         }).ToList()
                     }).ToList();
 
@@ -1115,7 +1117,7 @@ namespace ADEntities.Queries
                             foreach(var telas in item.TelasProveedores)
                             {
                                 var costoTela = context.tTextiles.Find(telas.idTextiles).Precio;
-                                var totalTela = telas.ValorMts * costoTela;
+                                var totalTela = (telas.ValorMts != null ? telas.ValorMts : 0) * costoTela;
                                 costoTotalTelas += totalTela;
                             }
 
