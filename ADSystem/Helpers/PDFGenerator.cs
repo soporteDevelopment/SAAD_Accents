@@ -2618,7 +2618,8 @@ namespace ADSystem.Helpers
                 var textTelas = "";
                 foreach (var t in item.fabrics)
                 {
-                    textTelas += t.NombreTextiles + " CostoXMts: " + t.CostoPorMts + " /";
+                    var AnchoTela = _preQuotation.GetWidthFabric(t.idTextiles);
+                    textTelas += t.NombreTextiles + " CostoXMts: " + t.CostoPorMts + " /" + "AnchoTela(Mts): " + AnchoTela;
                 }
 
                 tableSaleDetail.AddCell(new PdfPCell(new Phrase(item.Descripcion + "\n \n Telas: " + textTelas, hp.fontCell))

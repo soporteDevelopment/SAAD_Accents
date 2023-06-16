@@ -1409,5 +1409,21 @@ namespace ADEntities.Queries
                 }
         }
 
+        public decimal? GetWidthFabric(int? idTextil)
+        {
+            using (var context = new admDB_SAADDBEntities())
+                try
+                {
+                    var AnchoTela = context.tTextiles.Find(idTextil).AnchoTela;
+
+                    return AnchoTela;
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    var newException = new ADEntities.Common.FormattedDbEntityValidationException(ex);
+                    throw newException;
+                }
+        }
+
     }
 }
