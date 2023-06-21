@@ -9,6 +9,7 @@ angular.module("General").controller('ProviderPreQuotationController', function 
 
     //Inicializa la informacion al cargar la vista. 
     $scope.LoadInformation = (detail) => {
+        console.log("provedores", detail.providers)
         $scope.number = detail.number;
         $scope.dateTime = $scope.FormatDate(new Date(detail.date));
         $scope.comments = detail.oDetail.comments;
