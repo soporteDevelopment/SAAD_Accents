@@ -205,6 +205,31 @@
         }
     }
 
+    //Eliminar la prectizacion
+    $scope.DeletePreQuotation = (idPrequotation) => {
+        //console.log("idPrequotation", idPrequotation);
+        if (confirm("¿Desea eliminar esta precotización?")) {
+            $http({
+                method: 'POST',
+                url: '../../../PreQuotations/DeletePreQuotation',
+                params: {
+                    id: idPrequotation
+                }
+            }).
+                success(function (data, status, headers, config) {
+
+                    notify(data.oData.Message, $rootScope.success);
+                    $scope.listPreQuotations();
+                }).
+                error(function (data, status, headers, config) {
+
+                    $("#searchPreQuotations").button("reset");
+
+                    notify("Ocurrío un error.", $rootScope.error);
+                });
+        }
+    }
+
     //Paging
     $scope.prevPage = function () {
         if ($scope.currentPage > 0) {

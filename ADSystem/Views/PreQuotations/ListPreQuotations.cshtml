@@ -130,6 +130,7 @@
                                         <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "GetPreQuotations") == 1" title="Detalle" data-ng-click="openModalDetail(s)"><i class="fa fa-info-circle color-red" style="left: 0px;"></i></a>
                                         <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "DownloadPDF") == 1" title="Descargar PDF" ng-click="DownloadPDF(s.idPreCotizacion,s.Numero)"><i class="fa fa-download color-red" style="left: 0px;"></i></a>
                                         <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "SendCotizacion") == 1" title="Enviar a cotización" ng-click="SendQuotation(s.idPreCotizacion)"><i class="fa fa-send color-red" style="left: 0px;" ng-show="s.Estatus == 3"></i></a>
+                                        <a href="javascript:void(0);" data-ng-show="@HtmlHelperExtension.Icon("PreQuotations", "GetEraserPreQuotation") == 1" title="Eliminar" data-ng-click="DeletePreQuotation(s.idPreCotizacion)"><i class="fa fa-trash color-red" style="left: 0px;" ng-show="s.Estatus == 1"></i></a>
                                     </li>
                                 </ul>
                             </div>
