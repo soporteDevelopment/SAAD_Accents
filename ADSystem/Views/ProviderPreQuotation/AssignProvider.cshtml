@@ -130,9 +130,13 @@
                                             <div class="col-md-2 text-center">{{item.Proveedor}}</div>
                                             <div class="col-md-1 text-center">{{item.CostoFabricacion ? (item.CostoFabricacion | currency) : "S/D"}}</div>
                                             <div class="col-md-1 text-center">{{item.DiasFabricacion ? item.DiasFabricacion : "S/D"}}</div>
-                                            <div ng-repeat="row in item.TelasProveedores">
+                                            <div ng-repeat="row in item.TelasProveedores" ng-if="item.TelasProveedores.length > 0">
                                                 <div class="col-md-1 text-center">{{row.ValorMts != null ? (row.CostoPorMts | currency) : "S/D"}}</div>
                                                 <div class="col-md-2 text-center">{{row.ValorMts != null ?  ((row.CostoPorMts * row.ValorMts) | currency) : "S/D"}}</div>
+                                            </div>
+                                            <div ng-if="item.TelasProveedores.length == 0">
+                                                <div class="col-md-1 text-center">S/D</div>
+                                                <div class="col-md-2 text-center">S/D</div>
                                             </div>
                                             <div class="col-md-1 text-center">{{item.CostoPublico ? (item.CostoPublico | currency) : "S/D"}}</div>
                                             <div class="col-md-1 text-center">
