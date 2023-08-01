@@ -514,8 +514,20 @@ namespace ADEntities.Queries
 					if (idBranch == 1)
 						this.DeleteProductsFromStock(oVentas.idVenta, idUser1);
 					else
-						this.DeleteProductsFromStock(oVentas.idVenta, (int)oVentas.idSucursal, idUser1);
-
+					{
+						//Development TI
+						//28/04/2023
+						//Descripción:
+						//se modifica esta seccion ya que antes realizaba la disminución de existencia por la sucursal del encabezado de la venta ocasionando Negativos
+						//this.DeleteProductsFromStock(oVentas.idVenta, (int)oVentas.idSucursal, idUser1);						
+						foreach (var prod in lProducts)
+						{
+                            if (prod.idProducto != null)
+                            {
+								this.DeleteProductsFromStockByProductSucursal(oVentas.idVenta, (int)prod.idProducto, (int)prod.idSucursal, idUser1);
+							}
+						}
+					}
 					return objVentas.Remision;
 				}
 				catch (DbEntityValidationException ex)
@@ -1410,6 +1422,30 @@ namespace ADEntities.Queries
 
 						context.SaveChanges();
 					}
+				}
+				catch (DbEntityValidationException ex)
+				{
+					var newException = new ADEntities.Common.FormattedDbEntityValidationException(ex);
+					throw newException;
+				}
+		}
+
+		public void DeleteProductsFromStockByProductSucursal(int idSale, int idProducto, int idBranch, int? idUser)
+		{
+			using (var context = new admDB_SAADDBEntities())
+				try
+				{
+					SaleDetailViewModel lSaleDetail = context.tDetalleVentas.Where(p => p.idVenta == idSale && p.idProducto == idProducto).Select(p => new SaleDetailViewModel()
+					{
+						idProducto = p.idProducto,
+						Cantidad = p.Cantidad
+					}).FirstOrDefault();
+
+					tProductosSucursal oProductBranch = context.tProductosSucursals.FirstOrDefault(p => p.idSucursal == idBranch && p.idProducto == lSaleDetail.idProducto);
+					this.AddRegisterProduct(oProductBranch.idProducto, idBranch, "Se actualiza el inventario por venta " + this.GetSaleForIdSale(idSale).Remision, (decimal)oProductBranch.Existencia, (decimal)(oProductBranch.Existencia - lSaleDetail.Cantidad), lSaleDetail.Precio, lSaleDetail.Precio, String.Empty, (int)idUser);
+					oProductBranch.Existencia = oProductBranch.Existencia - lSaleDetail.Cantidad;
+
+					context.SaveChanges();
 				}
 				catch (DbEntityValidationException ex)
 				{

@@ -148,7 +148,7 @@
                             <label></label>
                         </div>
                         <div class="col-sm-6 text-left">
-                            <span><input type="text" maxlength="3" min="0" max="100" ng-model="discount" data-ng-init="discount = '@Math.Truncate((decimal)Model.Descuento)'" ng-change="CalculateTotalCost()" numbers-only="numbers-only" style="width:50px;" /></span>
+                            <span><input type="text" maxlength="3" min="0" max="100" ng-model="discount" data-ng-init="discount = '@Model.Descuento'" ng-change="CalculateTotalCost()" numbers-only="numbers-only" style="width:50px;" /></span>
                         </div>
                     </div>
                     <div class="row" ng-show="@Model.Estatus != 3">

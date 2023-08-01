@@ -94,55 +94,83 @@ namespace ADSystem.Controllers
                 result.Creado = DateTime.Now;
                 result.Estatus = 1;
 
-                int id = tEntries.Add(result);
-
-                if (id > 0)
+                if (!tEntries.VerifyEntry((int)result.CreadoPor, (DateTime)result.Creado, result.Cantidad))
                 {
-                    if (entry.Payments != null)
+                    int id = tEntries.Add(result);
+
+                    if (id > 0)
                     {
-                        tSales.UpdatePaymentEntry(id, entry.Payments);
-                    }
-
-                    jmResult.success = 1;
-                    jmResult.oData = new
-                    {
-                        Message = String.Format("Se agregó un registro al módulo {0}", "Manejo de Efectivo")
-                    };
-
-                    //Si es entregado por Anna se envía correo
-                    if (entry.EntregadaPor == 16)
-                    {
-                        StringBuilder body = new StringBuilder();
-                        body.Append("Se recibío de Anna la cantidad de <b>");
-                        body.Append(entry.Cantidad.Value.ToString("C", CultureInfo.CurrentCulture));
-                        body.Append("</b><br/>");
-                        body.Append("Comentarios: <b>" + entry.Comentarios);
-                        body.Append("</b><br/>");
-
-                        var emailService = new Email();
-
-                        emailService.SendMail("fernanda@accentsdecoration.com", "INGRESO", body.ToString());
-                    }else if (entry.EntregadaPor > 0)
-                    {  
-                        StringBuilder body = new StringBuilder();
-                        body.Append("Se recibío la cantidad de <b>");
-                        body.Append(entry.Cantidad.Value.ToString("C", CultureInfo.CurrentCulture));
-                        body.Append("</b><br/>");
-                        if (entry.idVenta > 0)
+                        if (entry.Payments != null)
                         {
-                            var sale = tSales.GetSaleForIdSale(entry.idVenta ?? 0);
-                            body.Append("Venta: <b>" + sale.Remision);
-                            body.Append("</b>");
-                            body.Append("Vendedor: <b>" + sale.Usuario1);
-                            body.Append("</b><br/>");
+                            tSales.UpdatePaymentEntry(id, entry.Payments);
                         }
-                        body.Append("Comentarios: <b>" + entry.Comentarios);
-                        body.Append("</b><br/>");
 
-                        var emailService = new Email();
+                        jmResult.success = 1;
+                        jmResult.oData = new
+                        {
+                            Message = String.Format("Se agregó un registro al módulo {0}", "Manejo de Efectivo")
+                        };
 
-                        emailService.SendMail("fernanda@accentsdecoration.com", "INGRESO", body.ToString());
+                        //Si es entregado por Anna se envía correo
+                        if (entry.EntregadaPor == 16)
+                        {
+                            StringBuilder body = new StringBuilder();
+                            body.Append("Se recibío de Anna la cantidad de <b>");
+                            body.Append(entry.Cantidad.Value.ToString("C", CultureInfo.CurrentCulture));
+                            body.Append("</b><br/>");
+                            body.Append("Comentarios: <b>" + entry.Comentarios);
+                            body.Append("</b><br/>");
+
+                            //var emailService = new Email();
+                            var emailServiceV2 = new EmailV2();
+
+                            var envioMail = new SendEmailNotifications()
+                            {
+                                SubjectEmail = "INGRESO",
+                                BodyEmail = body.ToString(),
+                                EmailEnvia = "",
+                                EmailConCopiaEnvia = "",
+                            };
+                            emailServiceV2.SendMail(envioMail, false);
+
+                            //emailService.SendMail("fernanda@accentsdecoration.com", "INGRESO", body.ToString());
+                        }
+                        else if (entry.EntregadaPor > 0)
+                        {
+                            StringBuilder body = new StringBuilder();
+                            body.Append("Se recibío la cantidad de <b>");
+                            body.Append(entry.Cantidad.Value.ToString("C", CultureInfo.CurrentCulture));
+                            body.Append("</b><br/>");
+                            if (entry.idVenta > 0)
+                            {
+                                var sale = tSales.GetSaleForIdSale(entry.idVenta ?? 0);
+                                body.Append("Venta: <b>" + sale.Remision);
+                                body.Append("</b>");
+                                body.Append("Vendedor: <b>" + sale.Usuario1);
+                                body.Append("</b><br/>");
+                            }
+                            body.Append("Comentarios: <b>" + entry.Comentarios);
+                            body.Append("</b><br/>");
+
+                            //var emailService = new Email();
+                            var emailServiceV2 = new EmailV2();
+
+                            var envioMail = new SendEmailNotifications()
+                            {
+                                SubjectEmail = "INGRESO",
+                                BodyEmail = body.ToString(),
+                                EmailEnvia = "",
+                                EmailConCopiaEnvia = "",
+                            };
+                            emailServiceV2.SendMail(envioMail, false);
+
+                            //emailService.SendMail("fernanda@accentsdecoration.com", "INGRESO", body.ToString());
+                        }
                     }
+                }
+                else
+                {
+                    throw new System.ArgumentException("El importe del ingreso que se esta agregando ya fue dado de alta hace un momento");
                 }
             }
             catch (Exception ex)

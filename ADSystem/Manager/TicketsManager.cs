@@ -296,12 +296,22 @@ namespace ADSystem.Manager
             body = body + "</form>";
             body = body + "<br/>";
 
-			var emails = new List<string>();
-			emails.Add(user.Correo);
-            emails.Add(FernandaEmail);
-			email.SendMail(emails, $"Nuevo ticket {entity.Codigo}", body);
+            //var emails = new List<string>();
+            //emails.Add(user.Correo);
+            //emails.Add(FernandaEmail);
+            //email.SendMail(emails, $"Nuevo ticket {entity.Codigo}", body);
 
-			return PrepareSingleReturn(result);
+            var envioMail = new SendEmailNotifications()
+            {
+                SubjectEmail = $"Nuevo ticket {entity.Codigo}",
+                BodyEmail = body,
+                EmailEnvia = user.Correo + "; " + FernandaEmail,
+                EmailConCopiaEnvia = "",
+            };
+            var emailServiceV2 = new EmailV2();
+            emailServiceV2.SendMail(envioMail, false);
+
+            return PrepareSingleReturn(result);
 		}
 
         public void UpdateAuthorized(AuthorizeTicketViewModel authorizeTicket)

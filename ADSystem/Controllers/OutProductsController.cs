@@ -740,6 +740,7 @@ namespace ADSystem.Controllers
             OutProductsViewModel oView = tVistas.GetOutProductsForRemision(remision);
             var view = _PDFGenerator.GenerateView(oView.idVista);
             var emailService = new Email();
+            var emailServiceV2 = new EmailV2();
 
             string email;
 
@@ -756,13 +757,31 @@ namespace ADSystem.Controllers
                 email = tOffices.GetOffice((int)oView.idDespacho).Correo;
             }
 
+            var envioMail = new SendEmailNotifications()
+            {
+                SubjectEmail = "Salida a Vista " + oView.remision,
+                BodyEmail = "Salida a Vista " + oView.remision,
+                EmailEnvia = email,
+                Files = new List<FileAttachment>()
+                {
+                    new FileAttachment()
+                    {
+                    FileName = "SalidaVista_" + oView.remision + ".pdf",
+                    memoryStreamFiles = view
+                    }
+                },
+                EmailConCopiaEnvia = "",
+            };
+
             if (email.Trim().ToLower() != "noreply@correo.com")
             {
-                emailService.SendMailWithAttachment(email, "Salida a Vista " + oView.remision, "Salida a Vista " + oView.remision, "SalidaVista_" + oView.remision + ".pdf", view);
+                emailServiceV2.SendMail(envioMail, false);
+                //emailService.SendMailWithAttachment(email, "Salida a Vista " + oView.remision, "Salida a Vista " + oView.remision, "SalidaVista_" + oView.remision + ".pdf", view);
             }
             else
             {
-                emailService.SendInternalMailWithAttachment("Salida a Vista " + oView.remision, "Salida a Vista " + oView.remision, "SalidaVista_" + oView.remision + ".pdf", view);
+                emailServiceV2.SendMail(envioMail, true);
+                //emailService.SendInternalMailWithAttachment("Salida a Vista " + oView.remision, "Salida a Vista " + oView.remision, "SalidaVista_" + oView.remision + ".pdf", view);
             }
         }
 
@@ -776,10 +795,28 @@ namespace ADSystem.Controllers
                 OutProductsViewModel oView = tVistas.GetOutProductsForRemision(remision);
                 var view = _PDFGenerator.GenerateView(oView.idVista);
                 var emailService = new Email();
+                var emailServiceV2 = new EmailV2();
+
+                var envioMail = new SendEmailNotifications()
+                {
+                    SubjectEmail = "Salida a Vista " + oView.remision,
+                    BodyEmail = "Salida a Vista " + oView.remision,
+                    EmailEnvia = email,
+                    Files = new List<FileAttachment>()
+                {
+                    new FileAttachment()
+                    {
+                    FileName = "SalidaVista_" + oView.remision + ".pdf",
+                    memoryStreamFiles = view
+                    }
+                },
+                    EmailConCopiaEnvia = "",
+                };
 
                 if (email.Trim().ToLower() != "noreply@correo.com")
                 {
-                    emailService.SendMailWithAttachment(email, "Salida a Vista " + oView.remision, "Salida a Vista " + oView.remision, "SalidaVista_" + oView.remision + ".pdf", view);
+                    emailServiceV2.SendMail(envioMail, false);
+                    //emailService.SendMailWithAttachment(email, "Salida a Vista " + oView.remision, "Salida a Vista " + oView.remision, "SalidaVista_" + oView.remision + ".pdf", view);
                 }
 
                 jmResult.success = 1;
