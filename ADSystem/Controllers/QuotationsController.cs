@@ -149,10 +149,7 @@ namespace ADSystem.Controllers
             {
                 int idQuotation = tQuotations.AddQuotationDollar(number, idUser1, idUser2, idCustomerP, idCustomerM, idOffice, project, typeCustomer, idOfficeReference, idBranch, dateSale, amountProducts, subtotal, discount, IVA, total, lProducts, comments);
 
-                if (send)
-                {
-                    this.SendMailQuotationSale(idQuotation);
-                }
+                this.SendMailQuotationSale(idQuotation, send);                
 
                 jmResult.success = 1;
                 jmResult.failure = 0;
@@ -248,10 +245,7 @@ namespace ADSystem.Controllers
             {
                 int idQuotation = tQuotations.AddQuotation(number, idUser1, idUser2, origin, idCustomerP, idCustomerM, idOffice, project, typeCustomer, idOfficeReference, idBranch, dateSale, amountProducts, subtotal, discount, IVA, total, lProducts, comments, IVATasa);
 
-                if (send)
-                {
-                    this.SendMailQuotationSale(idQuotation);
-                }
+                this.SendMailQuotationSale(idQuotation, send);
 
                 jmResult.success = 1;
                 jmResult.failure = 0;
@@ -320,10 +314,7 @@ namespace ADSystem.Controllers
             {
                 int idQuotation = tQuotations.AddQuotationFromView(number, idUser1, idUser2, idCustomerP, idCustomerM, idOffice, project, typeCustomer, idOfficeReference, idBranch, dateSale, amountProducts, subtotal, discount, IVA, IVATasa, total, lProducts, comments, idView);
 
-                if (send)
-                {
-                    this.SendMailQuotationSale(idQuotation);
-                }
+                this.SendMailQuotationSale(idQuotation, send);
 
                 jmResult.success = 1;
                 jmResult.failure = 0;
@@ -373,10 +364,7 @@ namespace ADSystem.Controllers
             {
                 int idQuotation = tQuotations.AddQuotationFromUnifiedView(number, idUser1, idUser2, idCustomerP, idCustomerM, idOffice, project, typeCustomer, idOfficeReference, idBranch, dateSale, amountProducts, subtotal, discount, IVA, total, lProducts, comments, IVATasa);
 
-                if (send)
-                {
-                    this.SendMailQuotationSale(idQuotation);
-                }
+                this.SendMailQuotationSale(idQuotation, send);
 
                 jmResult.success = 1;
                 jmResult.failure = 0;
@@ -487,7 +475,7 @@ namespace ADSystem.Controllers
             }
         }
 
-        public void SendMailQuotationSale(int idQuotation)
+        public void SendMailQuotationSale(int idQuotation, Boolean send)
         {
             QuotationViewModel _quotation = tQuotations.GetQuotationId(idQuotation);
             var quotation = _PDFGenerator.GenerateQuotation(idQuotation);
@@ -508,13 +496,39 @@ namespace ADSystem.Controllers
                 email = tOffices.GetOffice((int)_quotation.idDespacho).Correo;
             }
 
-            if (email.Trim().ToLower() != "noreply@correo.com")
+            var emailServiceV2 = new EmailV2();
+
+            var envioMail = new SendEmailNotifications()
             {
-                emailService.SendMailWithAttachment(email, "Cotización " + _quotation.Numero, "Cotización " + _quotation.Numero, "Cotizacion_" + _quotation.Numero + ".pdf", quotation);
-			}
+                SubjectEmail = "Cotización " + _quotation.Numero,
+                BodyEmail = "Cotización " + _quotation.Numero,
+                EmailEnvia = email,
+                Files = new List<FileAttachment>()
+                {
+                    new FileAttachment()
+                    {
+                        FileName = "Cotizacion_" + _quotation.Numero + ".pdf",
+                        memoryStreamFiles = quotation
+                    }
+                },
+                EmailConCopiaEnvia = "",
+                EmailConCopiaOculta = ""
+            };
+
+            if (send)
+            {
+                if (email.Trim().ToLower() != "noreply@correo.com")
+                {
+                    emailServiceV2.SendMail(envioMail, false);
+                }
+                else
+                {
+                    emailServiceV2.SendMail(envioMail, true);
+                 }
+            }
             else
             {
-                emailService.SendInternalMailWithAttachment("Cotización " + _quotation.Numero, "Cotización " + _quotation.Numero, "Cotizacion_" + _quotation.Numero + ".pdf", quotation);
+                emailServiceV2.SendMail(envioMail, true);
             }
         }
 
@@ -529,9 +543,34 @@ namespace ADSystem.Controllers
                 var quotation = _PDFGenerator.GenerateQuotation(idQuotation);
                 var emailService = new Email();
 
+                var emailServiceV2 = new EmailV2();
+
+                var envioMail = new SendEmailNotifications()
+                {
+                    SubjectEmail = "Cotización " + _quotation.Numero,
+                    BodyEmail = "Cotización " + _quotation.Numero,
+                    EmailEnvia = email,
+                    Files = new List<FileAttachment>()
+                {
+                    new FileAttachment()
+                    {
+                        FileName = "Cotizacion_" + _quotation.Numero + ".pdf",
+                        memoryStreamFiles = quotation
+                    }
+                },
+                    EmailConCopiaEnvia = "",
+                    EmailConCopiaOculta = ""
+                };
+
                 if (email.Trim().ToLower() != "noreply@correo.com")
                 {
-                    emailService.SendMailWithAttachment(email, "Cotización " + _quotation.Numero, "Cotización " + _quotation.Numero, "Cotizacion_" + _quotation.Numero + ".pdf", quotation);
+                    emailServiceV2.SendMail(envioMail, false);
+                    //emailService.SendMailWithAttachment(email, "Cotización " + _quotation.Numero, "Cotización " + _quotation.Numero, "Cotizacion_" + _quotation.Numero + ".pdf", quotation);
+                }
+                else
+                {
+                    emailServiceV2.SendMail(envioMail, true);
+                    //mailService.SendInternalMailWithAttachment("Cotización " + _quotation.Numero, "Cotización " + _quotation.Numero, "Cotizacion_" + _quotation.Numero + ".pdf", quotation);
                 }
 
                 jmResult.success = 1;

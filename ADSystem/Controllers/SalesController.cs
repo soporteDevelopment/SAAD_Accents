@@ -656,8 +656,24 @@ namespace ADSystem.Controllers
 
                 if (users != null)
                 {
-                    var emailService = new Email();
-                    emailService.SendMail(users, "Facturar", body.ToString());
+                    //var emailService = new Email();
+                    //emailService.SendMail(users, "Facturar", body.ToString());
+                    var emailsEnviar = "";
+                    foreach (var item in users)
+                    {
+                        emailsEnviar += item + "; ";
+                    }
+
+                    var envioMail = new SendEmailNotifications()
+                    {
+                        SubjectEmail = "Facturar",
+                        BodyEmail = body.ToString(),
+                        EmailEnvia = emailsEnviar,
+                        EmailConCopiaEnvia = "",
+                    };
+                    var emailServiceV2 = new EmailV2();
+                    emailServiceV2.SendMail(envioMail, false);
+
                 }
 
                 jmResult.success = 1;
@@ -727,9 +743,18 @@ namespace ADSystem.Controllers
                 body.Append("<p>CP:&nbsp;<b class='brand-danger'>" + cp + "</b></p>");
                 body.Append("<br/>");
 
-                var emailService = new Email();
+                //var emailService = new Email();
+                //emailService.SendMail("fernanda@accentsdecoration.com", "Factura", body.ToString());
 
-                emailService.SendMail("fernanda@accentsdecoration.com", "Factura", body.ToString());
+                var emailServiceV2 = new EmailV2();
+                var envioMail = new SendEmailNotifications()
+                {
+                    SubjectEmail = "Factura",
+                    BodyEmail = body.ToString(),
+                    EmailEnvia = "",
+                    EmailConCopiaEnvia = "",
+                };
+                emailServiceV2.SendMail(envioMail, false);
 
                 jmResult.success = 1;
                 jmResult.failure = 0;
@@ -831,8 +856,27 @@ namespace ADSystem.Controllers
                 var sale = _PDFGenerator.GenerateSaleWithPayment(idSale, sTypePayment, sTypeCard, check, idCreditNote, amount, left);
                 var detail = tSales.GetSaleForIdSale(idSale);
                 var emailService = new Email();
+                var emailServiceV2 = new EmailV2();
 
-                emailService.SendMailWithAttachmentWithoutCC("fernanda@accentsdecoration.com", "Abono de la Venta " + detail.Remision, "Abono realizado en la venta " + detail.Remision + ".", "Venta " + detail.Remision + ".pdf", sale);
+                var envioMail = new SendEmailNotifications()
+                {
+                    SubjectEmail = "Abono de la Venta " + detail.Remision,
+                    BodyEmail = "Abono realizado en la venta " + detail.Remision + ".",
+                    EmailEnvia = "",
+                    Files = new List<FileAttachment>()
+                    {
+                        new FileAttachment()
+                        {
+                        FileName = "Venta " + detail.Remision + ".pdf",
+                        memoryStreamFiles = sale
+                        }
+                    },
+                    EmailConCopiaEnvia = "",
+                };
+
+                emailServiceV2.SendMail(envioMail, false);
+
+               // emailService.SendMailWithAttachmentWithoutCC("fernanda@accentsdecoration.com", "Abono de la Venta " + detail.Remision, "Abono realizado en la venta " + detail.Remision + ".", "Venta " + detail.Remision + ".pdf", sale);
 
                 jmResult.success = 1;
                 jmResult.failure = 0;
@@ -1255,6 +1299,7 @@ namespace ADSystem.Controllers
             var sale = _PDFGenerator.GenerateSale(idSale);
             var saleDetail = tSales.GetSaleForIdSale(idSale);
             var emailService = new Email();
+            var emailServiceV2 = new EmailV2();
 
             string email;
 
@@ -1271,13 +1316,31 @@ namespace ADSystem.Controllers
                 email = tOffices.GetOffice((int)saleDetail.idDespacho).Correo;
             }
 
+            var envioMail = new SendEmailNotifications()
+            {
+                SubjectEmail = "Venta " + saleDetail.Remision,
+                BodyEmail = "Gracias por su compra.",
+                EmailEnvia = email,
+                Files = new List<FileAttachment>()
+                {
+                    new FileAttachment()
+                    {
+                        FileName = "Venta_" + saleDetail.Remision + ".pdf",
+                        memoryStreamFiles = sale
+                    }
+                },
+                EmailConCopiaEnvia = "",
+            };
+
             if (email.Trim().ToLower() != "noreply@correo.com")
             {
-                emailService.SendMailWithAttachment(email, "Venta " + saleDetail.Remision, "Gracias por su compra.", "Venta_" + saleDetail.Remision + ".pdf", sale);
+                emailServiceV2.SendMail(envioMail, false);
+                //emailService.SendMailWithAttachment(email, "Venta " + saleDetail.Remision, "Gracias por su compra.", "Venta_" + saleDetail.Remision + ".pdf", sale);
             }
             else
             {
-                emailService.SendInternalMailWithAttachment("Venta " + saleDetail.Remision, "Gracias por su compra.", "Venta_" + saleDetail.Remision + ".pdf", sale);
+                emailServiceV2.SendMail(envioMail, true);
+                //emailService.SendInternalMailWithAttachment("Venta " + saleDetail.Remision, "Gracias por su compra.", "Venta_" + saleDetail.Remision + ".pdf", sale);
             }
         }
 
@@ -1292,9 +1355,27 @@ namespace ADSystem.Controllers
                 var saleDetail = tSales.GetSaleForIdSale(idSale);
                 var emailService = new Email();
 
+                var emailServiceV2 = new EmailV2();
+
+                var envioMail = new SendEmailNotifications()
+                {
+                    SubjectEmail = "Venta " + saleDetail.Remision,
+                    BodyEmail = "Gracias por su compra.",
+                    EmailEnvia = email,
+                    Files = new List<FileAttachment>()
+                {
+                    new FileAttachment()
+                    {
+                        FileName = "Venta_" + saleDetail.Remision + ".pdf",
+                        memoryStreamFiles = sale
+                    }
+                },
+                    EmailConCopiaEnvia = "",
+                };
+
                 if (email.Trim().ToLower() != "noreply@correo.com")
                 {
-                    emailService.SendMailWithAttachment(email, "Venta " + saleDetail.Remision, "Gracias por su compra.", "Venta" + saleDetail.Remision + ".pdf", sale);
+                    emailServiceV2.SendMail(envioMail, false);                    
                 }
 
                 jmResult.success = 1;

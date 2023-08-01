@@ -4,11 +4,35 @@ using System.Linq;
 using System.Web;
 using ADEntities.ViewModels;
 using ADEntities.Models;
+using System.Data.Entity.Validation;
 
 namespace ADEntities.Queries
 {
     public class Entries
     {
+        public bool VerifyEntry(int idUser, DateTime verifyDate, decimal? importe)
+        {
+            using (var context = new admDB_SAADDBEntities())
+                try
+                {
+                    var entry = context.tEntradas.OrderByDescending(p => p.Fecha).FirstOrDefault(p => p.CreadoPor == idUser && p.Estatus == 1 && p.Cantidad == importe);
+
+                    if (entry != null)
+                    {
+                        var totalMinute = verifyDate.Subtract(entry.Fecha ?? DateTime.Now);
+                        return context.tEntradas.Any(p => p.CreadoPor == idUser && totalMinute.TotalMinutes <= 2);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    var newException = new ADEntities.Common.FormattedDbEntityValidationException(ex);
+                    throw newException;
+                }
+        }
         //Get
         public List<EntryViewModel> Get(DateTime start, DateTime end, string deliveredBy)
         {

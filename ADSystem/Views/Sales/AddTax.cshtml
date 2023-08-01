@@ -16,7 +16,7 @@
                     </div>
                     <div class="form-group" data-ng-init="discount = @ViewBag.descuento">
                         <label for="discountSale">Descuento</label>
-                        <input type="text" class="form-control" id="discountSale" value="{{  Math.floor(discount) }} %" placeholder="Descuento" readonly>
+                        <input type="text" class="form-control" id="discountSale" value="{{  discount }} %" placeholder="Descuento" readonly>
                     </div>
                     <div class="form-group">
                         <label for="ivaSale" data-ng-init="amount = ((subtotal - (subtotal * (discount/100))) * .16) ">IVA</label>
